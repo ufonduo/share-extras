@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<model name="pm:pollmodel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+
+   <description>Poll Model</description>
+   <author>Will Abson</author>
+   <version>1.0</version>
+
+   <imports>
+       <import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d" />
+       <import uri="http://www.alfresco.org/model/content/1.0" prefix="cm" />
+   </imports>
+
+   <namespaces>
+       <namespace uri="http://www.alfresco.org/model/poll/1.0" prefix="pm" />
+   </namespaces>
+   
+   <types>
+      <type name="pm:poll">
+         <title>Poll</title>
+         <parent>cm:folder</parent>
+         <properties>
+            <property name="pm:options">
+               <type>d:text</type>
+               <multiple>true</multiple>
+            </property>
+         </properties>
+      </type>
+      <type name="pm:response">
+         <title>Poll Response</title>
+         <parent>cm:content</parent>
+         <properties>
+            <property name="pm:response">
+               <type>d:text</type>
+            </property>
+         </properties>
+      </type>
+   </types>
+
+</model>
