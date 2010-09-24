@@ -1,0 +1,59 @@
+<alfresco-config>
+   <!-- dlexample:book type create form config-->
+   <config evaluator="model-type" condition="dlexample:book">
+      <forms>
+         <!-- Create book item form -->
+         <form>
+            <field-visibility>
+               <!-- cm:titled aspect -->
+               <show id="cm:title" />
+               <show id="cm:description" />
+               <!-- dlexample:book type -->
+               <show id="dlexample:bookAuthor" />
+               <show id="dlexample:bookISBN" />
+             </field-visibility>
+            <create-form template="../data-lists/forms/row-new.ftl" />
+            <appearance>
+               <field id="cm:description">
+                  <control template="/org/alfresco/components/form/controls/textarea.ftl" />
+               </field>
+            </appearance>
+         </form>
+
+         <!-- Data Grid view -->
+         <form id="datagrid">
+            <field-visibility>
+               <!-- cm:titled aspect -->
+               <show id="cm:title" />
+               <show id="cm:description" />
+               <!-- dlexample:book type -->
+               <show id="dlexample:bookAuthor" />
+               <show id="dlexample:bookISBN" />
+            </field-visibility>
+         </form>
+      </forms>
+   </config>
+
+   <!-- dlexample:task type edit form config-->
+   <config evaluator="node-type" condition="dlexample:book">
+      <forms>
+         <!-- Data List pop-up edit form -->
+         <form>
+            <field-visibility>
+               <!-- cm:titled aspect -->
+               <show id="cm:title" />
+               <show id="cm:description" />
+               <!-- dlexample:book type -->
+               <show id="dlexample:bookAuthor" />
+               <show id="dlexample:bookISBN" />
+            </field-visibility>
+            <edit-form template="../data-lists/forms/row-edit.ftl" />
+            <appearance>
+               <field id="cm:description">
+                  <control template="/org/alfresco/components/form/controls/textarea.ftl" />
+               </field>
+            </appearance>
+         </form>
+      </forms>
+   </config>
+</alfresco-config>
