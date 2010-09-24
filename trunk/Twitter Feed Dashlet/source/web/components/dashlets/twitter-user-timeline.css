@@ -1,0 +1,16 @@
+.twitter-user-timeline div.list
+{
+}
+.twitter-user-timeline div.detail-list-item
+{
+   min-height: 2em;
+}
+.twitter-user-timeline h4
+{
+   margin-bottom: 0.25em;
+}
+.twitter-user-timeline div.tweet-details
+{
+   color: #999999;
+   margin-bottom: 0.25em;
+}
