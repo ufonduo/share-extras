@@ -1,0 +1,26 @@
+<app-config>
+
+   <plug-ins>
+      <element-readers>
+         <element-reader element-name="remote" class="org.springframework.extensions.config.RemoteConfigElementReader"/>
+      </element-readers>
+   </plug-ins>
+
+   <config evaluator="string-compare" condition="Remote">
+        <remote>
+            
+            <!-- 
+            <endpoint>
+                <id>bbc-weather</id>
+                <name>BBC Weather</name>
+                <description>Access to BBC Weather data</description>
+                <connector-id>http</connector-id>
+                <endpoint-url>http://www.bbc.co.uk/weather</endpoint-url>    
+                <identity>none</identity>
+            </endpoint>
+            -->
+
+        </remote>
+    </config>
+
+</app-config>
