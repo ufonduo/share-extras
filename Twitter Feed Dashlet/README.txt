@@ -21,7 +21,7 @@ directory.
 
     ant clean dist-jar
 
-The command should build a JAR file named site-tags-dashlet.jar
+The command should build a JAR file named twitter-feed-dashlet.jar
 in the 'dist' directory within your project.
 
 To deploy the dashlet files into a local Tomcat instance for testing, you can 
