@@ -1,0 +1,6 @@
+<webscript>
+   <shortname>BBC Weather</shortname>
+   <description>Displays current conditions and three-day forecast for a UK location</description>
+   <family>user-dashlet</family>
+   <url>/components/dashlets/ext/bbc-weather</url>
+</webscript>
