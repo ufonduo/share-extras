@@ -1,0 +1,13 @@
+.poll input
+{
+   margin: 1em 0;
+}
+.poll .yui-radio-button
+{
+	display: block;
+   margin: 0.25em 0;
+}
+.poll .poptions
+{
+	margin: 1em 0;
+}
