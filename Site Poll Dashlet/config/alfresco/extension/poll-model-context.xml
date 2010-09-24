@@ -15,7 +15,7 @@
     <bean id="poll.datalist.ResourceBundle" class="org.alfresco.i18n.ResourceBundleBootstrapComponent">
       <property name="resourceBundles">
          <list>
-            <value>alfresco.poll-model</value>
+            <value>alfresco.extension.poll-model</value>
          </list>
       </property>
    </bean>
