@@ -1,0 +1,5 @@
+<webscript>
+   <shortname>Twitter Feed List</shortname>
+   <description>Return list of tweets for a selected user</description>
+   <url>/components/dashlets/twitter-user-timeline/list</url>
+</webscript>

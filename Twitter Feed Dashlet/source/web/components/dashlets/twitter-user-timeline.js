@@ -90,8 +90,33 @@
           * @type string
           * @default ""
           */
-         twitterUser: ""
+         twitterUser: "",
+
+         /**
+          * Default Twitter username of the user to display the timeline for, if no specific user is configured
+          * 
+          * @property defaultTwitterUser
+          * @type string
+          * @default ""
+          */
+         defaultTwitterUser: ""
       },
+
+      /**
+       * User timeline DOM container.
+       * 
+       * @property activityList
+       * @type object
+       */
+      timeline: null,
+
+      /**
+       * Dashlet title DOM container.
+       * 
+       * @property title
+       * @type object
+       */
+      title: null,
 
       /**
        * Fired by YUI when parent element is available for scripting
@@ -100,6 +125,67 @@
       onReady: function TwitterUserTimeline_onReady()
       {
          Event.addListener(this.id + "-configure-link", "click", this.onConfigClick, this, true);
+         
+         // The user timeline container
+         this.timeline = Dom.get(this.id + "-timeline");
+         
+         // The dashlet title container
+         this.title = Dom.get(this.id + "-title");
+         
+         // Load the timeline
+         this.refreshTimeline();
+      },
+
+      /**
+       * Fired by YUI when parent element is available for scripting
+       * @method onReady
+       */
+      refreshTimeline: function TwitterUserTimeline_refreshTimeline()
+      {
+         // Load the user timeline
+         Alfresco.util.Ajax.request(
+         {
+            url: Alfresco.constants.URL_SERVICECONTEXT + "components/dashlets/twitter-user-timeline/list",
+            dataObj:
+            {
+               twitterUser: ((this.options.twitterUser != null && this.options.twitterUser != "") ? 
+                     this.options.twitterUser : this.options.defaultTwitterUser)
+            },
+            successCallback:
+            {
+               fn: this.onTimelineLoaded,
+               scope: this,
+               obj: null
+            },
+            failureCallback:
+            {
+               fn: this.onTimelineLoadFailed,
+               scope: this
+            },
+            scope: this,
+            noReloadOnAuthFailure: true
+         });
+      },
+      
+      /**
+       * Timeline loaded successfully
+       * @method onTimelineLoaded
+       * @param p_response {object} Response object from request
+       */
+      onTimelineLoaded: function TwitterUserTimeline_onTimelineLoaded(p_response, p_obj)
+      {
+         this.timeline.innerHTML = p_response.serverResponse.responseText;
+         this.title.innerHTML = this.msg("header.userTimeline", ((this.options.twitterUser != "") ?
+               this.options.twitterUser : this.options.defaultTwitterUser));
+      },
+
+      /**
+       * Timeline load failed
+       * @method onTimelineLoadFailed
+       */
+      onTimelineLoadFailed: function TwitterUserTimeline_onTimelineLoadFailed()
+      {
+         this.timeline.innerHTML = '<div class="detail-list-item first-item last-item">' + this.msg("label.error") + '</div>';
       },
 
       /**
@@ -125,12 +211,14 @@
             {
                width: "50em",
                templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "modules/dashlets/twitter-user-timeline/config", actionUrl: actionUrl,
-               twitterUser: this.options.twitterUser,
                onSuccess:
                {
                   fn: function VideoWidget_onConfigFeed_callback(response)
                   {
-                     // TODO Refresh the feed
+                     // Refresh the feed
+                     var u = Dom.get(this.configDialog.id + "-twitterUser").value;
+                     this.options.twitterUser = (u != "") ? u : this.options.defaultTwitterUser;
+                     this.refreshTimeline();
                   },
                   scope: this
                },
@@ -138,7 +226,8 @@
                {
                   fn: function VideoWidget_doSetupForm_callback(form)
                   {
-                     Dom.get(this.configDialog.id + "-twitterUser").value = this.configDialog.options.twitterUser;
+                     Dom.get(this.configDialog.id + "-twitterUser").value = ((this.options.twitterUser != "") ?
+                           this.options.twitterUser : this.options.defaultTwitterUser);
                   },
                   scope: this
                }
