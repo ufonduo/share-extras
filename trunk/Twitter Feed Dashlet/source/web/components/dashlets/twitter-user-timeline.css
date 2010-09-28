@@ -14,3 +14,10 @@
    color: #999999;
    margin-bottom: 0.25em;
 }
+.twitter-user-timeline div.tweet-details a,
+.twitter-user-timeline div.tweet-details a:link,
+.twitter-user-timeline div.tweet-details a:hover,
+.twitter-user-timeline div.tweet-details a:visited
+{
+   color: #999999;
+}
