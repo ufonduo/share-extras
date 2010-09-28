@@ -31,6 +31,8 @@ ${tweet}
 </#if>
 <#elseif status?number==401>
 <div class="msg" style="margin: -8px 0">${msg("error.http.401")}</div>
+<#elseif status?number==404>
+<div class="msg" style="margin: -8px 0">${msg("error.http.404")}</div>
 <#else>
 <div class="msg" style="margin: -8px 0">${msg("error.http", status)}</div>
 </#if>
