@@ -1,4 +1,4 @@
-#summary Tag cloud dashlet displays all tags used in the site on the site dashboard as a tag cloud
+#summary Describes the Media Preview add-on for Alfresco Share
 #labels Dashlet,Video
 
 =Introduction=
