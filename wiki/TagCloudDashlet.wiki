@@ -6,6 +6,8 @@
 This project defines a custom dashlet that displays the list of tags defined in 
 the current site as a tag cloud.
 
+http://share-extras.googlecode.com/svn/trunk/Site%20Tags%20Dashlet/screenshot.png
+
 =Installation=
 
 The dashlet is packaged as a single JAR file for easy installation into Alfresco Share.
