@@ -14,7 +14,7 @@ To install the dashlet, simply drop the `site-tags-dashlet.jar` file into the `t
 =Building from Source=
 
 An Ant build script is provided to build a JAR file containing the 
-custom files, which can then be installed into the 'tomcat/shared/lib' folder 
+custom files, which can then be installed into the `tomcat/shared/lib` folder 
 of your Alfresco installation.
 
 To build the JAR file, run the following command from the base project 
