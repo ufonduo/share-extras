@@ -11,7 +11,7 @@ The previews therefore do not require FFmpeg for some formats, but it is highly 
 
 In addition to support for the additional media types in the Share Document Details screen, a custom site dashlet is provided, which can be configured to display a chosen video.
 
-http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshot.png
+[http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshot.png http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshot-small.png] [http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshot-dashlet.png http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshot-dashlet-small.png] [http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshot-browse.png http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshot-browse-small.png]
 
 =Installation=
 
