@@ -1,4 +1,5 @@
 #summary Tag cloud dashlet displays all tags used in the site on the site dashboard as a tag cloud
+#labels Dashlet,Tagging,Add-On
 
 =Introduction=
 
@@ -17,7 +18,7 @@ Check out the project if you have not already done so
 
 {{{
 svn checkout http://share-extras.googlecode.com/svn/trunk/Site%20Tags%20Dashlet
-}}
+}}}
 
 Change into the new directory
 
@@ -44,7 +45,7 @@ use the `hotcopy-tomcat-jar task`. You will need to set the `tomcat.home`
 property in Ant.
 
 {{{
-ant -Dtomcat.home=C:/Alfresco/tomcat clean hotcopy-tomcat-jar
+ant -Dtomcat.home=C:/Alfresco/tomcat clean dist-jar hotcopy-tomcat-jar
 }}}
     
 Once you have run this you will need to restart Tomcat so that the classpath 
