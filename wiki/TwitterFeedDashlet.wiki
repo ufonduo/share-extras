@@ -6,7 +6,7 @@
 This project defines a custom dashlet that displays the ten most recent Tweets
 of any Twitter user within the dashlet.
 
-[http://share-extras.googlecode.com/svn/trunk/Site%20Poll%20Dashlet/screenshot.png http://share-extras.googlecode.com/svn/trunk/Site%20Poll%20Dashlet/screenshot-small.png]
+[http://share-extras.googlecode.com/svn/trunk/Twitter%20Feed%20Dashlet/screenshot.png]
 
 =Installation=
 
@@ -19,13 +19,13 @@ To install the dashlet, simply drop the `twitter-feed-dashlet.jar` file into the
 Check out the project if you have not already done so
 
 {{{
-svn checkout http://share-extras.googlecode.com/svn/trunk/Site%20Poll%20Dashlet
+svn checkout http://share-extras.googlecode.com/svn/trunk/Twitter%20Feed%20Dashlet
 }}}
 
 Change into the new directory
 
 {{{
-cd "Site Poll Dashlet"
+cd "Twitter Feed Dashlet"
 }}}
 
 An Ant build script is provided to build a JAR file containing the custom files, which can then be installed into the `tomcat/shared/lib` folder of your Alfresco installation.
