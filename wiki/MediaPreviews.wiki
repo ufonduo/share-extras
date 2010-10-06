@@ -1,0 +1,89 @@
+#summary Tag cloud dashlet displays all tags used in the site on the site dashboard as a tag cloud
+#labels Dashlet,Video
+
+=Introduction=
+
+This add-on project for Alfresco Share provides the ability to preview audio and video files within the Share user interface.
+
+Specifically the project provides enhancements to the web preview component to support Flash-based previews of audio and video content. The supplied configuration extends the repository thumbnailing capabilities to support H264/FLV thumbnails for video content and MP3 thumbnails for audio content, using [http://ffmpeg.org/ FFmpeg].
+
+The previews therefore do not require FFmpeg for some formats, but it is highly recommended to support the widest range of formats, and for thumbnail image generation.
+
+In addition to support for the additional media types in the Share Document Details screen, a custom site dashlet is provided, which can be configured to display a chosen video.
+
+http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshot.png
+
+=Installation=
+
+The dashlet is packaged as a single JAR file for easy installation into Alfresco Share.
+
+To install the dashlet, simply drop the `share-media-preview.jar` file into the `tomcat/shared/lib` folder within your Alfresco installation, and restart the application server. You might need to create this folder if it does not already exist.
+
+To enable FFmpeg support you must
+
+  # Install FFmpeg (with [http://www.videolan.org/developers/x264.html x264]) on the server
+  # Edit your `alfresco-global.properties file` to define the location of the FFmpeg executable and base directory (should not contain spaces)
+{{{
+ffmpeg.exe=<location of ffmpeg executable>
+ffmpeg.base=<location of ffmpeg base dir> (Windows only)
+}}}
+
+After you have deployed the JAR file you will need to restart Tomcat to ensure 
+it picks up the changes.
+
+Check the `alfresco.log` file while the repository is starting up for any 
+warnings or errors related to FFmpeg, if you have enabled it.
+
+=Building from Source=
+
+Check out the project if you have not already done so
+
+{{{
+svn checkout http://share-extras.googlecode.com/svn/trunk/Media%20Preview
+}}}
+
+Change into the new directory
+
+{{{
+cd "Media Preview"
+}}}
+
+An Ant build script is provided to build a JAR file containing the custom files, which can then be installed into the `tomcat/shared/lib` folder of your Alfresco installation.
+
+To build the JAR file, run the following command from the base project directory.
+
+{{{
+ant clean dist-jar
+}}}
+
+The command should build a JAR file named `share-media-preview.jar` in the `dist` directory within your project, which you can then copy into the `tomcat/shared/lib` folder of your Alfresco installation.
+
+Alternatively, you can use the build script to _hot deploy_ the JAR file directly into a local Tomcat instance for testing. You will need to use the `hotcopy-tomcat-jar task` and set the `tomcat.home`
+property in Ant.
+
+{{{
+ant -Dtomcat.home=C:/Alfresco/tomcat clean dist-jar hotcopy-tomcat-jar
+}}}
+
+After you have deployed the JAR file you will need to restart Tomcat to ensure it picks up the changes.
+
+See the _Installing_ section above for information on configuring FFmpeg.
+
+= Usage =
+
+==Using Video Previews==
+
+  # Upload a media file to Alfresco Share. Both MPEG-4 (`.mp4`) and Flash Video (`.flv`) video files are supported natively by the player. MP3 format audio files are supported natively by the audio preview component.
+  # Other common formats may be uploaded and will also be supported by the preview, provided that FFmpeg is available on the server to perform conversions.
+  # Once the file has been uploaded, navigate to the _Document Details_ page to see the preview.
+  # Where conversion is required the rendition generation will be triggered the first time the Document Details page is viewed. A message will be displayed on the page to indicate that conversion is in progress.
+  # In addition to converting media files to other formats, the previewer will also attempt to use FFmpeg to generate thumbnail images for display in the document library list view as well as within the Flash player as a splash image.
+
+==Using the Video Preview dashlet==
+
+  # Log in to Alfresco Share and navigate to a site dashboard.
+  # Click the _Customize Dashboard_ button to edit the contents of the dashboard and drag the dashlet into one of the columns from the list of dashlets.
+
+=Known Issues=
+
+  * In Internet Explorer 7, the Flash video previewer only displays correctly the first time a video is loaded. After this the preview displays only a black box with the white 'play' button within it, and no video content.
