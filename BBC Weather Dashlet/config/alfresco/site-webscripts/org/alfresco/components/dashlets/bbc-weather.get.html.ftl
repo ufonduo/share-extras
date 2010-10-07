@@ -4,7 +4,7 @@
    <div class="msg">
 	<#if observations?exists>
 	   <div class="summary">
-	   <span><img src="${url.context}/components/dashlets/ext/bbc-weather/${observations.conditions?replace(' ','-')?html}.png" alt="${observations.conditions?html}" /></span>
+	   <span><@weather_icon observations.conditions?trim /></span>
 	   <span class="temperature">${observations.temperature?html}</span>
 	   </div>
 	   <dl class="obs">
@@ -20,3 +20,26 @@
 	</div> <#-- end msg -->
 	</div> <#-- end body -->
 </div> <#-- end dashlet -->
+<#macro weather_icon conditions>
+   <#if conditions == "sunny">
+      <img src="${url.context}/res/components/dashlets/weather-icons/64x64/weather-clear.png" alt="${conditions?html}" />
+   <#elseif conditions == "sunny intervals">
+      <img src="${url.context}/res/components/dashlets/weather-icons/64x64/weather-few-clouds.png" alt="${conditions?html}" />
+   <#elseif conditions == "white cloud">
+      <img src="${url.context}/res/components/dashlets/weather-icons/64x64/weather-overcast.png" alt="${conditions?html}" />
+   <#elseif conditions == "grey cloud">
+      <img src="${url.context}/res/components/dashlets/weather-icons/64x64/weather-overcast.png" alt="${conditions?html}" />
+   <#elseif conditions == "light rain shower">
+      <img src="${url.context}/res/components/dashlets/weather-icons/64x64/weather-showers-scattered.png" alt="${conditions?html}" />
+   <#elseif conditions == "heavy rain shower">
+      <img src="${url.context}/res/components/dashlets/weather-icons/64x64/weather-showers.png" alt="${conditions?html}" />
+   <#elseif conditions == "heavy rain">
+      <img src="${url.context}/res/components/dashlets/weather-icons/64x64/weather-showers.png" alt="${conditions?html}" />
+   <#elseif conditions == "light rain">
+      <img src="${url.context}/res/components/dashlets/weather-icons/64x64/weather-showers-scattered.png" alt="${conditions?html}" />
+   <#elseif conditions == "heavy snow">
+      <img src="${url.context}/res/components/dashlets/weather-icons/64x64/weather-snow.png" alt="${conditions?html}" />
+   <#else>
+      ${conditions?html}
+   </#if>
+</#macro>
