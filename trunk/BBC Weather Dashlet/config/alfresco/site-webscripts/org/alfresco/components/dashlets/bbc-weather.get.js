@@ -1,7 +1,8 @@
 function main()
 {
     var s = new XML(config.script);
-    var locID = s.defaultLoc.toString();
+    var defaultLocation = parseInt(s.defaultLoc, 8); // London by default
+    var locID = (args.location != null) ? args.location : defaultLocation;
     var forecastUrl = s.forecastURL.toString().replace("{loc}", locID);
     var observationsUrl = s.observationsURL.toString().replace("{loc}", locID);
     
@@ -76,6 +77,8 @@ function main()
         status.message = "An error occurred fetching the observations page " + observationsUrl + " (status code obsResult.status)";
         status.redirect = true;
     }
+    
+    model.defaultLocation = defaultLocation;
 }
 
 main();
