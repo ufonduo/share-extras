@@ -103,12 +103,87 @@
       },
 
       /**
+       * Dashlet title DOM container.
+       * 
+       * @property title
+       * @type object
+       */
+      title: null,
+
+      /**
+       * Dashlet body DOM container.
+       * 
+       * @property body
+       * @type object
+       */
+      body: null,
+
+      /**
        * Fired by YUI when parent element is available for scripting
        * @method onReady
        */
       onReady: function BBCWeather_onReady()
       {
          Event.addListener(this.id + "-configure-link", "click", this.onConfigClick, this, true);
+         
+         // The dashlet title container
+         this.title = Dom.get(this.id + "-title");
+
+         // The dashlet body container
+         this.body = Dom.get(this.id + "-body");
+         
+         // Load the data
+         this.refreshData();
+      },
+
+      /**
+       * Load the weather data using an AJAX call
+       * @method refreshTimeline
+       */
+      refreshData: function BBCWeather_refreshData()
+      {
+         // Load the user timeline
+         Alfresco.util.Ajax.request(
+         {
+            url: Alfresco.constants.URL_SERVICECONTEXT + "components/dashlets/bbc-weather/data",
+            dataObj:
+            {
+               location: this.options.location
+            },
+            successCallback:
+            {
+               fn: this.onDataLoaded,
+               scope: this,
+               obj: null
+            },
+            failureCallback:
+            {
+               fn: this.onDataLoadFailed,
+               scope: this
+            },
+            scope: this,
+            noReloadOnAuthFailure: true
+         });
+      },
+      
+      /**
+       * Data loaded successfully
+       * @method onDataLoaded
+       * @param p_response {object} Response object from request
+       */
+      onDataLoaded: function BBCWeather_onDataLoaded(p_response, p_obj)
+      {
+         this.body.innerHTML = p_response.serverResponse.responseText;
+         this.title.innerHTML = this.msg("weather.title", this.options.location);
+      },
+
+      /**
+       * Data load failed
+       * @method onDataLoadFailed
+       */
+      onDataLoadFailed: function BBCWeather_onDataLoadFailed()
+      {
+         this.body.innerHTML = '<div class="detail-list-item first-item last-item">' + this.msg("label.error") + '</div>';
       },
 
       /**
@@ -137,8 +212,12 @@
                actionUrl: actionUrl,
                onSuccess:
                {
-                  fn: function BBCWeather_onConfigPoll_callback(e)
+                  fn: function BBCWeather_onConfig_callback(e)
                   {
+                     // Refresh the data
+                     var loc = Dom.get(this.configDialog.id + "-location").value;
+                     this.options.location = loc;
+                     this.refreshData();
                   },
                   scope: this
                },
