@@ -1,0 +1,5 @@
+<bbc-weather>
+   <forecastURL>http://newsrss.bbc.co.uk/weather/forecast/{loc}/Next3DaysRSS.xml</forecastURL>
+   <observationsURL>http://newsrss.bbc.co.uk/weather/forecast/{loc}/ObservationsRSS.xml</observationsURL>
+   <defaultLoc>8</defaultLoc> <!-- Default to London -->
+</bbc-weather>
