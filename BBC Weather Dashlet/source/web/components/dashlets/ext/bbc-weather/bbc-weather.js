@@ -143,18 +143,13 @@
       refreshData: function BBCWeather_refreshData()
       {
          // Load the user timeline
-         Alfresco.util.Ajax.request(
+         Alfresco.util.Ajax.jsonGet(
          {
-            url: Alfresco.constants.URL_SERVICECONTEXT + "components/dashlets/bbc-weather/data",
-            dataObj:
-            {
-               location: this.options.location
-            },
+            url: Alfresco.constants.URL_SERVICECONTEXT + "components/dashlets/bbc-weather/data?location=" + this.options.location,
             successCallback:
             {
                fn: this.onDataLoaded,
-               scope: this,
-               obj: null
+               scope: this
             },
             failureCallback:
             {
@@ -171,10 +166,33 @@
        * @method onDataLoaded
        * @param p_response {object} Response object from request
        */
-      onDataLoaded: function BBCWeather_onDataLoaded(p_response, p_obj)
+      onDataLoaded: function BBCWeather_onDataLoaded(p_response)
       {
-         this.body.innerHTML = p_response.serverResponse.responseText;
-         this.title.innerHTML = this.msg("weather.title", this.options.location);
+         // Retrieve the tags list from the JSON response and trim accordingly
+         var location = p_response.json.location,
+            observations = p_response.json.observations,
+            forecast = p_response.json.observations,
+            locName = location.name,
+            html = "";
+         
+         if (observations != null)
+         {
+            html = "<div class=\"msg\"><div class=\"summary\"><span>" + 
+            this._getWeatherIcon(observations.conditions) + "</span>" +
+            "<span class=\"temperature\">" + $html(observations.temperature) + "</span>" + "</div>" +
+            "<dl class=\"obs\"><dt>" + this.msg("obs.wind") + "</dt><dd>" + $html(observations.windSpeed) + ", " + $html(observations.windDir) + "</dd>" +
+            "<dt>" + this.msg("obs.humidity") + "</dt><dd>" + $html(observations.humidity) + "</dd>" +
+            "<dt>" + this.msg("obs.pressure") + "</dt><dd>" + $html(observations.pressure) + ", " + $html(observations.pressureTrend) + "</dd>" +
+            "<dt>" + this.msg("obs.visibility") + "</dt><dd>" + $html(observations.visibility) + "</dd>" +
+            "</dl><dt><p><em>" + this.msg("data.source") + " " + this.msg("data.updated", observations.pubDate).toString() + "</em></p></div>";
+         }
+         else
+         {
+            html = "<div class=\"msg\">" + this.msg("weather.noObs") + "</span>";
+         }
+
+         this.body.innerHTML = html;
+         this.title.innerHTML = this.msg("weather.location-title", locName);
       },
 
       /**
@@ -187,6 +205,59 @@
       },
 
       /**
+       * Convenience method for getting weather icon to use
+       * @method _getWeatherIcon
+       */
+      _getWeatherIcon: function BBCWeather__getWeatherIcon(conditions)
+      {
+         var img = null, title=this.msg("conditions." + conditions.replace(" ", "-", "g"));
+         
+         switch (conditions)
+         {
+         case "sunny":
+            img = "weather-clear.png";
+            break;
+         case "sunny intervals":
+            img = "weather-few-clouds.png";
+            break;
+         case "white cloud":
+            img = "weather-overcast.png";
+            break;
+         case "grey cloud":
+            img = "weather-overcast.png";
+            break;
+         case "light rain shower":
+            img = "weather-showers-scattered.png";
+            break;
+         case "heavy rain shower":
+            img = "weather-showers.png";
+            break;
+         case "light rain":
+            img = "weather-showers-scattered.png";
+            break;
+         case "heavy rain":
+            img = "weather-showers.png";
+            break;
+         case "heavy snow":
+            img = "weather-snow.png";
+            break;
+         }
+         
+         if (img != null)
+         {
+            return "<img src=\"" + Alfresco.constants.URL_CONTEXT + "res/components/dashlets/weather-icons/64x64/" + img + "\" alt=\"" + title + "\ title=\"" + title + "\" />";
+         }
+         else if (title != null)
+         {
+            return $html(title);
+         }
+         else
+         {
+            return $html(conditions);
+         }
+      },
+
+      /**
        * YUI WIDGET EVENT HANDLERS
        * Handlers for standard events fired from YUI widgets, e.g. "click"
        */
@@ -194,10 +265,10 @@
       /**
        * Configuration click handler
        *
-       * @method onConfigPollClick
+       * @method onConfigClick
        * @param e {object} HTML event
        */
-      onConfigClick: function BBCWeather_onConfigPollClick(e)
+      onConfigClick: function BBCWeather_onConfigClick(e)
       {
          var actionUrl = Alfresco.constants.URL_SERVICECONTEXT + "modules/dashlet/config/" + encodeURIComponent(this.options.componentId);
          

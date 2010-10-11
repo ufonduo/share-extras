@@ -28,14 +28,16 @@ function main()
 	        var rss = new XML(rssXml);
 	        var items = rss.channel.item.description.toString().split(", ");
 	        
-            var conditions = rss.channel.item.title.toString().split(": ")[1].split(".")[0];
-            var temp = items[0].split(": ")[1];
+           var conditions = rss.channel.item.title.toString().split(": ")[1].split(".")[0];
+           var temp = items[0].split(": ")[1];
+           
+           var geons = new Namespace('http://www.w3.org/2003/01/geo/wgs84_pos#');
 	        
 	        model.location = {
 	           "id": locID,
 	           "name": rss.channel.title.toString().split(" Latest Observations for ")[1],
                "observationsURL": rss.channel.item.link.toString(),
-               "forecastURL": "",
+               "forecastURL": ""
 	        };
 	        
 	        model.observations = {
@@ -47,22 +49,10 @@ function main()
                "pressure": items[4].split(": ")[1],
                "pressureTrend": items[5],
                "visibility": items[6].split(": ")[1],
-               "pubDate": rss.channel.pubDate.toString()
+               "pubDate": new Date(rss.channel.pubDate.toString()),
+               "lat": rss.channel.item["geons::lat"].toString(),
+               "lon": rss.channel.item["geons::long"].toString()
 	        };
-	        
-	        /*
-	        var item, obj;
-	        for each (item in rss.channel..item)
-	        {
-	           obj = {
-	              "title": item.title.toString(),
-	              "description": item.description.toString(),
-	              "link": item.link.toString()
-	           };
-	           
-	           model.items.push(obj);
-	        }
-	        */
         }
 	    else
 	    {
@@ -74,7 +64,7 @@ function main()
     else
     {
         status.code = 500;
-        status.message = "An error occurred fetching the observations page " + observationsUrl + " (status code obsResult.status)";
+        status.message = "An error occurred fetching the observations page " + observationsUrl + " (status code " + obsResult.status + ")";
         status.redirect = true;
     }
 }

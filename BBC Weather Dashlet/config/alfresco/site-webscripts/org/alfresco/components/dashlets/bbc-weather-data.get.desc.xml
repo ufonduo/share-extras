@@ -2,4 +2,5 @@
    <shortname>BBC Weather Data</shortname>
    <description>Displays current conditions and three-day forecast for a UK location - data webscript</description>
    <url>/components/dashlets/bbc-weather/data</url>
+   <format default="json">extension</format>
 </webscript>
