@@ -25,11 +25,11 @@
    "forecast" :
    <#if forecast?exists>
    {
-      "days" :
+      "items" :
       [
          <#list forecast.days as day>
          {
-           "day": "${day.day}",
+           "date": "${day.day}",
            "conditions": "${day.conditions}",
            "maxTemp": "${day.maxTemp}",
            "minTemp": "${day.minTemp}",

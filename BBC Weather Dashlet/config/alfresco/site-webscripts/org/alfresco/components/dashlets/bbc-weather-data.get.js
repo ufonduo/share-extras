@@ -94,10 +94,10 @@ function main()
            {
               var titems = days[i].title.toString().split(", "); // conditions, max temp, min temp
               var ditems = days[i].description.toString().split(", "); // max temp, min temp, wind dir, wind speed, vis, press, humidity, UV risk, pollution, sunrise, sunset
-              var conditions = titems[0].split(": ")[1], maxTemp = titems[1], minTemp = titems[2];
+              var conditions = titems[0].split(": ")[1], maxTemp = titems[1].split(": ")[1], minTemp = titems[2].split(": ")[1];
               var pubDate = new Date(rss.channel.pubDate.toString());
               var guidItem = days[i].guid.substring(days[i].guid.lastIndexOf("/") + 1);
-              var itemDate = guidItem.substring(guidItem.indexOf(":") + 1); //TODO make this a real date
+              var itemDate = guidItem.substring(guidItem.indexOf(":") + 1, guidItem.indexOf("T"));
               
               fcItems[i] =
                     {
