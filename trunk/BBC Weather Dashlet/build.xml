@@ -39,6 +39,7 @@
     <property name="build.res.includes" value="**/*.*" />
     <property name="build.res.excludes" value="" />
     <property name="build.res.dir.name" value="ROOT/share-extension" />
+	 <property name="res.path" value="res/"/>
     <property name="post.verbose" value="false" />
     <property name="webapp.alfresco.path" value="/alfresco" />
     <property name="webapp.share.path" value="/share" />
@@ -109,18 +110,33 @@
     <target name="build-jar" description="Assemble configuration and resource files in a JAR file structure">
         <mkdir dir="${build.jar.dir}" />
         <copy todir="${build.jar.dir}" includeEmptyDirs="false">
-            <fileset dir="${config.dir}" includes="${config.includes}" excludes="${config.excludes}" >
+            <fileset dir="${config.dir}" excludes="**/*.js,**/*.ftl" >
                 <exclude name="alfresco/web-extension/custom-slingshot-application-context.xml" />
                 <exclude name="alfresco/web-extension/share-config-custom.xml" />
-                <exclude name="${config.excludes}" />
+                <exclude name="**/*.js,**/*.ftl" />
             </fileset>
+            <filterset>
+              <filter token="res.path" value="${res.path}"/>
+            </filterset>
         </copy>
+      <copy todir="${build.jar.dir}" includeEmptyDirs="false">
+          <fileset dir="${config.dir}" includes="**/*.js,**/*.ftl" />
+          <filterset>
+            <filter token="res.path" value="${res.path}"/>
+          </filterset>
+      </copy>
         <mkdir dir="${build.jar.dir}/META-INF" />
         <copy todir="${build.jar.dir}/META-INF" includeEmptyDirs="false">
-            <fileset dir="${res.dir}" includes="${build.res.includes}" excludes="${build.res.excludes}" />
+            <fileset dir="${res.dir}" excludes="**/*.js,**/*.css" />
         </copy>
+      <copy todir="${build.jar.dir}/META-INF" includeEmptyDirs="false">
+          <fileset dir="${res.dir}" includes="**/*.js,**/*.css" />
+          <filterset>
+            <filter token="res.path" value="${res.path}"/>
+          </filterset>
+      </copy>
         <!-- Minify JS -->
-        <yuicompress fromdir="${res.dir}" todir="${build.jar.dir}/META-INF" >
+        <yuicompress warn="false" fromdir="${build.jar.dir}/META-INF" todir="${build.jar.dir}/META-INF" >
            <include name="**/*.js" />
         </yuicompress>
     </target>
@@ -160,8 +176,14 @@
       description="Assemble the configuration and resource files for a Tomcat deployment structure">
       <!-- Copy web assets -->
         <copy todir="${build.zip.dir}/webapps/${build.res.dir.name}">
-            <fileset dir="${res.dir}" includes="${build.res.includes}" excludes="${build.res.excludes}" />
+            <fileset dir="${res.dir}" excludes="**/*.js,**/*.css" />
         </copy>
+      <copy todir="${build.zip.dir}/webapps/${build.res.dir.name}">
+          <fileset dir="${res.dir}" includes="**/*.js,**/*.css" />
+          <filterset>
+            <filter token="res.path" value="" />
+          </filterset>
+      </copy>
         <!-- Minifies JS -->
        <yuicompress fromdir="${res.dir}" todir="${build.zip.dir}/webapps/${build.res.dir.name}" >
                  <include name="**/*.js" />
@@ -175,22 +197,42 @@
 
     <target name="build-zip-shared">
         <copy todir="${build.zip.dir}/shared/classes">
-            <fileset dir="${config.dir}" includes="${config.includes}" excludes="${config.excludes}">
+            <fileset dir="${config.dir}" excludes="**/*.ftl,**/*.js">
                 <or>
                   <filename name="alfresco/web-extension/**"/>
                     <filename name="alfresco/extension/**"/>
                 </or>
             </fileset>
         </copy>
+      <copy todir="${build.zip.dir}/shared/classes">
+          <fileset dir="${config.dir}" includes="**/*.ftl,**/*.js">
+              <or>
+                <filename name="alfresco/web-extension/**"/>
+                  <filename name="alfresco/extension/**"/>
+              </or>
+          </fileset>
+          <filterset>
+            <filter token="res.path" value=""/>
+          </filterset>
+      </copy>
     </target>
 
     <target name="build-zip-shared-translate" if="build.zip.config.translate">
         <copy todir="${build.zip.dir}/shared/classes">
             <globmapper from="alfresco/site-*" to="alfresco/web-extension/site-*" handledirsep="true" />
-            <fileset dir="${config.dir}" includes="${config.includes}" excludes="${config.excludes}">
+            <fileset dir="${config.dir}" excludes="**/*.ftl,**/*.js">
                 <filename name="alfresco/site-*/**"/>
             </fileset>
         </copy>
+      <copy todir="${build.zip.dir}/shared/classes">
+          <globmapper from="alfresco/site-*" to="alfresco/web-extension/site-*" handledirsep="true" />
+          <fileset dir="${config.dir}" includes="**/*.ftl,**/*.js">
+              <filename name="alfresco/site-*/**"/>
+          </fileset>
+          <filterset>
+            <filter token="res.path" value=""/>
+          </filterset>
+      </copy>
     </target>
     
     <!-- Build the Tomcat ZIP file -->
@@ -231,14 +273,26 @@
       <!-- Copy config files -->
         <mkdir dir="${build.amp.dir}/config" />
         <copy todir="${build.amp.dir}/config">
-            <fileset dir="${config.dir}" includes="${config.includes}" excludes="${config.excludes}" />
+            <fileset dir="${config.dir}" excludes="**/*.ftl" />
         </copy>
+      <copy todir="${build.amp.dir}/config">
+          <fileset dir="${config.dir}" includes="**/*.ftl" />
+          <filterset>
+            <filter token="res.path" value=""/>
+          </filterset>
+      </copy>
       
       <!-- Copy resource files -->
         <mkdir dir="${build.amp.dir}/web" />
         <copy todir="${build.amp.dir}/web">
-            <fileset dir="${res.dir}" includes="${build.res.includes}" excludes="${build.res.excludes}" />
+            <fileset dir="${res.dir}" excludes="**/*.js,**/*.css" />
         </copy>
+      <copy todir="${build.amp.dir}/web">
+          <fileset dir="${res.dir}" includes="**/*.js,**/*.css" />
+          <filterset>
+            <filter token="res.path" value=""/>
+          </filterset>
+      </copy>
 
        <!-- Minify JS -->
        <yuicompress fromdir="${res.dir}" todir="${build.amp.dir}/web" >
