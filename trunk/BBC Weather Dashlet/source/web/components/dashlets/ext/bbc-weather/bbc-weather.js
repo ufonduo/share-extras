@@ -171,20 +171,31 @@
          // Retrieve the tags list from the JSON response and trim accordingly
          var location = p_response.json.location,
             observations = p_response.json.observations,
-            forecast = p_response.json.observations,
+            forecast = p_response.json.forecast,
             locName = location.name,
             html = "";
          
          if (observations != null)
          {
-            html = "<div class=\"msg\"><div class=\"summary\"><span>" + 
-            this._getWeatherIcon(observations.conditions) + "</span>" +
-            "<span class=\"temperature\">" + $html(observations.temperature) + "</span>" + "</div>" +
+            html = "<div class=\"summary\"><span>" + 
+            this._getWeatherIcon(observations.conditions, 64) + "</span>" +
+            "<span class=\"temp-current\">" + $html(observations.temperature) + "</span>" + "</div>" +
             "<dl class=\"obs\"><dt>" + this.msg("obs.wind") + "</dt><dd>" + $html(observations.windSpeed) + ", " + $html(observations.windDir) + "</dd>" +
             "<dt>" + this.msg("obs.humidity") + "</dt><dd>" + $html(observations.humidity) + "</dd>" +
             "<dt>" + this.msg("obs.pressure") + "</dt><dd>" + $html(observations.pressure) + ", " + $html(observations.pressureTrend) + "</dd>" +
             "<dt>" + this.msg("obs.visibility") + "</dt><dd>" + $html(observations.visibility) + "</dd>" +
-            "</dl><p><em>" + this.msg("data.source") + " " + this.msg("data.updated", observations.pubDate).toString() + "</em></p></div>";
+            "</dl>" + 
+            "<div class=\"forecast\">";
+            for ( var i = 0; i < forecast.items.length; i++)
+            {
+               var item = forecast.items[i], itemDate = new Date(item.date.substring(0,4),item.date.substring(5,7)-1,item.date.substring(8,10));
+               html += "<div class=\"forecast-item\">" + 
+               "<div class=\"date\">" + itemDate.toDateString().substring(0,3) + ":</div><div class=\"conditions\">" + this._getWeatherIcon(item.conditions, 32) + "</div>" + 
+               "<div class=\"temp-max\">" + item.maxTemp + "</div>" + "<div class=\"temp-min\">" + item.minTemp + "</div>" +
+               "<div class=\"clear\"></div></div>";
+            }
+            html += "</div>" +
+            "<div class=\"info\">" + this.msg("data.source") + " " + this.msg("data.updated", observations.pubDate).toString() + "</div>";
          }
          else
          {
@@ -208,7 +219,7 @@
        * Convenience method for getting weather icon to use
        * @method _getWeatherIcon
        */
-      _getWeatherIcon: function BBCWeather__getWeatherIcon(conditions)
+      _getWeatherIcon: function BBCWeather__getWeatherIcon(conditions, size)
       {
          var img = null, title=this.msg("conditions." + conditions.replace(" ", "-", "g"));
          
@@ -218,6 +229,9 @@
             img = "weather-clear.png";
             break;
          case "sunny intervals":
+            img = "weather-few-clouds.png";
+            break;
+         case "partly cloudy":
             img = "weather-few-clouds.png";
             break;
          case "white cloud":
@@ -232,6 +246,9 @@
          case "heavy rain shower":
             img = "weather-showers.png";
             break;
+         case "drizzle":
+            img = "weather-showers-scattered.png";
+            break;
          case "light rain":
             img = "weather-showers-scattered.png";
             break;
@@ -245,7 +262,7 @@
          
          if (img != null)
          {
-            return "<img src=\"" + Alfresco.constants.URL_CONTEXT + "@res.path@components/dashlets/weather-icons/64x64/" + img + "\" alt=\"" + title + "\" title=\"" + title + "\" />";
+            return "<img src=\"" + Alfresco.constants.URL_CONTEXT + "@res.path@components/dashlets/weather-icons/" + size + "x" + size + "/" + img + "\" alt=\"" + title + "\" title=\"" + title + "\" />";
          }
          else if (title != null)
          {
