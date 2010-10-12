@@ -136,7 +136,7 @@
           </filterset>
       </copy>
         <!-- Minify JS -->
-        <yuicompress warn="false" fromdir="${build.jar.dir}/META-INF" todir="${build.jar.dir}/META-INF" >
+        <yuicompress warn="false" fromdir="${build.jar.dir}/META-INF" todir="${build.jar.dir}/META-INF" excludes="**/*-min.js" >
            <include name="**/*.js" />
         </yuicompress>
     </target>
@@ -185,7 +185,7 @@
           </filterset>
       </copy>
         <!-- Minifies JS -->
-       <yuicompress fromdir="${res.dir}" todir="${build.zip.dir}/webapps/${build.res.dir.name}" >
+       <yuicompress warn="false" fromdir="${build.zip.dir}/webapps/${build.res.dir.name}" todir="${build.zip.dir}/webapps/${build.res.dir.name}" excludes="**/*-min.js" >
                  <include name="**/*.js" />
          </yuicompress>
     </target>
@@ -199,16 +199,14 @@
         <copy todir="${build.zip.dir}/shared/classes">
             <fileset dir="${config.dir}" excludes="**/*.ftl,**/*.js">
                 <or>
-                  <filename name="alfresco/web-extension/**"/>
-                    <filename name="alfresco/extension/**"/>
+                  <filename name="alfresco/**"/>
                 </or>
             </fileset>
         </copy>
       <copy todir="${build.zip.dir}/shared/classes">
           <fileset dir="${config.dir}" includes="**/*.ftl,**/*.js">
               <or>
-                <filename name="alfresco/web-extension/**"/>
-                  <filename name="alfresco/extension/**"/>
+              	<filename name="alfresco/**"/>
               </or>
           </fileset>
           <filterset>
@@ -295,7 +293,7 @@
       </copy>
 
        <!-- Minify JS -->
-       <yuicompress fromdir="${res.dir}" todir="${build.amp.dir}/web" >
+       <yuicompress warn="false" fromdir="${build.amp.dir}/web" todir="${build.amp.dir}/web" excludes="**/*-min.js" >
           <include name="**/*.js" />
        </yuicompress>
     </target>
