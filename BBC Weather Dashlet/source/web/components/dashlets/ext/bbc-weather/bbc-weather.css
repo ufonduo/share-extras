@@ -1,24 +1,27 @@
-.bbc-weather-dashlet .temperature {
-	font-size: 2em;
-   line-height: 2em;
-   border: 1px solid #E9E9E9;
-   padding: 0.5em;
+.bbc-weather-dashlet .temp-current, .bbc-weather-dashlet .temp-max, .bbc-weather-dashlet .temp-min {
+   padding: 0.25em;
+   border-radius: 0.25em;
+   -moz-border-radius: 0.25em;
+   text-align: center;
+}
+
+.bbc-weather-dashlet .temp-current {
+   font-size: 2em;
+   background-color: #f0f0f0;
 }
 
 .bbc-weather-dashlet .summary {
-   padding-bottom: 0.5em;
-   margin-bottom: 0.5em;
+   padding-bottom: 0 1em 0 1em;
    border-bottom:1px dashed #E9E9E9;
 }
 
 .bbc-weather-dashlet img {
-	vertical-align: top;
-	padding: 0 1em;
+	vertical-align: middle;
+	padding-right: 1em;
 }
 
 .bbc-weather-dashlet dl {
-   padding-bottom: 0.5em;
-   margin-bottom: 0.5em;
+   padding: 0.5em 1em;
    border-bottom:1px dashed #E9E9E9;
 }
 
@@ -32,4 +35,43 @@
 .bbc-weather-dashlet dd {
    margin-left: 5.5em;
    min-height: 1.2em;
+}
+
+.bbc-weather-dashlet .forecast {
+   padding: 1em;
+   border-bottom:1px dashed #E9E9E9;
+}
+
+.bbc-weather-dashlet .forecast-item {
+}
+
+.bbc-weather-dashlet .forecast-item .date {
+   float: left;
+   font-weight: bold;
+   text-align: right;
+   width: 4em;
+   padding-right: 0.5em;
+   vertical-align: middle;
+}
+
+.bbc-weather-dashlet .forecast-item .conditions {
+   float: left;
+}
+
+.bbc-weather-dashlet .temp-max {
+   background-color: #fff88a;
+   float: left;
+   width: 3em;
+}
+
+.bbc-weather-dashlet .temp-min {
+   background-color: #b3ceff;
+   float: left;
+   width: 3em;
+   margin-left: 1em;
+}
+
+.bbc-weather-dashlet .info {
+	color: #999999;
+   padding: 0.5em 1em;
 }
