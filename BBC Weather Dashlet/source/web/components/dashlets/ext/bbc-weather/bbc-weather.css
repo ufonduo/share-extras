@@ -1,21 +1,35 @@
 .bbc-weather-dashlet .temperature {
 	font-size: 2em;
    line-height: 2em;
+   border: 1px solid #E9E9E9;
+   padding: 0.5em;
 }
 
 .bbc-weather-dashlet .summary {
-	margin-bottom: 0.5em;
+   padding-bottom: 0.5em;
+   margin-bottom: 0.5em;
+   border-bottom:1px dashed #E9E9E9;
 }
 
 .bbc-weather-dashlet img {
 	vertical-align: top;
+	padding: 0 1em;
+}
+
+.bbc-weather-dashlet dl {
+   padding-bottom: 0.5em;
+   margin-bottom: 0.5em;
+   border-bottom:1px dashed #E9E9E9;
 }
 
 .bbc-weather-dashlet dt {
    float: left;
-   padding-right: 0.3em;
+   font-weight: bold;
+   text-align: right;
+   width: 5em;
 }
 
 .bbc-weather-dashlet dd {
-   color: #333333;
+   margin-left: 5.5em;
+   min-height: 1.2em;
 }
