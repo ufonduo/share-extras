@@ -3,7 +3,7 @@
    {
       siteId: "${page.url.templateArgs.site!""}",
       componentId: "${instance.object.id}",
-      location: <#if args.location?? && args.location?number gt 0>${args.location?number?c}<#else>${defaultLocation?c}</#if>
+      location: <#if args.location?? && args.location?number gt 0>${args.location?number?c}<#else>${defaultLocation?number?c}</#if>
    }).setMessages(
       ${messages}
    );

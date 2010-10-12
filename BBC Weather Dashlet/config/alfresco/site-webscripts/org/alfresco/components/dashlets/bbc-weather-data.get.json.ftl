@@ -22,5 +22,32 @@
    <#else>
    null,
    </#if>
-   "forecast" : null
+   "forecast" :
+   <#if forecast?exists>
+   {
+      "days" :
+      [
+         <#list forecast.days as day>
+         {
+           "day": "${day.day}",
+           "conditions": "${day.conditions}",
+           "maxTemp": "${day.maxTemp}",
+           "minTemp": "${day.minTemp}",
+           "windDir": "${day.windDir}",
+           "windSpeed": "${day.windSpeed}",
+           "humidity": "${day.humidity}",
+           "pressure": "${day.pressure}",
+           "visibility": "${day.visibility}",
+           "uvRisk": "${day.uvRisk}",
+           "pollution": "${day.pollution}",
+           "sunrise": "${day.sunrise}",
+           "sunset": "${day.sunset}"
+         }<#if day_has_next>,</#if>
+         </#list>
+      ],
+      "pubDate" : "${forecast.pubDate?datetime?string("EEE, dd MMM yyyy HH:mm:ss z")}"
+   }
+   <#else>
+   null
+   </#if>
 }
