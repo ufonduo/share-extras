@@ -184,7 +184,7 @@
             "<dt>" + this.msg("obs.humidity") + "</dt><dd>" + $html(observations.humidity) + "</dd>" +
             "<dt>" + this.msg("obs.pressure") + "</dt><dd>" + $html(observations.pressure) + ", " + $html(observations.pressureTrend) + "</dd>" +
             "<dt>" + this.msg("obs.visibility") + "</dt><dd>" + $html(observations.visibility) + "</dd>" +
-            "</dl><dt><p><em>" + this.msg("data.source") + " " + this.msg("data.updated", observations.pubDate).toString() + "</em></p></div>";
+            "</dl><p><em>" + this.msg("data.source") + " " + this.msg("data.updated", observations.pubDate).toString() + "</em></p></div>";
          }
          else
          {
@@ -245,7 +245,7 @@
          
          if (img != null)
          {
-            return "<img src=\"" + Alfresco.constants.URL_CONTEXT + "res/components/dashlets/weather-icons/64x64/" + img + "\" alt=\"" + title + "\ title=\"" + title + "\" />";
+            return "<img src=\"" + Alfresco.constants.URL_CONTEXT + "res/components/dashlets/weather-icons/64x64/" + img + "\" alt=\"" + title + "\" title=\"" + title + "\" />";
          }
          else if (title != null)
          {
