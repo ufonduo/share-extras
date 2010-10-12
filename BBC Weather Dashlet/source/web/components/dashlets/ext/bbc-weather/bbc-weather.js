@@ -245,7 +245,7 @@
          
          if (img != null)
          {
-            return "<img src=\"" + Alfresco.constants.URL_CONTEXT + "res/components/dashlets/weather-icons/64x64/" + img + "\" alt=\"" + title + "\" title=\"" + title + "\" />";
+            return "<img src=\"" + Alfresco.constants.URL_CONTEXT + "@res.path@components/dashlets/weather-icons/64x64/" + img + "\" alt=\"" + title + "\" title=\"" + title + "\" />";
          }
          else if (title != null)
          {
