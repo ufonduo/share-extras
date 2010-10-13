@@ -1,7 +1,7 @@
 function main()
 {
    var s = new XML(config.script), matches = [];
-   for each (place in s.places.place.(@name.indexOf(args.query)==0)) // List of places matching the query term
+   for each (place in s.places.place.(@name.toLowerCase().indexOf(args.query.toLowerCase())==0)) // List of places matching the query term
    {
       matches.push({
          "id" : parseInt(place.@location.toString()),
