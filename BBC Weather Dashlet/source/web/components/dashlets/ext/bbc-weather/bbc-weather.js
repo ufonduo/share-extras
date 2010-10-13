@@ -370,7 +370,7 @@
                          // update hidden form field with the selected item's ID
                          lid.value = oData.id;
                          
-                         myAC.getInputEl().value = oData.display; 
+                         myAC.getInputEl().value = oData.display ? oData.display : oData.name; 
                      };
                      oAC.itemSelectEvent.subscribe(myHandler);
                   },
