@@ -268,6 +268,9 @@
          case "heavy snow":
             img = "weather-snow.png";
             break;
+         case "clear sky":
+            img = "weather-clear-night.png";
+            break;
          }
          
          if (img != null)
