@@ -59,7 +59,7 @@
     */
    Alfresco.dashlet.BBCWeather = function BBCWeather_constructor(htmlId)
    {
-      return Alfresco.dashlet.BBCWeather.superclass.constructor.call(this, "Alfresco.dashlet.BBCWeather", htmlId);
+      return Alfresco.dashlet.BBCWeather.superclass.constructor.call(this, "Alfresco.dashlet.BBCWeather", htmlId, ["button", "container", "datatable", "datasource", "autocomplete"]);
    };
 
    /**
@@ -91,6 +91,15 @@
           * @default 0
           */
          location: 0,
+      
+         /**
+          * The location name of the forecast to show
+          *
+          * @property locationName
+          * @type string
+          * @default ""
+          */
+         locationName: "",
 
          /**
           * ID of the current site
@@ -172,8 +181,9 @@
          var location = p_response.json.location,
             observations = p_response.json.observations,
             forecast = p_response.json.forecast,
-            locName = location.name,
             html = "";
+         
+         this.options.locationName = location.name;
          
          if (observations != null)
          {
@@ -203,7 +213,7 @@
          }
 
          this.body.innerHTML = html;
-         this.title.innerHTML = this.msg("weather.location-title", locName);
+         this.title.innerHTML = this.msg("weather.location-title", this.options.locationName);
       },
 
       /**
@@ -303,7 +313,7 @@
                   fn: function BBCWeather_onConfig_callback(e)
                   {
                      // Refresh the data
-                     var loc = Dom.get(this.configDialog.id + "-location").value;
+                     var loc = Dom.get(this.configDialog.id + "-location-id").value;
                      this.options.location = loc;
                      this.refreshData();
                   },
@@ -313,11 +323,53 @@
                {
                   fn: function BBCWeather_doSetupForm_callback(form)
                   {
-                     var select = Dom.get(this.configDialog.id + "-location");
-                     if (select != null)
+                     var l = Dom.get(this.configDialog.id + "-location");
+                     if (l != null)
                      {
-                        select.value = this.options.location;
+                        l.value = this.options.locationName;
                      }
+                     var lid = Dom.get(this.configDialog.id + "-location-id");
+                     if (lid != null)
+                     {
+                        lid.value = this.options.location;
+                     }
+                     
+                     // Use a XHRDataSource
+                     var oDS = new YAHOO.util.XHRDataSource(Alfresco.constants.URL_SERVICECONTEXT + "modules/dashlets/bbc-weather/locations");
+                     // Set the responseType
+                     oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSARRAY;
+                     oDS.responseSchema = {fields : ["id", "name", "display"]};
+
+                     // Instantiate the AutoComplete
+                     var oAC = new YAHOO.widget.AutoComplete(this.configDialog.id + "-location", this.configDialog.id + "-location-names", oDS);
+                     oAC.useShadow = true;
+                     oAC.resultTypeList = false;
+                     
+                     // Custom formatter
+                     oAC.formatResult = function(oResultData, sQuery, sResultMatch) {
+                        if (oResultData.display)
+                        {
+                           return oResultData.display;
+                        }
+                        else
+                        {
+                           return oResultData.name
+                        }
+                     };
+                     
+                     // Define an event handler to populate a hidden form field
+                     // when an item gets selected
+                     var myHandler = function(sType, aArgs) {
+                         var myAC = aArgs[0]; // reference back to the AC instance
+                         var elLI = aArgs[1]; // reference to the selected LI element
+                         var oData = aArgs[2]; // object literal of selected item's result data
+                         
+                         // update hidden form field with the selected item's ID
+                         lid.value = oData.id;
+                         
+                         myAC.getInputEl().value = oData.display; 
+                     };
+                     oAC.itemSelectEvent.subscribe(myHandler);
                   },
                   scope: this
                }

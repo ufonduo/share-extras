@@ -5,12 +5,9 @@
          <div class="yui-gd">
             <div class="yui-u first"><label for="${args.htmlid}-location">${msg("label.location")}:</label></div>
             <div class="yui-u">
-               <select name="location" id="${args.htmlid}-location" style="width: 30em;">
-                  <option value="2">Birmingham, West Midlands</option>
-                  <option value="8">London, Greater London</option>
-                  <option value="2576">London Heathrow, Greater London</option>
-                  <option value="4297">Maidenhead, Berkshire</option>
-               </select>
+               <input type="text" name="locname" style="width: 30em;" id="${args.htmlid}-location" />
+               <div id="${args.htmlid}-location-names"></div>
+               <input type="hidden" name="location" id="${args.htmlid}-location-id" />
             </div>
          </div>
          <div class="bdft">
