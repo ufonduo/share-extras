@@ -231,7 +231,7 @@
        */
       _getWeatherIcon: function BBCWeather__getWeatherIcon(conditions, size)
       {
-         var img = null, title=this.msg("conditions." + conditions.replace(" ", "-", "g"));
+         var img = null, msgid = "conditions." + conditions.replace(" ", "-", "g"), title=this.msg(msgid);
          
          switch (conditions)
          {
@@ -275,15 +275,15 @@
          
          if (img != null)
          {
-            return "<img src=\"" + Alfresco.constants.URL_CONTEXT + "@res.path@components/dashlets/weather-icons/" + size + "x" + size + "/" + img + "\" alt=\"" + title + "\" title=\"" + title + "\" />";
+            return "<img src=\"" + Alfresco.constants.URL_CONTEXT + "@res.path@components/dashlets/weather-icons/" + size + "x" + size + "/" + img + "\" width=\"" + size + "\" height=\"" + size + "\" alt=\"" + title + "\" title=\"" + title + "\" />";
          }
-         else if (title != null)
+         else if (title != msgid)
          {
-            return $html(title);
+            return "<span class=\"conditions\">" + $html(title) + "</span>";
          }
          else
          {
-            return $html(conditions);
+            return "<span class=\"conditions\">" + $html(conditions) + "</span>";
          }
       },
 

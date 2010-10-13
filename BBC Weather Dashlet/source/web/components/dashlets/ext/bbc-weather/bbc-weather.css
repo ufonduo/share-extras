@@ -15,9 +15,14 @@
    border-bottom:1px dashed #E9E9E9;
 }
 
-.bbc-weather-dashlet img {
+.bbc-weather-dashlet img, .bbc-weather-dashlet .summary .conditions {
 	vertical-align: middle;
 	padding-right: 1em;
+	font-size: 2em;
+}
+
+.bbc-weather-dashlet .summary .conditions {
+	height: 3em;
 }
 
 .bbc-weather-dashlet dl {
