@@ -99,21 +99,29 @@ function main()
               var guidItem = days[i].guid.substring(days[i].guid.lastIndexOf("/") + 1);
               var itemDate = guidItem.substring(guidItem.indexOf(":") + 1, guidItem.indexOf("T"));
               
+              var dobj = {};
+              
+              for (var j = 0; j < ditems.length; j++)
+               {
+                  var pair = ditems[j].split(": ");
+                  dobj[pair[0]] = pair[1];
+               }
+              
               fcItems[i] =
                     {
                        "day": itemDate,
                        "conditions": conditions,
                        "maxTemp": maxTemp.substring(0, maxTemp.indexOf(" ")), // Temp in celcuis for now
                        "minTemp": minTemp.substring(0, minTemp.indexOf(" ")),
-                       "windDir": ditems[2].split(": ")[1],
-                       "windSpeed": ditems[3].split(": ")[1],
-                       "humidity": ditems[6].split(": ")[1],
-                       "pressure": ditems[5].split(": ")[1],
-                       "visibility": ditems[4].split(": ")[1],
-                       "uvRisk": ditems[7].split(": ")[1],
-                       "pollution": ditems[8].split(": ")[1],
-                       "sunrise": ditems[9].split(": ")[1],
-                       "sunset": ditems[10].split(": ")[1]
+                       "windDir": dobj["Wind Direction"] ? dobj["Wind Direction"] : "",
+                       "windSpeed": dobj["Wind Speed"] ? dobj["Wind Speed"] : "",
+                       "humidity": dobj["Humidity"] ? dobj["Humidity"] : "",
+                       "pressure": dobj["Pressure"] ? dobj["Pressure"] : "",
+                       "visibility": dobj["Visibility"] ? dobj["Visibility"] : "",
+                       "uvRisk": dobj["UV risk"] ? dobj["UV risk"] : "",
+                       "pollution": dobj["Pollution"] ? dobj["Pollution"] : "",
+                       "sunrise": dobj["Sunrise"] ? dobj["Sunrise"] : "",
+                       "sunset": dobj["Sunset"] ? dobj["Sunset"] : ""
                     };
            }
            
