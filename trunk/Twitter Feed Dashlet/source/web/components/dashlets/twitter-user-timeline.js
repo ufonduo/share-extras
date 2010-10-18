@@ -43,12 +43,6 @@
    var $html = Alfresco.util.encodeHTML,
       $combine = Alfresco.util.combinePaths;
 
-   /**
-    * Preferences
-    */
-   var PREFERENCES_DASHLET = "org.alfresco.share.dashlet",
-      PREF_SITE_TAGS_FILTER = PREFERENCES_DASHLET + ".TwitterUserTimelineFilter";
-
 
    /**
     * Dashboard TwitterUserTimeline constructor.
