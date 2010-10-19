@@ -3,7 +3,7 @@
 =Introduction=
 
 This add-on project for Alfresco Share defines a simple dashlet to display 
-displays current weather observations from the BBC.
+current weather observations and a three day forecast for over 9,000 locations across the world. Data is sourced from the [http://backstage.bbc.co.uk/data/WeatherFeeds BBC Weather RSS feeds].
 
 [http://share-extras.googlecode.com/svn/trunk/BBC%20Weather%20Dashlet/screenshot.png]
 
