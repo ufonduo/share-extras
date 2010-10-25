@@ -5,9 +5,11 @@
 {
    min-height: 2em;
 }
-.twitter-user-timeline h4
+.twitter-user-timeline h4, .twitter-user-timeline p
 {
    margin-bottom: 0.25em;
+   margin-top: 0;
+   padding-top:0;
 }
 .twitter-user-timeline div.tweet-details
 {
@@ -20,4 +22,16 @@
 .twitter-user-timeline div.tweet-details a:visited
 {
    color: #999999;
+}
+.twitter-user-timeline .list-tweet
+{
+   clear: both;
+}
+.twitter-user-timeline .list-tweet .tweet
+{
+	margin-left: 58px;
+}
+.twitter-user-timeline .list-tweet .user-icon
+{
+   float: left;
 }
