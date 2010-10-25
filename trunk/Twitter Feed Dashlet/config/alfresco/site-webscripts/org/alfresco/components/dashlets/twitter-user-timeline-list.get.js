@@ -5,7 +5,7 @@ function main()
    if (u.indexOf("/") > 0)
    {
       var uparts = u.split("/");
-      var theUrl = "http://api.twitter.com/1/" + uparts[0] + "/lists/" + uparts[1] + "/statuses.json?count=10";
+      var theUrl = "http://api.twitter.com/1/" + uparts[0] + "/lists/" + uparts[1] + "/statuses.json?per_page=20";
    }
    else
    {
