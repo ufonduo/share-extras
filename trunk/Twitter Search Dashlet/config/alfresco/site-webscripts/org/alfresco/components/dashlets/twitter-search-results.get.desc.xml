@@ -1,0 +1,5 @@
+<webscript>
+   <shortname>Twitter Search Results</shortname>
+   <description>Return search results for a Twitter search</description>
+   <url>/components/dashlets/twitter-search/results</url>
+</webscript>
