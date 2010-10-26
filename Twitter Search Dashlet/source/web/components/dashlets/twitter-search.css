@@ -1,0 +1,37 @@
+.twitter-search div.list
+{
+}
+.twitter-search div.detail-list-item
+{
+   min-height: 2em;
+}
+.twitter-search h4, .twitter-search p
+{
+   margin-bottom: 0.25em;
+   margin-top: 0;
+   padding-top:0;
+}
+.twitter-search div.tweet-details
+{
+   color: #999999;
+   margin-bottom: 0.25em;
+}
+.twitter-search div.tweet-details a,
+.twitter-search div.tweet-details a:link,
+.twitter-search div.tweet-details a:hover,
+.twitter-search div.tweet-details a:visited
+{
+   color: #999999;
+}
+.twitter-search .list-tweet
+{
+   clear: both;
+}
+.twitter-search .list-tweet .tweet
+{
+	margin-left: 58px;
+}
+.twitter-search .list-tweet .user-icon
+{
+   float: left;
+}
