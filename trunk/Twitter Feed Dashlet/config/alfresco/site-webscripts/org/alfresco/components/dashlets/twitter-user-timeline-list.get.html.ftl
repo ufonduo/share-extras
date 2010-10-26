@@ -35,7 +35,7 @@
    <#list tweets as t> <#-- User feed -->
       <#assign postedLink><a href="http://twitter.com/${t.user.screen_name?html}/status/${t.id?c}">${formatDate(t.created_at?datetime("EEE MMM dd HH:mm:ss Z yyyy"))}</a></#assign>
       <div class="detail-list-item <#if t_index = 0>first-item<#elseif !t_has_next>last-item</#if>">
-         <h4>${formatTweet(t.text)}</h4>
+         <p>${formatTweet(t.text)}</p>
          <div class="tweet-details">${msg("text.tweetDetails", postedLink, t.source)}</div>
       </div>
    </#list>
