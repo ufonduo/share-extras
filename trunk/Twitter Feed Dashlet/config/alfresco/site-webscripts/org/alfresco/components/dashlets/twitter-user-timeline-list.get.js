@@ -21,6 +21,7 @@ function main()
    }
    else
    {
+      model.username = u;
       model.status = result.status;
    }
 }
