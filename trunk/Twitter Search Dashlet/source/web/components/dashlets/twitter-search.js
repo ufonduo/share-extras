@@ -179,8 +179,9 @@
       onResultsLoaded: function TwitterSearch_onResultsLoaded(p_response, p_obj)
       {
          this.searchResults.innerHTML = p_response.serverResponse.responseText;
-         this.title.innerHTML = this.msg("header.search", ((this.options.searchTerm != "") ?
-               this.options.searchTerm : this.options.defaultSearchTerm));
+         var t = ((this.options.searchTerm != "") ?
+               this.options.searchTerm : this.options.defaultSearchTerm);
+         this.title.innerHTML = this.msg("header.search", "<a href=\"http://twitter.com/search?q=" + Alfresco.util.encodeURIPath(t) + "\">" + Alfresco.util.encodeHTML(t) + "</a>");
       },
 
       /**
