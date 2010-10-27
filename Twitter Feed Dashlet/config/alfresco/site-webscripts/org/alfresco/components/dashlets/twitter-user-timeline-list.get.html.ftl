@@ -42,13 +42,13 @@
 </#if>
 <#else>
       <div class="detail-list-item first-item last-item">
-         <span>${msg("label.noTweets")}</span>
+         <span><#if (username?index_of("/") > 0)>${msg("list.noTweets")}<#else>${msg("user.noTweets")}</#if></span>
       </div>
 </#if>
 <#elseif status?number==401>
-<div class="msg" style="margin: -8px 0">${msg("error.http.401")}</div>
+<div class="msg" style="margin: -8px 0"><#if (username?index_of("/") > 0)>${msg("error.list.401")}<#else>${msg("error.user.401")}</#if></div>
 <#elseif status?number==404>
-<div class="msg" style="margin: -8px 0">${msg("error.http.404")}</div>
+<div class="msg" style="margin: -8px 0"><#if (username?index_of("/") > 0)>${msg("error.list.404")}<#else>${msg("error.user.404")}</#if></div>
 <#else>
-<div class="msg" style="margin: -8px 0">${msg("error.http", status)}</div>
+<div class="msg" style="margin: -8px 0"><#if (username?index_of("/") > 0)>${msg("error.general", status)}<#else>${msg("error.general", status)}</#if></div>
 </#if>
