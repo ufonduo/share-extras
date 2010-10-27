@@ -9,7 +9,7 @@
 </#list>
 <#local res = tweet?matches("#(\\w+)")>
 <#list res as m>
-<#local tweet = tweet?replace(m, '<a href="http://search.twitter.com/search?q=%23' + m?groups[1] + '">' + m + '</a>')>
+<#local tweet = tweet?replace(m, '<a href="http://twitter.com/search?q=%23' + m?groups[1] + '">' + m + '</a>')>
 </#list>
 <#return tweet>
 </#function>

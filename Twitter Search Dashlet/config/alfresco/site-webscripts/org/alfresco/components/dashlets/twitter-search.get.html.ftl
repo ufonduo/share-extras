@@ -12,7 +12,7 @@
 //]]></script>
 
 <div class="dashlet twitter-user-timeline">
-   <div class="title" id="${args.htmlid}-title">${msg("header.search", searchTerm!'')}</div>
+   <div class="title" id="${args.htmlid}-title">${msg("header.search", "<a href=\"http://twitter.com/search?q=" + searchTerm?url + "\">" + searchTerm?html + "</a>")}</div>
    <#if hasConfigPermission>
       <div class="toolbar">
          <a id="${args.htmlid}-configure-link" class="theme-color-1" title="${msg('link.configure')}" href="">${msg("link.configure")}</a>
