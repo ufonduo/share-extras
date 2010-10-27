@@ -3,7 +3,7 @@
 
 =Introduction=
 
-This project defines a custom dashlet that displays recent Tweets from any public user or list.
+This project defines a custom dashlet that displays recent Tweets from any Twitter user, or any list belonging to a user.
 
 [http://share-extras.googlecode.com/svn/trunk/Twitter%20Feed%20Dashlet/screenshot.png]
 
