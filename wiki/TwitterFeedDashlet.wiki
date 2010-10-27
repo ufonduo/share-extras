@@ -3,8 +3,7 @@
 
 =Introduction=
 
-This project defines a custom dashlet that displays the ten most recent Tweets
-of any Twitter user within the dashlet.
+This project defines a custom dashlet that displays recent Tweets from any public user or list.
 
 [http://share-extras.googlecode.com/svn/trunk/Twitter%20Feed%20Dashlet/screenshot.png]
 
@@ -51,3 +50,4 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
 
   # Log in to Alfresco Share and navigate to a site dashboard.
   # Click the _Customize Dashboard_ button to edit the contents of the dashboard and drag the dashlet into one of the columns from the list of dashlets.
+  # Use the _Configure_ button to change the feed displayed. You can specify any Twitter username on its own, or any list belonging to a user as _username/listname_.
