@@ -90,4 +90,6 @@ See the _Installing_ section above for information on configuring FFmpeg.
 
 =Known Issues=
 
-  * In Internet Explorer 7, the Flash video previewer only displays correctly the first time a video is loaded. After this the preview displays only a black box with the white 'play' button within it, and no video content.
+  * In some versions of Internet Explorer 7, the Flash video previewer only displays correctly the first time a video is loaded. After this the preview displays only a black box with the white 'play' button within it, and no video content.
+
+  * Prior to Alfresco Community 3.4.b, adding the additional thumbnail definitions to the thumbnail registry required overriding the entire thumbnailRegistry bean. The supplied Spring configuration still uses this old method for now in order to support the widest range of versions, but if this causes you problems you can use the new org.alfresco.repo.thumbnail.ThumbnailDefinitionSpringRegistrer bean instead ([http://fisheye.alfresco.com/browse/alfresco_open_mirror/alfresco/HEAD/root/projects/repository/config/alfresco/extension/video-transformation-context.xml.sample?r=22817 example config])
