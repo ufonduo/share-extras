@@ -5,7 +5,9 @@
 
 This add-on project for Alfresco Share provides the ability to preview audio and video files within the Share user interface.
 
-Specifically the project provides enhancements to the web preview component to support Flash-based previews of audio and video content. The supplied configuration extends the repository thumbnailing capabilities to support H264/FLV thumbnails for video content and MP3 thumbnails for audio content, using [http://ffmpeg.org/ FFmpeg].
+Specifically the project provides enhancements to the web preview component to support Flash-based previews of audio and video content, using the open source [http://flv-player.net/ FLV Player] and [http://flash-mp3-player.net/ MP3 Player] media players by [http://www.neolao.com/ neolao].
+
+The supplied Spring configuration extends the repository thumbnailing capabilities to support H264/FLV thumbnails for video content and MP3 thumbnails for audio content, using [http://ffmpeg.org/ FFmpeg].
 
 [http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshot.png http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshot-small.png]
 
