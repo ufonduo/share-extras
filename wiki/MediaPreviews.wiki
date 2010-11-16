@@ -1,4 +1,4 @@
-#summary Describes the Media Preview add-on for Alfresco Share
+#summary Media Preview add-on for Alfresco Share
 #labels Dashlet,Video
 
 =Introduction=
