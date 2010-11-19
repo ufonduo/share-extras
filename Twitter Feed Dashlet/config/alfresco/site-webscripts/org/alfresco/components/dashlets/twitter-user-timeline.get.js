@@ -3,7 +3,6 @@ function main()
    var s = new XML(config.script),
       defaultUser = s.defaultUser.toString(),
       u = args.twitterUser ? args.twitterUser : defaultUser,
-      theUrl = "http://twitter.com/status/user_timeline/" + u + ".json?count=10",
       hasConfigPermission = false;
    
    // Work out if the user has permission to configure the dashlet
