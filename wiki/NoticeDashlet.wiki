@@ -1,10 +1,10 @@
 #summary Describes the Notice Dashlet add-on for Alfresco Share
 
+<wiki:toc max_depth="1" />
+
 =Introduction=
 
 This add-on project for Alfresco Share defines a simple dashlet to display a user-defined piece of content on a user or a site dashboard. It was inspired in part by the JotPad dashlet in [http://www.sugarcrm.com/ SugarCRM].
-
-[http://share-extras.googlecode.com/svn/trunk/Notice%20Dashlet/notice-dashlet.png] [http://share-extras.googlecode.com/svn/trunk/Notice%20Dashlet/notice-dashlet-config.png]
 
 =Installation=
 
@@ -49,3 +49,9 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
 
   # Log in to Alfresco Share and navigate to your user dashboard.
   # Click the _Customize Dashboard_ button to edit the contents of the dashboard and drag the _Notice_ dashlet into one of the columns, from the list of dashlets.
+
+==Screenshots==
+
+[http://share-extras.googlecode.com/svn/trunk/Notice%20Dashlet/notice-dashlet.png]
+
+[http://share-extras.googlecode.com/svn/trunk/Notice%20Dashlet/notice-dashlet-config.png]
