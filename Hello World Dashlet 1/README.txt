@@ -9,34 +9,29 @@ the screen.
 Installation
 ------------
 
-The theme has been developed to install on top of an existing Alfresco
+The dashlet has been developed to install on top of an existing Alfresco
 3.3 installation.
 
-An Ant build script is provided to build a ZIP file containing the 
-custom files, which can then be installed into the 'tomcat' folder of your
-Alfresco installation.
+An Ant build script is provided to build a JAR file containing the 
+custom files, which can then be installed into the 'tomcat/shared/lib' folder 
+of your Alfresco installation.
 
-To build the ZIP file, run the following command from the base project 
+To build the JAR file, run the following command from the base project 
 directory.
 
-    ant clean dist-zip-tomcat
+    ant clean dist-jar
 
-The command should build a ZIP file named hello-world-dashlet.zip
+The command should build a JAR file named hello-world-dashlet.jar
 in the 'dist' directory within your project.
 
 To deploy the dashlet files into a local Tomcat instance for testing, you can 
-instead use the hotcopy-tomcat-zip task. You will need to set the tomcat.home
+use the hotcopy-tomcat-jar task. You will need to set the tomcat.home
 property in Ant.
 
-    ant -Dtomcat.home=C:/Alfresco/tomcat clean hotcopy-tomcat-zip
-
-Once you have run this you will need to refresh the list of web scripts in 
-Alfresco Share using the page at http://localhost:8080/share/page/index. An 
-optional Ant task reload-webscripts-webtier is provided commented out in the 
-build script if you wish to use this.
-
-For equivalent actions that deploy using the JAR mechanism in 3.3, use the 
-deploy-jar and hotcopy-tomcat-jar targets.
+    ant -Dtomcat.home=C:/Alfresco/tomcat clean hotcopy-tomcat-jar
+    
+Once you have run this you will need to restart Tomcat so that the classpath 
+resources in the JAR file are picked up.
 
 Using the dashlet
 -----------------
