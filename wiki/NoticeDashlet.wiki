@@ -50,7 +50,7 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
   # Log in to Alfresco Share and navigate to your user dashboard.
   # Click the _Customize Dashboard_ button to edit the contents of the dashboard and drag the _Notice_ dashlet into one of the columns, from the list of dashlets.
 
-==Screenshots==
+= Screenshots =
 
 [http://share-extras.googlecode.com/svn/trunk/Notice%20Dashlet/notice-dashlet.png]
 
