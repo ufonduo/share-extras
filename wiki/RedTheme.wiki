@@ -1,14 +1,16 @@
-#summary Describes the custom Red Theme add-on for Alfresco Share
+#summary Describes the custom Red Theme add-on for Alfresco Share 3.3/3.4
 
 =Introduction=
 
-This add-on project for Alfresco Share defines an additional theme for Alfresco Share using a red colour scheme. It has been tested against version 3.3 of Share and *may not work fully with version 3.4.*
+This add-on project for Alfresco Share defines an additional theme for Alfresco Share using a red colour scheme.
 
 [http://share-extras.googlecode.com/svn/trunk/Red%20Theme/screenshot.png]
 
 =Installation=
 
-The custom theme is packaged as an [http://wiki.alfresco.com/wiki/AMP_Files AMP file] that can be installed on top of Alfresco Share using the [http://wiki.alfresco.com/wiki/Module_Management_Tool Module Management Tool]. This tool is available as a separate download if your installation does not include it.
+*In Share 3.4.b and greater the theme can be easily installed as a JAR file. To install the theme, simply drop the `red-theme.jar` file into the `tomcat/shared/lib` folder within your Alfresco installation, and restart the application server. You might need to create this folder if it does not already exist.*
+
+For all other versions, the custom theme is packaged as an [http://wiki.alfresco.com/wiki/AMP_Files AMP file] that can be installed on top of Alfresco Share using the [http://wiki.alfresco.com/wiki/Module_Management_Tool Module Management Tool]. This tool is available as a separate download if your installation does not include it.
 
 To install the theme, drop the AMP file into the root of your Alfresco installation and use the MMT executable JAR to install the files into the `share` web application.
 
@@ -35,9 +37,15 @@ Change into the new directory
 cd "Red Theme"
 }}}
 
-An Ant build script is provided to build an AMP file containing the custom files, which can then be installed into the `share` web application, as documented in the _Installation_ section above.
+An Ant build script is provided to build a package containing the custom files, which can then be installed into the `share` web application, as documented in the _Installation_ section above.
 
-To build the AMP file, run the following command from the base project directory.
+*In Share 3.4.b and greater, you can build the JAR file directly*
+
+{{{
+ant clean dist-jar
+}}}
+
+Or, to build the AMP file, run the following command from the base project directory.
 
 {{{
 ant clean dist-amp
