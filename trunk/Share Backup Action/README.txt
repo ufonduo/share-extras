@@ -32,9 +32,8 @@ property in Ant.
 
     ant -Dtomcat.home=C:/Alfresco/tomcat clean hotcopy-tomcat-jar
 
-Once the JAR file has been deployed into your application server (you will likely 
-need to restart it as well) you will need to configure the Share application to 
-display the action.
+Once the JAR file has been deployed into your application server you will need to 
+configure the Share application to display the action.
 
 Firstly, copy the web script configuration file 
 WEB-INF/classes/alfresco/site-webscripts/org/alfresco/components/documentlibrary/documentlist.get.config.xml 
