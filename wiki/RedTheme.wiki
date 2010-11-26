@@ -2,7 +2,7 @@
 
 =Introduction=
 
-This add-on project for Alfresco Share defines an additional theme for Alfresco Share using a red colour scheme.
+This add-on project for Alfresco Share defines an additional theme for Alfresco Share using a red colour scheme. It has been tested against version 3.3 of Share and *may not work fully with version 3.4.*
 
 [http://share-extras.googlecode.com/svn/trunk/Red%20Theme/screenshot.png]
 
