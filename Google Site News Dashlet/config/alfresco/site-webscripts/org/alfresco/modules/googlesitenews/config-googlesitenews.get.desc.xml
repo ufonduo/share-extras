@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>config-googlesitenews</shortname>
+  <description>Configuration dialog for Google site news dashlet</description>
+  <url>/modules/googlesitenews/config</url>
+</webscript>

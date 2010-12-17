@@ -1,0 +1,18 @@
+.googlesitenews div.list
+{
+   float: left;
+}
+
+.googlesitenews div.detail-list-item
+{
+   min-height: 2em;
+}
+
+.googlesitenews div.description
+{
+   clear: left;
+}
+.googlesitenews a.blog-post-title
+{
+	font-weight: 700;
+}
