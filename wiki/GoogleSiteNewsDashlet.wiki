@@ -44,3 +44,7 @@ You can use normal Google search syntax to include or exclude search terms to ge
 None at this time.
 =Future Enhancements =
 The tabs displayed, and the tab order are hard coded. You can change this to your liking, by changing the source and build the dashlet yourself. Preferably this would be configurable in the Configure dialog.
+==Contribution==
+This Dashlet was contributed by Peter Löfgren, http://loftux.se 
+
+An earlier version was included in the Alfresco Developer Toolbox download. This updated version adds configurability.
