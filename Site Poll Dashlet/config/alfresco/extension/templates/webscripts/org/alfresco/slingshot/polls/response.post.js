@@ -13,7 +13,7 @@ if (pollNode != null)
    {
       if (response != null)
       {
-         responseNode = pollNode.createNode(username, "pm:response");
+         responseNode = pollNode.createNode(username, "pm:response", "pm:pollResponse");
          responseNode.properties["pm:response"] = response;
          responseNode.save()
          model.result = true;

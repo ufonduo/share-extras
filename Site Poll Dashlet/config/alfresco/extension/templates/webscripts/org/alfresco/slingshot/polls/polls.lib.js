@@ -1,14 +1,15 @@
+var pollContainerName = "dataLists"
 function getPollsContainer(site)
 {
    var poll;
    
-   if (site.hasContainer("polls"))
+   if (site.hasContainer(pollContainerName))
    {
-      poll = site.getContainer("polls");
+      poll = site.getContainer(pollContainerName);
    }
    else
    {
-      poll = site.createContainer("polls");
+      poll = site.createContainer(pollContainerName);
    }
    
    if(poll != null)
