@@ -29,7 +29,7 @@ function getPolls(siteId)
       return;
    }
    
-   var query = "PATH:\"" + pollsContainer.qnamePath + "//*\" AND TYPE:\"{http://www.alfresco.org/model/poll/1.0}poll\"";
+   var query = "PATH:\"" + pollsContainer.qnamePath + "//*\" AND TYPE:\"{http://www.alfresco.org/model/poll/1.0}poll\" AND @\\{http\\://www.alfresco.org/model/poll/1.0\\}enabled:true";
    
    if (filter)
    {

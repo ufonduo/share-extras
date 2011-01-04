@@ -175,7 +175,7 @@
                      fn: function(response)
                      {
                         // Replace the form with a thank you message
-                        Dom.get(this.id + "-form").innerHTML = "<p>" + this.msg("msg.thankyou") + "</p>";
+                        Dom.get(this.id + "-form").innerHTML = "<p>" + this.msg("msg.thankyou", this.getSelectedOption()) + "</p>";
                      },
                      scope: this
                   },

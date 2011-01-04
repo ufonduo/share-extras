@@ -30,8 +30,13 @@ else
 if (pollNode != null)
 {
    var responseNode = pollNode.childByNamePath(username);
-   model.hasVoted = responseNode != null;
    model.poll = pollNode;
+   model.hasPermission = pollNode.hasPermission("CreateChildren");
+   model.hasVoted = responseNode != null;
+   if (model.hasVoted)
+   {
+      model.pollResponse = responseNode.properties["pm:response"];
+   }
 }
 else
 {
