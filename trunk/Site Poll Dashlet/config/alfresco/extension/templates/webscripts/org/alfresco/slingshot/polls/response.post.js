@@ -13,10 +13,30 @@ if (pollNode != null)
    {
       if (response != null)
       {
-         responseNode = pollNode.createNode(username, "pm:response", "pm:pollResponse");
-         responseNode.properties["pm:response"] = response;
-         responseNode.save()
-         model.result = true;
+         // Check the poll has not expired
+         var pollEnabled = pollNode.properties["pm:enabled"];
+         var now = Date.now();
+         if (pollEnabled && pollNode.properties.from)
+         {
+            pollEnabled = pollNode.properties.from.getTime() < now;
+         }
+         if (pollEnabled && pollNode.properties.to)
+         {
+            pollEnabled = pollNode.properties.to.getTime() > now;
+         }
+         if (pollEnabled)
+         {
+            responseNode = pollNode.createNode(username, "pm:response", "pm:pollResponse");
+            responseNode.properties["pm:response"] = response;
+            responseNode.save()
+            model.result = true;
+         }
+         else
+         {
+            status.code = 500;
+            status.message = "Poll is not enabled or not currently active";
+            status.redirect = true;
+         }
       }
       else
       {

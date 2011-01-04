@@ -13,7 +13,25 @@ if (nodeRef != null)
       model.pollTitle = response.title;
       model.options = response.options;
       model.nodeRef = response.nodeRef;
+      model.hasPermission = response.hasPermission;
       model.hasVoted = response.hasVoted;
+      if (response.pollResponse)
+      {
+         model.pollResponse = response.pollResponse;
+      }
+      var pollEnabled = response.enabled
+      var now = Date.now();
+      if (pollEnabled && response.startDate)
+      {
+         var startDate = Date.parse(response.startDate);
+         pollEnabled = startDate < now;
+      }
+      if (pollEnabled && response.startDate)
+      {
+         var endDate = Date.parse(response.endDate);
+         pollEnabled = endDate > now;
+      }
+      model.pollEnabled = pollEnabled;
    }
 }
 

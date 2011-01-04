@@ -20,8 +20,11 @@
    <div class="body" <#if args.height??>style="height: ${args.height}px;"</#if>>
    <div class="msg">
    <#if args.nodeRef??>
+   <#if pollName??>
    <h3 class="pollName"><#if pollTitle??>${pollTitle}<#else>${pollName}</#if></h3>
    <#if !hasVoted>
+   <#if pollEnabled>
+   <#if hasPermission>
    <#if (options?size > 0)>
    <form action="#" method="post" id="${args.htmlid}-form">
    <div id="${args.htmlid}-buttongroup" class="yui-buttongroup poptions">
@@ -31,10 +34,18 @@
    </div>
    <input type="submit" value="${msg("button.submit")}" name="action" id="${args.htmlid}-submit"/>
    </form>
-   <#else>
    </#if>
    <#else>
-   <p>${msg("msg.thankyou")}</p>
+   <p>${msg("msg.noPermission")}</p>
+   </#if>
+   <#else>
+   <p>${msg("msg.notEnabled")}</p>
+   </#if>
+   <#else>
+   <p>${msg("msg.thankyou", pollResponse)}</p>
+   </#if>
+   <#else>
+   ${msg("msg.notFound")}
    </#if>
    <#else>
    ${msg("msg.notConfigured")}

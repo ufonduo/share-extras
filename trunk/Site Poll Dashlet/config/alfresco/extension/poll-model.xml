@@ -29,6 +29,10 @@
                <type>d:text</type>
                <multiple>true</multiple>
             </property>
+            <property name="pm:enabled">
+               <type>d:boolean</type>
+               <default>true</default>
+            </property>
          </properties>
          <associations>
             <child-association name="pm:pollResponse">
@@ -47,6 +51,7 @@
          </associations>
          <mandatory-aspects>
             <aspect>cm:titled</aspect>
+            <aspect>cm:effectivity</aspect>
          </mandatory-aspects>
       </type>
       <type name="pm:response">
