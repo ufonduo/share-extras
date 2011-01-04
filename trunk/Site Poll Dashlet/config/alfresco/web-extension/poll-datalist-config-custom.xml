@@ -1,0 +1,60 @@
+<alfresco-config>
+   <!-- pm:poll type create form config-->
+   <config evaluator="model-type" condition="pm:poll">
+      <forms>
+         <!-- Create book item form -->
+         <form>
+            <field-visibility>
+               <!-- cm:titled aspect -->
+               <show id="cm:title" />
+               <show id="cm:description" />
+               <!-- pm:poll type props -->
+               <show id="pm:options" />
+             </field-visibility>
+            <create-form template="/org/alfresco/components/data-lists/forms/dataitem.ftl" />
+            <appearance>
+               <field id="cm:title" mandatory="true" />
+               <field id="cm:description">
+                  <control template="/org/alfresco/components/form/controls/textarea.ftl" />
+               </field>
+               <field id="pm:options" mandatory="true" help="Separate multiple options using commas">
+                  <control template="/org/alfresco/components/form/controls/textarea.ftl" />
+               </field>
+            </appearance>
+         </form>
+
+         <!-- Data Grid view -->
+         <form id="datagrid">
+            <field-visibility>
+               <!-- cm:titled aspect -->
+               <show id="cm:title" />
+               <show id="cm:description" />
+               <!-- pm:poll type props -->
+               <show id="pm:options" />
+            </field-visibility>
+         </form>
+      </forms>
+   </config>
+
+   <!-- pm:poll type edit form config-->
+   <config evaluator="node-type" condition="pm:poll">
+      <forms>
+         <!-- Data List pop-up edit form -->
+         <form>
+            <field-visibility>
+               <!-- cm:titled aspect -->
+               <show id="cm:title" />
+               <show id="cm:description" />
+               <!-- pm:poll type props -->
+               <show id="pm:options" />
+            </field-visibility>
+            <edit-form template="/org/alfresco/components/data-lists/forms/dataitem.ftl" />
+            <appearance>
+               <field id="cm:description">
+                  <control template="/org/alfresco/components/form/controls/textarea.ftl" />
+               </field>
+            </appearance>
+         </form>
+      </forms>
+   </config>
+</alfresco-config>
