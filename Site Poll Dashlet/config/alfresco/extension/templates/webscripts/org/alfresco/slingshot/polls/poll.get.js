@@ -2,29 +2,15 @@
 
 var pollNode, username = person.properties.userName;
 
+// Locate the poll node by name or nodeRef
 if (url.templateArgs.site != null)
 {
-   var site = siteService.getSite(url.templateArgs.site);
-   if (site === null)
-   {
-      status.setCode(status.STATUS_NOT_FOUND, "Site not found: '" + siteId + "'");
-      status.redirect = true;
-   }
-   
-   var pollsContainer = getPollsContainer(site);
-   if (pollsContainer === null)
-   {
-      status.setCode(status.STATUS_BAD_REQUEST, "Poll container not found");
-      status.redirect = true;
-   }
-   
-   pollNode = pollsContainer.childByNamePath(url.templateArgs.pname);
+   pollNode = findPollByName(url.templateArgs.site, url.templateArgs.pname);
 }
 else
 {
-   // Locate the poll node
    var nodeRef = url.templateArgs.protocol + "://" + url.templateArgs.store + "/" + url.templateArgs.id;
-   pollNode = search.findNode(nodeRef);
+   pollNode = findPoll(nodeRef);
 }
 
 if (pollNode != null)

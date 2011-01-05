@@ -1,0 +1,8 @@
+<webscript>
+    <shortname>Poll Results</shortname>
+    <description>Display the results of a poll</description>
+    <format default="json">extension</format>
+    <url>/slingshot/poll/s/{site}/{pname}/results</url>
+    <url>/slingshot/poll/{protocol}/{store}/{id}/results</url>
+    <authentication>user</authentication>
+</webscript>
