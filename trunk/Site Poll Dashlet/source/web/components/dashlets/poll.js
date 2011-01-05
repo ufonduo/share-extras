@@ -128,6 +128,24 @@
        * @default ""
        */
       submitButton: null,
+      
+      /**
+       * Results container div object
+       * 
+       * @property resultsContainer
+       * @type object
+       * @default null
+       */
+      resultsContainer: null,
+      
+      /**
+       * Toggle results link object
+       * 
+       * @property toggleResultsLink
+       * @type object
+       * @default null
+       */
+      toggleResultsLink: null,
 
       /**
        * Value of the currently-selected option
@@ -144,9 +162,13 @@
        */
       onReady: function SitePoll_onReady()
       {
-         Event.addListener(this.id + "-configure-link", "click", this.onConfigPollClick, this, true);
+         this.resultsContainer = Dom.get(this.id + "-results");
+         this.toggleResultsLink = Dom.get(this.id + "-toggle-results-link");
          
-         if (Dom.get(this.id + "-form") != null)
+         Event.addListener(this.id + "-configure-link", "click", this.onConfigPollClick, this, true);
+         Event.addListener(this.id + "-toggle-results-link", "click", this.onToggleResultsClick, this, true);
+         
+         if (!this.options.hasVoted)
          {
             this.buttonGroup = new YAHOO.widget.ButtonGroup(this.id + "-buttongroup");
             
@@ -174,8 +196,10 @@
                   {
                      fn: function(response)
                      {
-                        // Replace the form with a thank you message
-                        Dom.get(this.id + "-form").innerHTML = "<p>" + this.msg("msg.thankyou", this.getSelectedOption()) + "</p>";
+                        // Replace the form with a thank you message and a link for the results
+                        Dom.get(this.id + "-poll-message").innerHTML = this.msg("msg.thankyou", this.getSelectedOption());
+                        Dom.setStyle(this.id + "-form", "display", "none");
+                        Dom.setStyle([this.id + "-poll-message", this.id + "-poll-links"], "display", "block");
                      },
                      scope: this
                   },
@@ -186,18 +210,75 @@
             });
             this.submitButton.set("disabled", true);
          }
+         else
+         {
+            Dom.setStyle([this.id + "-poll-message", this.id + "-poll-links"], "display", "block");
+         }
       },
       
+      /**
+       * Get the name of the currently-selected poll, set using the config dialogue
+       * @method getSelectedOption
+       */
       getSelectedOption: function SitePoll_getSelectedOption()
       {
          return this.selectedValue;
+      },
+      
+      /**
+       * Load and render the poll results in-line in the dashlet
+       * @method loadResults
+       */
+      loadResults: function SitePoll_loadResults()
+      {
+         // Hide the existing content
+         Dom.setStyle(this.resultsContainer, "display", "none");
+
+         Alfresco.util.Ajax.jsonGet(
+         {
+            url: Alfresco.constants.PROXY_URI + "slingshot/poll/" + this.options.nodeRef.replace("://", "/") + "/results",
+            successCallback: 
+            {
+               fn: this.onResultsSuccess,
+               scope: this
+            },
+            failureMessage: "Could not load poll results from '" + Alfresco.constants.PROXY_URI + "slingshot/poll/" + this.options.nodeRef.replace("://", "/") + "/results'.",
+            scope: this,
+            noReloadOnAuthFailure: true
+         });
+      },
+
+      /**
+       * Poll results retrieved successfully
+       * @method onResultsSuccess
+       * @param p_response {object} Response object from request
+       */
+      onResultsSuccess: function SitePoll_onResultsSuccess(p_response)
+      {
+         var responses = p_response.json.responses, totalVotes = p_response.json.totalVotes, html = "", response;
+         for (i = 0, ii = responses.length; i < ii; i++)
+         {
+            response = responses[i];
+            html += "<h4 class=\"resultResponse\">" + $html(response.response) + "</h4><p class=\"pollResult\"><span class=\"resultBar\"><span class=\"outer\"><span class=\"inner\" style=\"width: " + Math.round(response.share * 100) + "%;\"> </span></span></span><span class=\"resultSummary\">" + $html(response.votes) + " <span class=\"detail\">(" + Math.round(response.share * 100) + "%)</span></span></p>";
+         }
+         html += "<p>" + this.msg("msg.totalVotes", totalVotes) + "</p>";
+         this.resultsContainer.innerHTML = html;
+         
+         // Fade the new content in
+         Alfresco.util.Anim.fadeIn(this.resultsContainer);
       },
 
       /**
        * YUI WIDGET EVENT HANDLERS
        * Handlers for standard events fired from YUI widgets, e.g. "click"
        */
-      
+
+      /**
+       * Currently-checked response set/changed
+       * @method onOptionCheckedChanged
+       * @param p_oEvent {object} Button event
+       * @param p_obj {object} Button
+       */
       onOptionCheckedChanged: function SitePoll_onOptionCheckedChanged(p_oEvent, p_obj)
       {
          this.selectedValue = p_obj.get("value");
@@ -255,6 +336,37 @@
          }
          
          this.configDialog.show();
+      },
+
+      /**
+       * Toggle results click handler
+       *
+       * @method onToggleResultsClick
+       * @param e {object} HTML event
+       */
+      onToggleResultsClick: function SitePoll_onToggleResultsClick(e)
+      {
+         Event.stopEvent(e);
+         if (Dom.getStyle(this.resultsContainer, "display") == "none")
+         {
+            if (this.resultsContainer.innerHTML == "")
+            {
+               // Load and render the results
+               this.loadResults();
+            }
+            else
+            {
+               // Fade the existing content in
+               Alfresco.util.Anim.fadeIn(this.resultsContainer);
+            }
+            this.toggleResultsLink.innerHTML = this.msg("label.hideResults");
+         }
+         else
+         {
+            // Hide the element
+            Dom.setStyle(this.resultsContainer, "display", "none");
+            this.toggleResultsLink.innerHTML = this.msg("label.showResults");
+         }
       }
    });
 })();
