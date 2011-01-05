@@ -4,7 +4,7 @@
 =Introduction=
 
 This project defines a custom dashlet allowing polls to be defined 
-within a site, which any site user can then vote on, using the dashlet.
+within a site, which site users can then vote on, using the dashlet.
 
 http://share-extras.googlecode.com/svn/trunk/Site%20Poll%20Dashlet/site-poll-dashlet.png 
 http://share-extras.googlecode.com/svn/trunk/Site%20Poll%20Dashlet/site-poll-dashlet-results.png
