@@ -60,4 +60,4 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
 
 =Known Issues=
 
-By default, only members with the Site Contributor role or greater are able to vote in polls that you create. You can however allow Site Consumers to vote by changing the permission on the poll object, using the Repository Browser component in Share or via Alfresco Explorer.
+  * By default, only members with the Site Contributor role or greater are able to vote in polls that you create. You can however allow Site Consumers to vote by changing the permission on the poll object, using the Repository Browser component in Share or via Alfresco Explorer.
