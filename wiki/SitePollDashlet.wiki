@@ -50,5 +50,10 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
 
 = Usage =
 
-  # Log in to Alfresco Share and navigate to a site dashboard.
-  # Click the _Customize Dashboard_ button to edit the contents of the dashboard and drag the dashlet into one of the columns from the list of dashlets.
+  # Log in to Alfresco Share and navigate to a site where you are a Site Manager
+  # Navigate to the *Data Lists* page
+  # If you have not done so before, create a new data list of type *Poll*
+  # Create your poll in the list by clicking the *New Item* button. Make sure you tick the *Enabled* checkbox and complete all other required fields.
+  # Navigate back to the site dashboard and click the *Customize Dashboard* button to edit the contents of the dashboard. Drag the dashlet into one of the columns from the list of dashlets to add it.
+  # Back on the dashboard, click *Configure* on the Site Poll dashlet and select the poll to display.
+  # The poll should now be displayed in the dashlet. After you have voted on it you will be able to see the current results.
