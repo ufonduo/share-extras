@@ -56,6 +56,7 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
   # Create your poll in the list by clicking the *New Item* button. Make sure you tick the *Enabled* checkbox and complete all other required fields.
   # Navigate back to the site dashboard and click the *Customize Dashboard* button to edit the contents of the dashboard. Drag the dashlet into one of the columns from the list of dashlets to add it.
   # Back on the dashboard, click *Configure* on the Site Poll dashlet and select the poll to display.
+  # Click *OK* to save the configuration and then refresh the page in your browser to make this take effect.
   # The poll should now be displayed in the dashlet. After you have voted on it you will be able to see the current results.
 
 =Known Issues=
