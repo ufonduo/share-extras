@@ -11,7 +11,7 @@ function getPolls(siteId)
 {
    if (siteId === null || siteId.length === 0)
    {
-      status.setCode(status.STATUS_BAD_REQUEST, "Site not found: '" + siteId + "'");
+      status.setCode(status.STATUS_BAD_REQUEST, "Site not specified");
       return;
    }
    
