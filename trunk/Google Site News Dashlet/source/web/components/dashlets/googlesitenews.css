@@ -16,3 +16,103 @@
 {
 	font-weight: 700;
 }
+
+/* Left text */
+.textlabel
+{
+   text-align: center;
+   padding: 0.5em 0;
+}
+
+ul.enabledList
+{
+   width: 16em;
+   height: 15.5em;
+   overflow-y: auto;
+   overflow-x: hidden;
+   margin-left: auto;
+   margin-right: auto;
+   border: 1px solid #BFBFBF;
+
+}
+ul.disabledList
+{
+   width: 16em;
+   height: 15.5em;
+   overflow-y: auto;
+   overflow-x: hidden;
+   margin-left: auto;
+   margin-right: auto;
+   border: 1px solid #BFBFBF;
+
+}
+
+/* Style the searchers */
+.enabledSearchers,
+.disabledSearchers
+{
+   width: 17em;
+   float: left;
+   height: 2.5em;
+   text-align: left;
+   border-style: none;
+   border-width: 0;
+}
+
+/* search items */
+
+.searcheritem
+{
+   width: 17em;
+   float: left;
+   height: 2.5em;
+   text-align: left;
+   border-style: none;
+   border-width: 0;
+}
+
+
+.searcheritem
+{
+   margin: 0.2em;   
+   background-color: #F2F8F0;
+}
+
+
+/* Show dashlets a bit darker when they are focused. */
+.searcheritem.dnd-focused
+{
+   background-color: #E2E8E0;
+}
+
+/*
+ * Since the a is the one that gets focus we use a transparent gif inside it
+ * to make sure IE displays a nice dottec line around the "link".
+ * Change the cursor to a move cursor on mouse over.
+ */
+.searcheritem a img
+{
+   width: 100%;
+   height: 100%;
+}
+
+/* Vertically center the text. */
+.searcheritem div
+{
+   background-color:#FFFFFF;
+   opacity:0.01;
+   filter:alpha(opacity=1);
+   height:3em;
+   position:relative;
+   top:-4.5em;
+   width:17em;
+}
+
+.searcheritem span
+{
+   position: relative;
+   top: -2.2em;
+   left: 1em;  
+   opacity:1;
+   filter:alpha(opacity=100);
+}

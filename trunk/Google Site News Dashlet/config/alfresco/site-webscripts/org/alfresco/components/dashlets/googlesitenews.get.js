@@ -61,6 +61,14 @@ if (!limit) {
 	model.limit=limit;
 }
 
+//We only need the enabled ones for display purposes
+var enabledsearchers = args.enabledsearchers;
+if (!enabledsearchers){
+	model.enabledsearchers = ["web","news","blog"];
+} else {
+	model.enabledsearchers = enabledsearchers.split(",");
+}
+
 var julianToday = getJulianToday();
 model.julianToday=julianToday.toString();
 
