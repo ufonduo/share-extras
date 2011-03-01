@@ -1,3 +1,15 @@
+<#macro renderListItem item>
+<#if item!="">
+<#assign label="searcher."+item>
+
+			          <li class="searcheritem">
+			          	<input type="hidden" name="searcheritem" value="${item}"/>
+	           			<a href="#"><img class="dnd-draggable" src="${url.context}/res/yui/assets/skins/default/transparent.gif" alt="" /></a>
+	           			<span>${msg(label)}</span>
+	           			<div class="dnd-draggable" title="${msg(label)}"></div>
+			          </li>
+</#if>			         
+</#macro>
 <div id="${args.htmlid}-configDialog" class="config-googlesitenews">
    <div class="hd">${msg("label.enterSearchCriteria")}:</div>
    <div class="bd">
@@ -15,10 +27,34 @@
                </select>
             </div>
          </div>
-         <div class="bdft">
+
+         <div class="yui-g">
+         <hr/>
+         <div id="searcher">
+         <input type="hidden" id="${args.htmlid}-enabledsearchers" name="enabledsearchers" value="xxx"/>
+	          <div id="${args.htmlid}-enabled-searcher" class="yui-u first" >
+	          <div class="textlabel">${msg("label.enabled")}</div>
+		          <ul id="${args.htmlid}-enabled-searcher-ul" class="enabledList">
+		          	<#list enabledsearchers as item>	
+   					<@renderListItem item />
+					</#list>
+		          </ul>
+	          </div>
+	          <div id="${args.htmlid}-disabled-searcher" class="yui-u" >
+	          <div class="textlabel">${msg("label.disabled")}</div>
+		          <ul id="${args.htmlid}-disabled-searcher-ul" class="disabledList">
+		          	<#list disabledsearchers as item>	
+   					<@renderListItem item />
+					</#list>
+		          </ul>
+	          </div>
+          </div>
+          </diV>
+          <div class="bdft">
             <input type="submit" id="${args.htmlid}-ok" value="${msg("button.ok")}" />
             <input type="button" id="${args.htmlid}-cancel" value="${msg("button.cancel")}" />
          </div>
       </form>
+
    </div>
 </div>

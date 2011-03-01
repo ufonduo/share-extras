@@ -7,7 +7,8 @@
       "componentId": "${instance.object.id}",
       "searchTerm": "${searchterm?js_string}", 
       "limit": "${limit}",
-      "julianToday": "${julianToday}"      
+      "julianToday": "${julianToday}",
+      "enabledSearchers": [<#list enabledsearchers as es>"${es}"<#if es_has_next>,</#if></#list>]      
    });
    new Alfresco.widget.DashletResizer("${args.htmlid}", "${instance.object.id}");
    //Load google components

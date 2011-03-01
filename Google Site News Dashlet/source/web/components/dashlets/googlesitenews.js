@@ -90,7 +90,16 @@
           * @type number
           * @default 0
           */
-         julianToday: "0"
+         julianToday: "0",
+         
+         /**
+          * The enabled searhcers
+          *
+          * @property enabledSearchers
+          * @type array
+          * @default -
+          */
+         enabledSearchers: ["web","news","image"]
       },  
       
       /**
@@ -131,7 +140,7 @@
             this.configDialog = new Alfresco.module.SimpleDialog(this.id + "-configDialog").setOptions(
             {
                width: "50em",
-               templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "modules/googlesitenews/config",
+               templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "modules/googlesitenews/config?componentId=" + encodeURIComponent(this.options.componentId),
                onSuccess:
                {
                   fn: function GoogleSiteNews_onConfigGoogleSiteNews_callback(response)
@@ -141,6 +150,7 @@
                      // Save search terms for new config dialog openings
                      this.options.searchTerm = (result && result.searchterm) ? result.searchterm : this.options.searchTerm;
                      this.options.limit = (result && result.limit) ? result.limit : this.options.limit;
+                     this.options.enabledSearchers = (result && result.enabledsearchers) ? result.enabledsearchers.split(",") : this.options.enabledSearchers;
                      
                      //Execute new search
                      var lower = parseInt(this.options.julianToday)-parseInt(this.options.limit);
@@ -168,9 +178,63 @@
                            break;
                         }
                      }
+                     
+                     //Set up DnD
+                     //this.widgets.shadowEl = Dom.get(this.configDialog.id + "-dashlet-li-shadow");
+                     this.widgets.enabledSearchers = Dom.get(this.configDialog.id+"-enabled-searcher-ul");
+                     this.widgets.disabledSearchers = Dom.get(this.configDialog.id+"-disabled-searcher-ul");
+                     var dndConfig =
+                     {
+                        draggables: [
+                           {
+                              container: this.widgets.enabledSearchers,
+                              groups: [Alfresco.util.DragAndDrop.GROUP_MOVE],
+                              cssClass: "enabledSearchers"
+                           },
+                           {
+                               container: this.widgets.disabledSearchers,
+                               groups: [Alfresco.util.DragAndDrop.GROUP_MOVE],
+                               cssClass: "disabledSearchers"
+                            }
+                        ],
+                        targets: [
+                           {
+                              container: this.widgets.enabledSearchers,
+                              group: Alfresco.util.DragAndDrop.GROUP_MOVE,
+                              maximum: 10
+                              //You need to set a maximum, else it will not be accepted as target
+                           },
+                           {
+                              container: this.widgets.disabledSearchers,
+                              group: Alfresco.util.DragAndDrop.GROUP_MOVE,
+                              maximum: 10
+                           }
+                        ]
+                     };
+                     var dnd = new Alfresco.util.DragAndDrop(dndConfig);
                   },
+
                   scope: this
-               }
+               },
+               doBeforeFormSubmit:
+	         	  {
+	         	  	fn: function GoogleSiteNews_doBeforeFormsSubmit(form)
+	           			{
+	         	  			//Before submit, iterate selected enabled items, and store in hidden input
+	         	  			var inputsearchers = Dom.get(this.configDialog.id + "-enabledsearchers");
+	         	  			var ul = Dom.get(this.configDialog.id + "-enabled-searcher-ul");
+	         	  			var lis = Dom.getElementsByClassName("searcheritem", "li", ul);
+	         	  			var enableditems=[];
+	         	            for (var j = 0; j < lis.length; j++)
+	         	            {
+	         	            	var li = lis[j];
+	         	            	enableditems.push(YAHOO.util.Selector.query("input[type=hidden][name=searcheritem]", li, true).value);
+	         	            }
+	         	  			Alfresco.logger.debug("Submit ", form);
+	         	  			inputsearchers.value=enableditems;
+	           			},
+	           		scope: this
+	         	  }
             });
          }
          this.configDialog.setOptions(
@@ -184,39 +248,45 @@
       _doSearch: function GoogleSiteNews_doSearch(search)
       {
   		// Create a search control
-  		var searchControl = new google.search.SearchControl();
-
-  		// Add in a full set of searchers
+  		var searchControl = new google.search.SearchControl(), 		
+  			options = new google.search.SearcherOptions(),
+  			searchers = this.options.enabledSearchers,
+  			drawOptions = new google.search.DrawOptions();
   		
-  		var options = new google.search.SearcherOptions();
   		options.setExpandMode(google.search.SearchControl.EXPAND_MODE_OPEN);
   		
-  		//var localSearch = new google.search.LocalSearch();
-  		// Set the Local Search center point
-  		//localSearch.setCenterPoint("New York, NY");
-  		//searchControl.addSearcher(localSearch);
-
-  		searchControl.addSearcher(new google.search.WebSearch());
-  		
-  		var newsSearch = new google.search.NewsSearch();
-  		newsSearch.setResultOrder(google.search.Search.ORDER_BY_DATE);
-  		searchControl.addSearcher(newsSearch);
-  		
-  		//searchControl.addSearcher(new google.search.VideoSearch());
-  		var blogSearch = new google.search.BlogSearch();
-  		blogSearch.setResultOrder(google.search.Search.ORDER_BY_DATE);
-  		searchControl.addSearcher(blogSearch);
-
-  		searchControl.addSearcher(new google.search.ImageSearch());
-  		
-  		//searchControl.addSearcher(new google.search.BookSearch());
-  		
-  		searchControl.addSearcher(new google.search.PatentSearch());
-
-
-
-  		// draw in tabbed layout mode
-  		var drawOptions = new google.search.DrawOptions();
+  		for (i=0;i<searchers.length;i++)
+  		{
+  			switch (searchers[i])
+  			{
+	  			case "web":
+	  				searchControl.addSearcher(new google.search.WebSearch());
+	  				break;
+	  			case "news":
+	  				var newsSearch = new google.search.NewsSearch();
+	  				newsSearch.setResultOrder(google.search.Search.ORDER_BY_DATE);
+	  				searchControl.addSearcher(newsSearch);
+	  				break;
+	  			case "blog":
+	  		  		var blogSearch = new google.search.BlogSearch();
+	  		  		blogSearch.setResultOrder(google.search.Search.ORDER_BY_DATE);
+	  		  		searchControl.addSearcher(blogSearch);
+	  		  		break;
+	  			case "video":
+	  				searchControl.addSearcher(new google.search.VideoSearch());
+	  				break;
+	  			case "image":
+	  				searchControl.addSearcher(new google.search.ImageSearch());
+	  				break;
+	  			case "books":
+	  				searchControl.addSearcher(new google.search.BookSearch());
+	  				break;
+	  			case "patent":
+	  				searchControl.addSearcher(new google.search.PatentSearch());
+	  				break;
+  			}
+  		}
+ 
   		drawOptions.setSearchFormRoot(document.getElementById(this.id + "-searchform"));
   		drawOptions.setDrawMode(google.search.SearchControl.DRAW_MODE_TABBED);
   		searchControl.draw(document.getElementById(this.id + "-searchcontrol"), drawOptions);
