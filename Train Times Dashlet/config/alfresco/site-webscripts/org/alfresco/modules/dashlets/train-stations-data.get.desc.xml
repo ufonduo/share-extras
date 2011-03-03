@@ -1,0 +1,6 @@
+<webscript>
+   <shortname>Train Times Station Data</shortname>
+   <description>Search for UK stations</description>
+   <url>/modules/dashlets/uk-train-times/station-data</url>
+   <format default="json">extension</format>
+</webscript>

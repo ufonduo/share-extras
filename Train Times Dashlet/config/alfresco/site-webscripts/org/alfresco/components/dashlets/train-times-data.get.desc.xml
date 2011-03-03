@@ -1,0 +1,6 @@
+<webscript>
+   <shortname>Train Times Data</shortname>
+   <description>Live departure board information for any station in the UK in JSON format</description>
+   <url>/components/dashlets/uk-train-times/train-data</url>
+   <format default="json">extension</format>
+</webscript>

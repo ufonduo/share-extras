@@ -1,0 +1,6 @@
+<webscript>
+   <shortname>Train Times</shortname>
+   <description>Displays live departure board information for any station in the UK</description>
+   <url>/components/dashlets/uk-train-times</url>
+   <family>dashlet</family>
+</webscript>
