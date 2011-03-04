@@ -44,7 +44,9 @@
 
 .bbc-weather-dashlet .forecast {
    padding: 1em;
+   /*
    border-bottom:1px dashed #E9E9E9;
+   */
 }
 
 .bbc-weather-dashlet .forecast-item {
@@ -78,5 +80,9 @@
 
 .bbc-weather-dashlet .info {
 	color: #999999;
-   padding: 0.5em 1em;
+   font-size: 0.85em;
+}
+
+.bbc-weather-dashlet .scrollableList {
+   paddding-bottom: 0px;
 }

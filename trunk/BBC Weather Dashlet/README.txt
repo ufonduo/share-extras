@@ -4,7 +4,8 @@ BBC Weather dashlet for Alfresco Share
 Author: Will Abson
 
 This add-on project for Alfresco Share defines a simple dashlet to display 
-displays current weather observations from the BBC.
+displays current weather observations from the BBC. It can be used on a 
+user or a site dashboard.
 
 Installation
 ------------
@@ -36,6 +37,6 @@ resources in the JAR file are picked up.
 Using the dashlet
 -----------------
 
-Log in to Alfresco Share and navigate to a site dashboard. Click the 
+Log in to Alfresco Share and navigate to a site or user dashboard. Click the 
 Customize Dashboard button to edit the contents of the dashboard and drag 
 the dashlet into one of the columns from the list of dashlets.
