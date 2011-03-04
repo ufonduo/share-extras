@@ -99,16 +99,7 @@
           * @type string
           * @default ""
           */
-         locationName: "",
-
-         /**
-          * ID of the current site
-          * 
-          * @property siteId
-          * @type string
-          * @default ""
-          */
-         siteId: ""
+         locationName: ""
       },
 
       /**
@@ -275,7 +266,7 @@
          
          if (img != null)
          {
-            return "<img src=\"" + Alfresco.constants.URL_CONTEXT + "@res.path@components/dashlets/weather-icons/" + size + "x" + size + "/" + img + "\" width=\"" + size + "\" height=\"" + size + "\" alt=\"" + title + "\" title=\"" + title + "\" />";
+            return "<img src=\"" + Alfresco.constants.URL_CONTEXT + "components/dashlets/weather-icons/" + size + "x" + size + "/" + img + "\" width=\"" + size + "\" height=\"" + size + "\" alt=\"" + title + "\" title=\"" + title + "\" />";
          }
          else if (title != msgid)
          {
