@@ -52,7 +52,7 @@
     */
    Alfresco.dashlet.TrainTimes = function TrainTimes_constructor(htmlId)
    {
-      return Alfresco.dashlet.TrainTimes.superclass.constructor.call(this, "Alfresco.dashlet.TrainTimes", htmlId, ["datatable","datasource","autocomplete"]);
+      return Alfresco.dashlet.TrainTimes.superclass.constructor.call(this, "Alfresco.dashlet.TrainTimes", htmlId, ["datatable", "datasource", "paginator", "autocomplete"]);
    };
 
    /**
