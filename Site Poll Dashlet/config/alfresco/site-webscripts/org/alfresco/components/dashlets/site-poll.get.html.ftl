@@ -17,7 +17,7 @@
       <a class="theme-color-1" href="#" id="${args.htmlid}-configure-link">${msg("label.configure")}</a>
    </div>
 </#if>
-   <div class="body" <#if args.height??>style="height: ${args.height}px;"</#if>>
+   <div class="body">
    <div class="msg">
    <#if args.nodeRef??>
    <#if pollName??>
