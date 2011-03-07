@@ -26,7 +26,7 @@
    <input type="submit" value="${msg("button.submit")}" name="action" id="${args.htmlid}-submit"/>
    </form>
    <div id="${args.htmlid}-results" class="pollResults" style="display: none;"></div>
-   <p id="${args.htmlid}-poll-links" style="display: none;"><a id="${args.htmlid}-toggle-results-link" href="#">${msg("label.showResults")}</a></p>
+   <p id="${args.htmlid}-poll-links" class="poll-links" style="display: none;"><a id="${args.htmlid}-toggle-results-link" href="#">${msg("label.showResults")}</a></p>
    </div>
    </div>
    </div>

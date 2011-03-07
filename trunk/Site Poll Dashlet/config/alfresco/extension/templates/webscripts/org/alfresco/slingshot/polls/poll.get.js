@@ -17,12 +17,16 @@ if (pollNode != null)
 {
    var responseNode = pollNode.childByNamePath(username);
    model.poll = pollNode;
-   model.hasPermission = pollNode.hasPermission("CreateChildren");
+   model.hasCreateChildrenPermission = pollNode.hasPermission("CreateChildren");
+   model.hasCoordinatorPermission = pollNode.hasPermission("Coordinator");
+   model.pollOwner = pollNode.getOwner();
+   model.isOwner = pollNode.getOwner() == person.properties.userName;
    model.hasVoted = responseNode != null;
    if (model.hasVoted)
    {
       model.pollResponse = responseNode.properties["pm:response"];
    }
+   model.options = getPollOptions(pollNode);
 }
 else
 {
