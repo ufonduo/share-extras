@@ -2,7 +2,6 @@
    <div class="hd">${msg("label.header")}</div>
    <div class="bd">
       <form id="${args.htmlid}-form" action="" method="POST">
-         <input type="hidden" name="siteId" value="${url.templateArgs.siteId}"/>
          <div class="yui-gd">
             <div class="yui-u first"><label for="${args.htmlid}-url">${msg("label.url")}:</label></div>
             <div class="yui-u">
