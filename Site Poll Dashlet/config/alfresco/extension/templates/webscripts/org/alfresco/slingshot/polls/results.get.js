@@ -20,46 +20,48 @@ if (pollNode != null)
    // Pre-populate the allowed options
    // pm:options is a multi-valued prop, but options can also be comma-separated within a single value (as
    // the form service does not yet support m-v props)
-   for (var i=0; i<pollNode.properties["pm:options"].length; i++)
+   options = getPollOptions(pollNode);
+   for (var i=0; i<options.length; i++)
    {
-      options = pollNode.properties["pm:options"][i].split(",");
-      for (var j=0; j<options.length; j++)
-      {
-         responses.push(
-               {
-                  "response": options[j],
-                  "votes": 0
-               }
-            );
-      }
+      responses.push(
+            {
+               "response": options[i],
+               "votes": 0
+            }
+         );
    }
    
+   var assocs = pollNode.childAssocs["pm:pollResponse"];
+   
    // Step through each of the responses
-   for (var i=0; i<pollNode.childAssocs["pm:pollResponse"].length; i++)
+   if (assocs)
    {
-      found = false;
-      if (pollNode.childAssocs["pm:pollResponse"][i].typeShort == "pm:response")
+      for (var i=0; i<assocs.length; i++)
       {
-         response = pollNode.childAssocs["pm:pollResponse"][i].properties["pm:response"];
-         for (var j=0; j<responses.length; j++)
+         found = false;
+         if (pollNode.childAssocs["pm:pollResponse"][i].typeShort == "pm:response")
          {
-            if (response == responses[j].response)
+            response = pollNode.childAssocs["pm:pollResponse"][i].properties["pm:response"];
+            for (var j=0; j<responses.length; j++)
             {
-               responses[j].votes ++;
-               found = true;
+               if (response == responses[j].response)
+               {
+                  responses[j].votes ++;
+                  found = true;
+               }
             }
+            if (! found)
+            {
+               // Register any non-allowed responses that might have slipped through (e.g. if an option name was changed)
+               responses.push(
+                        {
+                           "response": response,
+                           "votes": 1
+                        }
+                     );
+            }
+            totalVotes ++;
          }
-         if (! found)
-         {
-            // Register any non-allowed responses that might have slipped through (e.g. if an option name was changed)
-            responses.push(
-                     {
-                        "response": response,
-                        "votes": 1
-                     }
-                  );
-         }
-         totalVotes ++;
       }
    }
 

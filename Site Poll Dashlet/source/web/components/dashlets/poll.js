@@ -191,8 +191,12 @@
          }
          else
          {
+            Dom.get(this.id + "-poll-title").innerHTML = "";
+            Dom.get(this.id + "-results").innerHTML = "";
             Dom.get(this.id + "-poll-message").innerHTML = this.msg("msg.notConfigured");
             Dom.setStyle(this.id + "-poll-message", "display", "block");
+            Dom.setStyle([this.id + "-results", this.id + "-poll-links"], "display", "none");
+            this.toggleResultsLink.innerHTML = this.msg("label.showResults");
          }
       },
       
@@ -222,7 +226,7 @@
             
             if (pollEnabled)
             {
-               if (p_response.json.hasPermission)
+               if (p_response.json.hasCreateChildrenPermission)
                {
                   if (this.buttonGroup)
                   {
@@ -272,6 +276,11 @@
                         {
                            fn: function(response)
                            {
+                              // Hide the results if shown
+                              this.resultsContainer.innerHTML = "";
+                              Dom.setStyle(this.resultsContainer, "display", "none");
+                              this.toggleResultsLink.innerHTML = this.msg("label.showResults");
+                           
                               // Replace the form with a thank you message and a link for the results
                               Dom.get(this.id + "-poll-message").innerHTML = this.msg("msg.thankyou", this.getSelectedOption());
                               Dom.setStyle(this.id + "-form", "display", "none");
@@ -287,7 +296,7 @@
                   this.submitButton.set("disabled", true);
 
                   Dom.setStyle(this.id + "-form", "display", "block");
-                  Dom.setStyle([this.id + "-poll-message", this.id + "-poll-links"], "display", "none");
+                  Dom.setStyle(this.id + "-poll-message", "display", "none");
                }
                else
                {
@@ -306,8 +315,21 @@
          else
          {
             Dom.setStyle(this.id + "-form", "display", "none");
+         }
+         
+         // If they have voted or own the poll then allow the results to be shown
+         if (p_response.json.hasVoted)
+         {
             Dom.get(this.id + "-poll-message").innerHTML = this.msg("msg.thankyou", p_response.json.pollResponse);
-            Dom.setStyle([this.id + "-poll-message", this.id + "-poll-links"], "display", "block");
+            Dom.setStyle([this.id + "-poll-message", this.id + "-results", this.id + "-poll-links"], "display", "block");
+         }
+         else if (p_response.json.isOwner)
+         {
+            Dom.setStyle([this.id + "-results", this.id + "-poll-links"], "display", "block");
+         }
+         else
+         {
+            Dom.setStyle([this.id + "-results", this.id + "-poll-links"], "display", "none");
          }
 
          // Hide the results if shown
@@ -321,10 +343,16 @@
        * @method onPollLoadFailed
        * @param p_response {object} Response object from request
        */
-      onPollLoadFailed: function SitePoll_onPollLoadFailed(p_response, p_obj)
+      onPollLoadFailed: function SitePoll_onPollLoadFailed(p_response)
       {
-         // TODO check response code to ensure it is a 404
-         Dom.get(this.id + "-poll-message").innerHTML = this.msg("msg.notFound");
+         if (p_response.serverResponse.status == 404)
+         {
+            Dom.get(this.id + "-poll-message").innerHTML = this.msg("msg.notFound");
+         }
+         else
+         {
+            Dom.get(this.id + "-poll-message").innerHTML = this.msg("msg.error");
+         }
          Dom.setStyle(this.id + "-poll-message", "display", "block");
       },
       
@@ -368,14 +396,20 @@
       onResultsSuccess: function SitePoll_onResultsSuccess(p_response)
       {
          var responses = p_response.json.responses, totalVotes = p_response.json.totalVotes, html = "", response;
-         for (i = 0, ii = responses.length; i < ii; i++)
+         if (totalVotes > 0)
          {
-            response = responses[i];
-            html += "<h4 class=\"resultResponse\">" + $html(response.response) + "</h4><p class=\"pollResult\"><span class=\"resultBar\"><span class=\"outer\"><span class=\"inner\" style=\"width: " + Math.round(response.share * 100) + "%;\"> </span></span></span><span class=\"resultSummary\">" + $html(response.votes) + " <span class=\"detail\">(" + Math.round(response.share * 100) + "%)</span></span></p>";
+            for (i = 0, ii = responses.length; i < ii; i++)
+            {
+               response = responses[i];
+               html += "<h4 class=\"resultResponse\">" + $html(response.response) + "</h4><p class=\"pollResult\"><span class=\"resultBar\"><span class=\"outer\"><span class=\"inner\" style=\"width: " + Math.round(response.share * 100) + "%;\"> </span></span></span><span class=\"resultSummary\">" + $html(response.votes) + " <span class=\"detail\">(" + Math.round(response.share * 100) + "%)</span></span></p>";
+            }
+            html += "<p>" + this.msg("msg.totalVotes", totalVotes) + "</p>";
          }
-         html += "<p>" + this.msg("msg.totalVotes", totalVotes) + "</p>";
+         else
+         {
+            html = "<p>" + this.msg("msg.noVotes") + "</p>";
+         }
          this.resultsContainer.innerHTML = html;
-         
          // Fade the new content in
          Alfresco.util.Anim.fadeIn(this.resultsContainer);
       },
@@ -467,16 +501,7 @@
          Event.stopEvent(e);
          if (Dom.getStyle(this.resultsContainer, "display") == "none")
          {
-            if (this.resultsContainer.innerHTML == "")
-            {
-               // Load and render the results
-               this.loadResults();
-            }
-            else
-            {
-               // Fade the existing content in
-               Alfresco.util.Anim.fadeIn(this.resultsContainer);
-            }
+            this.loadResults();
             this.toggleResultsLink.innerHTML = this.msg("label.hideResults");
          }
          else

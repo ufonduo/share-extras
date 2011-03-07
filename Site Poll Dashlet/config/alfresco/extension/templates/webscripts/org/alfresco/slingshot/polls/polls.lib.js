@@ -53,3 +53,21 @@ function findPollByName(siteName, pollName)
     pollNode = pollsContainer.childByNamePath(pollName);
     return pollNode;
 }
+
+function getPollOptions(pollNode)
+{
+   var options = [];
+   
+   // pm:options is a multi-valued prop, but options can also be comma-separated within a single value (as
+   // the form service does not yet support m-v props)
+   for (var i=0; i<pollNode.properties["pm:options"].length; i++)
+   {
+      opts = pollNode.properties["pm:options"][i].split(",");
+      for (var j=0; j<opts.length; j++)
+      {
+         options.push(opts[j].replace(/^ /, "").replace(/ $/, ""));
+      }
+   }
+   
+   return options;
+}

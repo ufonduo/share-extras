@@ -1,3 +1,5 @@
+<import resource="classpath:alfresco/extension/templates/webscripts/org/alfresco/slingshot/polls/polls.lib.js">
+
 var nodeRef = url.templateArgs.protocol + "://" + url.templateArgs.store + "/" + url.templateArgs.id,
    jsonData = jsonUtils.toObject(requestbody.content),
    response = jsonData.response,
@@ -13,28 +15,40 @@ if (pollNode != null)
    {
       if (response != null)
       {
-         // Check the poll has not expired
-         var pollEnabled = pollNode.properties["pm:enabled"];
-         var now = Date.now();
-         if (pollEnabled && pollNode.properties.from)
+         // Check that the option is in the allowed list
+         var opts = getPollOptions(pollNode);
+         
+         if (opts.indexOf(response) >= 0)
          {
-            pollEnabled = pollNode.properties.from.getTime() < now;
-         }
-         if (pollEnabled && pollNode.properties.to)
-         {
-            pollEnabled = pollNode.properties.to.getTime() > now;
-         }
-         if (pollEnabled)
-         {
-            responseNode = pollNode.createNode(username, "pm:response", "pm:pollResponse");
-            responseNode.properties["pm:response"] = response;
-            responseNode.save()
-            model.result = true;
+            // Check the poll has not expired
+            var pollEnabled = pollNode.properties["pm:enabled"];
+            var now = Date.now();
+            if (pollEnabled && pollNode.properties.from)
+            {
+               pollEnabled = pollNode.properties.from.getTime() < now;
+            }
+            if (pollEnabled && pollNode.properties.to)
+            {
+               pollEnabled = pollNode.properties.to.getTime() > now;
+            }
+            if (pollEnabled)
+            {
+               responseNode = pollNode.createNode(username, "pm:response", "pm:pollResponse");
+               responseNode.properties["pm:response"] = response;
+               responseNode.save()
+               model.result = true;
+            }
+            else
+            {
+               status.code = 500;
+               status.message = "Poll is not enabled or not currently active";
+               status.redirect = true;
+            }
          }
          else
          {
-            status.code = 500;
-            status.message = "Poll is not enabled or not currently active";
+            status.code = status.BAD_REQUEST;
+            status.message = "Response '" + response + "' is not a valid option";
             status.redirect = true;
          }
       }
