@@ -93,15 +93,6 @@
          nodeRef: "",
 
          /**
-          * Whether the user has voted already or not.
-          * 
-          * @property hasVoted
-          * @type boolean
-          * @default false
-          */
-         hasVoted: false,
-
-         /**
           * ID of the current site
           * 
           * @property siteId
@@ -167,53 +158,174 @@
          
          Event.addListener(this.id + "-configure-link", "click", this.onConfigPollClick, this, true);
          Event.addListener(this.id + "-toggle-results-link", "click", this.onToggleResultsClick, this, true);
-         
-         if (!this.options.hasVoted)
+
+         this.initPoll();
+      },
+
+      /**
+       * Load poll information over HTTP and initialise the dashlet
+       * 
+       * @method initPoll
+       */
+      initPoll: function SitePoll_initPoll()
+      {
+         if (this.options.nodeRef != "")
          {
-            this.buttonGroup = new YAHOO.widget.ButtonGroup(this.id + "-buttongroup");
-            
-            // Add event listener to each button
-            for ( var i = 0; i < this.buttonGroup.getCount(); i++)
+            // Load the user timeline
+            Alfresco.util.Ajax.request(
             {
-               var b = this.buttonGroup.getButton(i);
-               b.on("checkedChange", this.onOptionCheckedChanged, b, this);
-            }
-            
-            this.submitButton = Alfresco.util.createYUIButton(this, "submit", function()
-            {
-               Alfresco.util.Ajax.request(
+               url: Alfresco.constants.PROXY_URI + "slingshot/poll/" + this.options.nodeRef.replace("://", "/"),
+               successCallback:
                {
-                  method: "POST",
-                  requestContentType: Alfresco.util.Ajax.JSON,
-                  responseContentType: Alfresco.util.Ajax.JSON,
-                  url: Alfresco.constants.PROXY_URI + "slingshot/poll/" + this.options.nodeRef.replace("://", "/") + "/response",
-                  dataObj: 
-                  {
-                     site: this.options.site,
-                     response: this.getSelectedOption()
-                  },
-                  successCallback: 
-                  {
-                     fn: function(response)
-                     {
-                        // Replace the form with a thank you message and a link for the results
-                        Dom.get(this.id + "-poll-message").innerHTML = this.msg("msg.thankyou", this.getSelectedOption());
-                        Dom.setStyle(this.id + "-form", "display", "none");
-                        Dom.setStyle([this.id + "-poll-message", this.id + "-poll-links"], "display", "block");
-                     },
-                     scope: this
-                  },
-                  failureMessage: "Could not post response to '" + Alfresco.constants.PROXY_URI + "slingshot/poll/" + this.options.nodeRef.replace("://", "/") + "/response'.",
-                  scope: this,
-                  execScripts: true
-               });
+                  fn: this.onPollLoaded,
+                  scope: this
+               },
+               failureCallback:
+               {
+                  fn: this.onPollLoadFailed,
+                  scope: this
+               },
+               scope: this,
+               noReloadOnAuthFailure: true
             });
-            this.submitButton.set("disabled", true);
          }
          else
          {
+            Dom.get(this.id + "-poll-message").innerHTML = this.msg("msg.notConfigured");
+            Dom.setStyle(this.id + "-poll-message", "display", "block");
+         }
+      },
+      
+      /**
+       * Poll loaded successfully
+       * @method onPollLoaded
+       * @param p_response {object} Response object from request
+       */
+      onPollLoaded: function SitePoll_onPollLoaded(p_response, p_obj)
+      {
+         Dom.get(this.id + "-poll-title").innerHTML = p_response.json.title;
+         
+         if (!p_response.json.hasVoted)
+         {
+            var pollEnabled = p_response.json.enabled;
+            var now = Date.now();
+            if (pollEnabled && p_response.json.startDate)
+            {
+               var startDate = Date.parse(p_response.json.startDate);
+               pollEnabled = startDate < now;
+            }
+            if (pollEnabled && p_response.json.startDate)
+            {
+               var endDate = Date.parse(p_response.json.endDate);
+               pollEnabled = endDate > now;
+            }
+            
+            if (pollEnabled)
+            {
+               if (p_response.json.hasPermission)
+               {
+                  if (this.buttonGroup)
+                  {
+                     this.buttonGroup.destroy();
+                  }
+                  this.buttonGroup = new YAHOO.widget.ButtonGroup({
+                        id: this.id + "-buttongroup",
+                        name: "response",
+                        container: this.id + "-poll-options"
+                  });
+                  
+                  var opt, optid;
+                  // Create buttons
+                  for ( var i = 0; i < p_response.json.options.length; i++)
+                  {
+                     opt = p_response.json.options[i];
+                     optid = this.id + "-poll-option-" + i;
+                     this.buttonGroup.addButton(
+                           {
+                              id: optid,
+                              name: "response",
+                              label: opt,
+                              value: opt,
+                              type: "radio"
+                           }
+                        );
+
+                     // Add event listener to each button
+                     var b = this.buttonGroup.getButton(i);
+                     b.on("checkedChange", this.onOptionCheckedChanged, b, this);
+                  }
+                  
+                  this.submitButton = Alfresco.util.createYUIButton(this, "submit", function()
+                  {
+                     Alfresco.util.Ajax.request(
+                     {
+                        method: "POST",
+                        requestContentType: Alfresco.util.Ajax.JSON,
+                        responseContentType: Alfresco.util.Ajax.JSON,
+                        url: Alfresco.constants.PROXY_URI + "slingshot/poll/" + this.options.nodeRef.replace("://", "/") + "/response",
+                        dataObj: 
+                        {
+                           site: this.options.site,
+                           response: this.getSelectedOption()
+                        },
+                        successCallback: 
+                        {
+                           fn: function(response)
+                           {
+                              // Replace the form with a thank you message and a link for the results
+                              Dom.get(this.id + "-poll-message").innerHTML = this.msg("msg.thankyou", this.getSelectedOption());
+                              Dom.setStyle(this.id + "-form", "display", "none");
+                              Dom.setStyle([this.id + "-poll-message", this.id + "-poll-links"], "display", "block");
+                           },
+                           scope: this
+                        },
+                        failureMessage: "Could not post response to '" + Alfresco.constants.PROXY_URI + "slingshot/poll/" + this.options.nodeRef.replace("://", "/") + "/response'.",
+                        scope: this,
+                        execScripts: true
+                     });
+                  });
+                  this.submitButton.set("disabled", true);
+
+                  Dom.setStyle(this.id + "-form", "display", "block");
+                  Dom.setStyle([this.id + "-poll-message", this.id + "-poll-links"], "display", "none");
+               }
+               else
+               {
+                  Dom.setStyle(this.id + "-form", "display", "none");
+                  Dom.get(this.id + "-poll-message").innerHTML = this.msg("msg.noPermission");
+                  Dom.setStyle(this.id + "-poll-message", "display", "block");
+               }
+            }
+            else
+            {
+               Dom.setStyle(this.id + "-form", "display", "none");
+               Dom.get(this.id + "-poll-message").innerHTML = this.msg("msg.notEnabled");
+               Dom.setStyle(this.id + "-poll-message", "display", "block");
+            }
+         }
+         else
+         {
+            Dom.setStyle(this.id + "-form", "display", "none");
+            Dom.get(this.id + "-poll-message").innerHTML = this.msg("msg.thankyou", p_response.json.pollResponse);
             Dom.setStyle([this.id + "-poll-message", this.id + "-poll-links"], "display", "block");
          }
+
+         // Hide the results if shown
+         this.resultsContainer.innerHTML = "";
+         Dom.setStyle(this.resultsContainer, "display", "none");
+         this.toggleResultsLink.innerHTML = this.msg("label.showResults");
+      },
+      
+      /**
+       * Poll load failed
+       * @method onPollLoadFailed
+       * @param p_response {object} Response object from request
+       */
+      onPollLoadFailed: function SitePoll_onPollLoadFailed(p_response, p_obj)
+      {
+         // TODO check response code to ensure it is a 404
+         Dom.get(this.id + "-poll-message").innerHTML = this.msg("msg.notFound");
+         Dom.setStyle(this.id + "-poll-message", "display", "block");
       },
       
       /**
@@ -310,6 +422,12 @@
                {
                   fn: function SitePoll_onConfigPoll_callback(e)
                   {
+                     var select = Dom.get(this.configDialog.id + "-poll-select");
+                     if (select != null && this.options.nodeRef != select.value)
+                     {
+                        this.options.nodeRef = select.value;
+                        this.initPoll();
+                     }
                   },
                   scope: this
                },

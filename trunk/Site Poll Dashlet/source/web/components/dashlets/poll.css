@@ -1,3 +1,7 @@
+.poll .poll-form
+{
+	display: none;
+}
 .poll input
 {
    margin: 1em 0;
