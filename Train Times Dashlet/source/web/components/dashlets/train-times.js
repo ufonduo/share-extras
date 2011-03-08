@@ -123,6 +123,15 @@
       trainsContainer: null,
       
       /**
+       * Service updates div object
+       * 
+       * @property updatesContainer
+       * @type object
+       * @default null
+       */
+      updatesContainer: null,
+      
+      /**
        * Message div object
        * 
        * @property messageContainer
@@ -169,6 +178,7 @@
          this.bodyContainer = Dom.get(this.id + "-body");
          this.trainsContainer = Dom.get(this.id + "-trains");
          this.messageContainer = Dom.get(this.id + "-message");
+         this.updatesContainer = Dom.get(this.id + "-updates");
          
          Event.addListener(this.id + "-configure-link", "click", this.onConfigClick, this, true);
          Event.addListener(this.id + "-refresh", "click", this.onRefresh, this, true);
@@ -252,8 +262,16 @@
                        "destination", 
                        {key:"expected", parser:function (oData) { return oData.split(" &lt;br/&gt; ")[0] }}, 
                        "platform",
-                       "url"]
+                       "url"],
+             metaFields: {
+                updates: "updates"
+             }
           };
+          myDataSource.subscribe("responseEvent", function(oArgs) {
+             //var d = (YAHOO.lang.JSON.parse("" + oArgs.response.responseText));
+             //for (p in d) {
+             //alert(p + "=" + d[p]); }
+          });
           var rowFormatter = function(elTr, oRecord) {
              if (oRecord.getData('status') == "d") {
                 Dom.addClass(elTr, "delayed");
@@ -274,9 +292,47 @@
                 MSG_EMPTY: this.msg("msg.noTrains"),
                 MSG_LOADING: this.msg("msg.loading")
           };
-          this.dataSource = myDataSource;
-          this.dataTable = new YAHOO.widget.DataTable(this.trainsContainer,
+          var myDataTable = new YAHOO.widget.DataTable(this.trainsContainer,
                  myColumnDefs, myDataSource, dtOptions);
+          
+          var me = this;
+          
+          myDataTable.handleDataReturnPayload = function(oRequest, oResponse, oPayload)
+          {
+             // Add service updates to the dashlet
+             if (oResponse.meta.updates && oResponse.meta.updates.length > 0)
+             {
+                var html = "";
+                for ( var i = 0; i < oResponse.meta.updates.length; i++)
+                {
+                   html += "<div class=\"update\">" +
+                      me._htmlDecode(oResponse.meta.updates[i].text) +
+                      "</div>";
+                }
+                me.updatesContainer.innerHTML = html;
+                Dom.setStyle(me.updatesContainer, "display", "block");
+             }
+             else
+             {
+                Dom.setStyle(me.updatesContainer, "display", "none");
+             }
+             return oPayload;
+          };
+
+          this.dataSource = myDataSource;
+          this.dataTable = myDataTable;
+      },
+      
+      /**
+       * Replace HTML-encoded entities in text with their non-encoded equivalents
+       * 
+       * @method _htmlDecode
+       * @param text {string} HTML-encoded text to be decoded
+       * @private
+       */
+      _htmlDecode: function TrainTimes_urlDecode(text)
+      {
+         return text.replace("&lt;", "<", "g").replace("&gt;", ">", "g").replace("&amp;", "&", "g").replace("&quot;", "\"", "g").replace("&#034;", "\"", "g");
       },
       
       /**

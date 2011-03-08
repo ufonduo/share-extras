@@ -40,3 +40,23 @@
    text-decoration: none;
    width: 16px;
 }
+.train-times-dashlet .updates
+{
+	background-color: #FFFBDD;
+	border-bottom: 1px solid #DDD6A0;
+   padding-top: 5px;
+   padding-bottom: 5px;
+   display: none;
+}
+.train-times-dashlet .updates .update
+{
+   padding: 5px 0px 5px 30px;
+   background-image: url('warning-icon.png');
+   background-position: 0% 50%;
+   background-repeat: no-repeat;
+}
+.train-times-dashlet .updates .update p
+{
+   padding-top: 0px;
+   padding-bottom: 0px;
+}

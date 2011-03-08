@@ -18,6 +18,7 @@
    </div>
 </#if>
    <div class="body" id="${args.htmlid}-body">
+      <div class="updates" id="${args.htmlid}-updates"></div>
       <div class="trains" id="${args.htmlid}-trains"></div>
       <div class="message" id="${args.htmlid}-message"></div>
    </div>
