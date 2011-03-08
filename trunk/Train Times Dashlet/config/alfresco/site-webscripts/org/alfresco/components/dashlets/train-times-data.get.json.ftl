@@ -14,5 +14,13 @@
          "url": "${t[5]}"
       }<#if t_has_next>,</#if>
    </#list>
+   ],
+   "updates": [
+   <#list data.updates as u>
+      {
+         "link": "${u['link']}",
+         "text": "${u['text']}"
+      }<#if u_has_next>,</#if>
+   </#list>
    ]
 }
