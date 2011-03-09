@@ -3,7 +3,7 @@
    <div class="bd">
       <form id="${args.htmlid}-form" action="" method="POST">
          <div class="yui-gd">
-            <div class="yui-u first"><label for="${args.htmlid}-url">${msg("label.url")}:</label></div>
+            <div class="yui-u first"><label for="${args.htmlid}-poll-select">${msg("label.poll-select")}:</label></div>
             <div class="yui-u">
             <#if pollList.polls?size &gt; 0>
                <select name="nodeRef" id="${args.htmlid}-poll-select" style="width: 30em;">
