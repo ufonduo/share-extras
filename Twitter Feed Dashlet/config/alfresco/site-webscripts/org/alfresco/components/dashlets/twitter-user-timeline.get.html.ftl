@@ -17,6 +17,8 @@
          <a id="${args.htmlid}-configure-link" class="theme-color-1" title="${msg('link.configure')}" href="">${msg("link.configure")}</a>
       </div>
    </#if>
-   <div id="${args.htmlid}-timeline" class="body scrollableList" <#if args.height??>style="height: ${args.height}px;"</#if>>
+   <div id="${args.htmlid}-body" class="body scrollableList" <#if args.height??>style="height: ${args.height}px;"</#if>>
+      <div id="${args.htmlid}-timeline" class="timeline"></div>
+      <div id="${args.htmlid}-buttons" class="buttons"><input type="button" id="${args.htmlid}-btn-more" value="${msg('button.more')}" /></div>
    </div>
 </div>

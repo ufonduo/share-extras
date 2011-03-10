@@ -74,6 +74,7 @@
           *
           * @property componentId
           * @type string
+          * @default ""
           */
          componentId: "",
 
@@ -101,6 +102,7 @@
        * 
        * @property activityList
        * @type object
+       * @default null
        */
       timeline: null,
 
@@ -109,11 +111,22 @@
        * 
        * @property title
        * @type object
+       * @default null
        */
       title: null,
 
       /**
+       * Load More button
+       * 
+       * @property moreButton
+       * @type object
+       * @default null
+       */
+      moreButton: null,
+
+      /**
        * Fired by YUI when parent element is available for scripting
+       * 
        * @method onReady
        */
       onReady: function TwitterUserTimeline_onReady()
@@ -126,24 +139,38 @@
          // The dashlet title container
          this.title = Dom.get(this.id + "-title");
          
+         // Set up the More Tweets button
+         this.moreButton = new YAHOO.widget.Button(
+            this.id + "-btn-more",
+            {
+               disabled: true,
+               onclick: {
+                  fn: this.onMoreButtonClick,
+                  obj: this.moreButton,
+                  scope: this
+               }
+            }
+         );
+         
          // Load the timeline
          this.refreshTimeline();
       },
 
       /**
-       * Fired by YUI when parent element is available for scripting
-       * @method onReady
+       * Reload the timeline from the Twitter API and refresh the contents of the dashlet
+       * 
+       * @method refreshTimeline
        */
       refreshTimeline: function TwitterUserTimeline_refreshTimeline()
       {
-         // Load the user timeline
+         // Load the timeline
          Alfresco.util.Ajax.request(
          {
             url: Alfresco.constants.URL_SERVICECONTEXT + "components/dashlets/twitter-user-timeline/list",
             dataObj:
             {
-               twitterUser: ((this.options.twitterUser != null && this.options.twitterUser != "") ? 
-                     this.options.twitterUser : this.options.defaultTwitterUser)
+               twitterUser: this.getTwitterUser(),
+               htmlid: this.id
             },
             successCallback:
             {
@@ -163,23 +190,157 @@
       
       /**
        * Timeline loaded successfully
+       * 
        * @method onTimelineLoaded
        * @param p_response {object} Response object from request
        */
       onTimelineLoaded: function TwitterUserTimeline_onTimelineLoaded(p_response, p_obj)
       {
          this.timeline.innerHTML = p_response.serverResponse.responseText;
-         this.title.innerHTML = this.msg("header.userTimeline", ((this.options.twitterUser != "") ?
-               this.options.twitterUser : this.options.defaultTwitterUser));
+         this.title.innerHTML = this.msg("header.userTimeline", this.getTwitterUser());
+         
+         /*
+          * Enable the Load More button if the feed is a list feed. The button is not supported for 
+          * users since the user_timeline API does not support max_id and since_id.
+          */
+         if (this.getTwitterUser().indexOf("/") > 0)
+         {
+            this.moreButton.set("disabled", false);
+            Dom.setStyle(this.id + "-buttons", "display", "block");
+         }
+         else
+         {
+            this.moreButton.set("disabled", true);
+            Dom.setStyle(this.id + "-buttons", "display", "none");
+         }
       },
 
       /**
        * Timeline load failed
+       * 
        * @method onTimelineLoadFailed
        */
       onTimelineLoadFailed: function TwitterUserTimeline_onTimelineLoadFailed()
       {
          this.timeline.innerHTML = '<div class="detail-list-item first-item last-item">' + this.msg("label.error") + '</div>';
+      },
+
+      /**
+       * Load Tweets further back in time from the Twitter API and add to the dashlet contents
+       * 
+       * @method extendTimeline
+       */
+      extendTimeline: function TwitterUserTimeline_extendTimeline()
+      {
+         // Load the user timeline
+         Alfresco.util.Ajax.request(
+         {
+            url: Alfresco.constants.URL_SERVICECONTEXT + "components/dashlets/twitter-user-timeline/list",
+            dataObj:
+            {
+               twitterUser: this.getTwitterUser(),
+               maxId: this.getEarliestTweetId(),
+               htmlid: this.id
+            },
+            successCallback:
+            {
+               fn: this.onTimelineExtensionLoaded,
+               scope: this,
+               obj: null
+            },
+            failureCallback:
+            {
+               fn: this.onTimelineExtensionLoadFailure,
+               scope: this,
+               obj: null
+            },
+            scope: this,
+            noReloadOnAuthFailure: true
+         });
+      },
+      
+      /**
+       * Extended timeline loaded successfully
+       * 
+       * @method onTimelineExtensionLoaded
+       * @param p_response {object} Response object from request
+       */
+      onTimelineExtensionLoaded: function TwitterUserTimeline_onTimelineLoaded(p_response, p_obj)
+      {
+         this.timeline.innerHTML += p_response.serverResponse.responseText;
+         this.moreButton.set("disabled", false);
+      },
+      
+      /**
+       * Extended timeline load failed
+       * 
+       * @method onTimelineExtensionLoadFailure
+       * @param p_response {object} Response object from request
+       */
+      onTimelineExtensionLoadFailure: function TwitterUserTimeline_onTimelineExtensionLoadFailure(p_response, p_obj)
+      {
+         Alfresco.util.PopupManager.displayMessage(
+         {
+            text: this.msg("message.extendFailed")
+         });
+         
+         // Re-enable the button
+         this.moreButton.set("disabled", false);
+      },
+      
+      /**
+       * Get the current Twitter user or list ID
+       * 
+       * @method getTwitterUser
+       * @return {string} The name of the currently-configured user or list, or the default
+       * user/list if unconfigured or blank
+       */
+      getTwitterUser: function TwitterUserTimeline_getTwitterUser()
+      {
+         return (this.options.twitterUser != null && this.options.twitterUser != "") ? 
+               this.options.twitterUser : this.options.defaultTwitterUser;
+      },
+      
+      /**
+       * Get the ID of the earlist Tweet in the timeline
+       * 
+       * @method getEarliestTweetId
+       * @return {string} The ID of the earliest Tweet shown in the timeline, or null if
+       * no Tweets are available or the last Tweet has no compatible ID on its element
+       */
+      getEarliestTweetId: function TwitterUserTimeline_getEarliestTweetId()
+      {
+         var div = Dom.getLastChild(this.timeline);
+         if (div !== null)
+         {
+            var id = Dom.getAttribute(div, "id");
+            if (id !== null && id.lastIndexOf("-") != -1)
+            {
+               return id.substring(id.lastIndexOf("-") + 1);
+            }
+         }
+         return null;
+      },
+      
+      /**
+       * Get the ID of the latest Tweet in the timeline
+       * 
+       * @method getLatestTweetId
+       * @return {string} The ID of the latest Tweet shown in the timeline, or null if
+       * no Tweets are available or the last Tweet has no compatible ID on its element
+       */
+      getLatestTweetId: function TwitterUserTimeline_getLatestTweetId()
+      {
+         var div = Dom.getFirstChild(this.timeline);
+         if (div !== null)
+         {
+            var id = Dom.getAttribute(div, "id");
+            if (id !== null && id.lastIndexOf("-") != -1)
+            {
+               return id.substring(id.lastIndexOf("-") + 1);
+            }
+         }
+         return null;
       },
 
       /**
@@ -220,8 +381,7 @@
                {
                   fn: function VideoWidget_doSetupForm_callback(form)
                   {
-                     Dom.get(this.configDialog.id + "-twitterUser").value = ((this.options.twitterUser != "") ?
-                           this.options.twitterUser : this.options.defaultTwitterUser);
+                     Dom.get(this.configDialog.id + "-twitterUser").value = this.getTwitterUser();
                   },
                   scope: this
                }
@@ -236,6 +396,19 @@
             });
          }
          this.configDialog.show();
+      },
+
+      /**
+       * Click handler for Show More button
+       *
+       * @method onMoreButtonClick
+       * @param e {object} HTML event
+       */
+      onMoreButtonClick: function TwitterUserTimeline_onMoreButtonClick(e, obj)
+      {
+         // Disable the button while we make the request
+         this.moreButton.set("disabled", true);
+         this.extendTimeline();
       }
       
    });
