@@ -3,7 +3,7 @@
 }
 .twitter-user-timeline div.detail-list-item
 {
-   min-height: 2em;
+   min-height: 48px; /* No smaller that profile images */
 }
 .twitter-user-timeline h4, .twitter-user-timeline p
 {
@@ -34,4 +34,15 @@
 .twitter-user-timeline .list-tweet .user-icon
 {
    float: left;
+}
+.twitter-user-timeline > .body div.timeline
+{
+   padding-left: 0;
+   padding-right: 0;
+}
+.twitter-user-timeline .buttons
+{
+	padding-top: 1em;
+	text-align: center;
+	display: none;
 }

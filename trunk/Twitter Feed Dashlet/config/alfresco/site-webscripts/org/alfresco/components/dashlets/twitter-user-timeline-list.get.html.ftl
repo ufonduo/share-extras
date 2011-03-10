@@ -23,7 +23,7 @@
    <#list tweets as t> <#-- List feed -->
       <#assign userLink><a href="http://twitter.com/${t.user.screen_name?html}" title="${t.user.name?html}" class="theme-color-1">${t.user.screen_name?html}</a></#assign>
       <#assign postedLink><a href="http://twitter.com/${t.user.screen_name?html}/status/${t.id?c}">${formatDate(t.created_at?datetime("EEE MMM dd HH:mm:ss Z yyyy"))}</a></#assign>
-      <div class="list-tweet detail-list-item <#if t_index = 0>first-item<#elseif !t_has_next>last-item</#if>">
+      <div class="list-tweet detail-list-item" id="${args.htmlid}-tweet-${t.id?c}">
          <div class="user-icon"><a href="http://twitter.com/${t.user.screen_name?html}" title="${t.user.name?html}"><img src="${t.user.profile_image_url}" alt="${t.user.screen_name?html}" width="48" height="48" /></a></div>
          <div class="tweet">
          <p><strong>${userLink}</strong>: ${formatTweet(t.text)}</p>
@@ -34,7 +34,7 @@
 <#else>
    <#list tweets as t> <#-- User feed -->
       <#assign postedLink><a href="http://twitter.com/${t.user.screen_name?html}/status/${t.id?c}">${formatDate(t.created_at?datetime("EEE MMM dd HH:mm:ss Z yyyy"))}</a></#assign>
-      <div class="detail-list-item <#if t_index = 0>first-item<#elseif !t_has_next>last-item</#if>">
+      <div class="detail-list-item <#if t_index = 0>first-item<#elseif !t_has_next>last-item</#if>" id="${args.htmlid}-tweet-${t.id?c}">
          <p>${formatTweet(t.text)}</p>
          <div class="tweet-details">${msg("text.tweetDetails", postedLink, t.source)}</div>
       </div>
