@@ -31,8 +31,8 @@ function main()
    }
    else
    {
-      model.username = u;
-      model.status = result.status;
+      status.setCode(result.status, "Encountered an error when loading remote data");
+      status.redirect = true;
    }
 }
 

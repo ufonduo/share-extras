@@ -320,15 +320,20 @@
        */
       onTimelineLoadFailed: function TwitterUserTimeline_onTimelineLoadFailed(p_response)
       {
-         var status = p_response.serverResponse.status;
+         var status = p_response.serverResponse.status,
+            isList = this.getTwitterUser().indexOf("/") > 0;
          if (status == 401 || status == 404)
          {
-            this.timeline.innerHTML = "<div class=\"detail-list-item first-item last-item\">" + this.msg("error.list." + status) + "</div>";
+            this.timeline.innerHTML = "<div class=\"msg\">" + this.msg("error." + (isList ? "list" : "user") + "." + status) + "</div>";
          }
          else
          {
-            this.timeline.innerHTML = "<div class=\"detail-list-item first-item last-item\">" + this.msg("label.error") + "</div>";
+            this.timeline.innerHTML = "<div class=\"msg\">" + this.msg("label.error") + "</div>";
          }
+         
+         // Disable the Load More button
+         this.moreButton.set("disabled", true);
+         Dom.setStyle(this.id + "-buttons", "display", "none");
       },
 
       /**
