@@ -23,17 +23,24 @@
 {
    color: #999999;
 }
-.twitter-user-timeline .list-tweet
+.twitter-user-timeline .list-tweet,
+.twitter-user-timeline .user-tweet
 {
    clear: both;
 }
-.twitter-user-timeline .list-tweet .tweet
+.twitter-user-timeline .list-tweet .tweet,
+.twitter-user-timeline .user-tweet .tweet
 {
 	margin-left: 58px;
 }
-.twitter-user-timeline .list-tweet .user-icon
+.twitter-user-timeline .list-tweet .user-icon,
+.twitter-user-timeline .user-tweet .user-icon
 {
    float: left;
+}
+.twitter-user-timeline > .scrollableList
+{
+   padding-top: 0;
 }
 .twitter-user-timeline > .body div.timeline
 {
@@ -45,4 +52,25 @@
 	padding-top: 1em;
 	text-align: center;
 	display: none;
+}
+.twitter-user-timeline .screen-name
+{
+   font-weight: 700;
+}
+.twitter-user-timeline .user-name
+{
+   color: #999999;
+}
+.twitter-user-timeline .retweeted
+{
+   background-image: url("twitter-user-timeline-rt.png");
+   background-position: left;
+   background-repeat: no-repeat;
+   padding-left: 18px;
+   color: #999999;
+}
+.twitter-user-timeline .tweet-hd,
+.twitter-user-timeline .tweet-bd
+{
+   padding-bottom: 0.2em;
 }

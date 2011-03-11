@@ -94,7 +94,16 @@
           * @type string
           * @default ""
           */
-         defaultTwitterUser: ""
+         defaultTwitterUser: "",
+
+         /**
+          * Number of Tweets to load per batch
+          * 
+          * @property pageSize
+          * @type int
+          * @default 20
+          */
+         pageSize: 20
       },
 
       /**
@@ -170,6 +179,7 @@
             dataObj:
             {
                twitterUser: this.getTwitterUser(),
+               pageSize: this.options.pageSize,
                htmlid: this.id
             },
             successCallback:
@@ -196,23 +206,111 @@
        */
       onTimelineLoaded: function TwitterUserTimeline_onTimelineLoaded(p_response, p_obj)
       {
-         this.timeline.innerHTML = p_response.serverResponse.responseText;
+         // Update the dashlet title
          this.title.innerHTML = this.msg("header.userTimeline", this.getTwitterUser());
          
-         /*
-          * Enable the Load More button if the feed is a list feed. The button is not supported for 
-          * users since the user_timeline API does not support max_id and since_id.
-          */
-         if (this.getTwitterUser().indexOf("/") > 0)
+         var html = "", tweets, t,userLink, postedLink, isList = this.getTwitterUser().indexOf("/") > 0;
+         
+         if (p_response.json)
          {
-            this.moreButton.set("disabled", false);
-            Dom.setStyle(this.id + "-buttons", "display", "block");
+            tweets = p_response.json;
+            
+            if (tweets.length > 0)
+            {
+               html += this.generateTweetsHTML(tweets);
+            }
+            else
+            {
+               html += "<div class=\"detail-list-item first-item last-item\">\n";
+               html += "<span>\n";
+               if (isList)
+               {
+                  html += this.msg("list.noTweets");
+               }
+               else
+               {
+                  html += this.msg("user.noTweets");
+               }
+               html += "</span>\n";
+               html += "</div>\n";
+            }
          }
-         else
+         
+         this.timeline.innerHTML = html;
+         
+         // Enable the Load More button
+         this.moreButton.set("disabled", false);
+         Dom.setStyle(this.id + "-buttons", "display", "block");
+      },
+      
+      /**
+       * Generate HTML markup for a single Tweet
+       * 
+       * @method generateTweetHTML
+       * @param t {object} Tweet object to render into HTML
+       * @param rt {object} Retweet object, if the Tweet has been RT'ed
+       * @return {string} HTML markup
+       */
+      generateTweetHTML: function TwitterUserTimeline_generateTweetHTML(t, rt)
+      {
+         var html = "", 
+            isList = this.getTwitterUser().indexOf("/") > 0,
+            profileUri = "http://twitter.com/" + encodeURIComponent(t.user.screen_name),
+            userLink = "<a href=\"" + profileUri + "\" title=\"" + $html(t.user.name) + "\" class=\"theme-color-1\">" + $html(t.user.screen_name) + "</a>",
+            postedLink = "<a href=\"" + profileUri + "/status/" + encodeURIComponent(t.id) + "\">" + (typeof(Alfresco.util.relativeTime) === "function" ? Alfresco.util.relativeTime(new Date(t.created_at)) : Alfresco.util.formatDate(t.created_at)) + "</a>";
+
+         html += "<div class=\"" + (isList ? "list-tweet" : "user-tweet") + " detail-list-item\" id=\"" + $html(this.id) + "-tweet-" + $html(t.id) + "\">\n";
+         html += "<div class=\"user-icon\"><a href=\"" + profileUri + "\" title=\"" + $html(t.user.name) + "\"><img src=\"" + $html(t.user.profile_image_url) + "\" alt=\"" + $html(t.user.screen_name) + "\" width=\"48\" height=\"48\" /></a></div>\n";
+         html += "<div class=\"tweet\">\n";
+         html += "<div class=\"tweet-hd\">\n";
+         html += "<span class=\"screen-name\">" + userLink + "</span> <span class=\"user-name\">" + $html(t.user.name) + "</span>\n";
+         html += !YAHOO.lang.isUndefined(rt) ? " <span class=\"retweeted\">" + this.msg("label.retweetedBy", rt.user.screen_name) + "</span>\n" : "";
+         html += "</div>\n";
+         html += "<div class=\"tweet-bd\">" + this.formatTweet(t.text) + "</div>\n";
+         html += "<div class=\"tweet-details\">" + this.msg("text.tweetDetails", postedLink, t.source) + "</div>\n";
+         html += "</div>\n"; // end tweet
+         html += "</div>\n"; // end list-tweet
+         return html;
+      },
+      
+      /**
+       * Generate HTML markup for a collection of Tweets
+       * 
+       * @method generateHTML
+       * @param tweets {array} Tweet objects to render into HTML
+       * @return {string} HTML markup
+       */
+      generateTweetsHTML: function TwitterUserTimeline_generateTweetsHTML(tweets)
+      {
+         var html = "", t;
+         for (var i = 0; i < tweets.length; i++)
          {
-            this.moreButton.set("disabled", true);
-            Dom.setStyle(this.id + "-buttons", "display", "none");
+            t = tweets[i];
+            if (t.retweeted_status)
+            {
+               html += this.generateTweetHTML(t.retweeted_status, t);
+            }
+            else
+            {
+               html += this.generateTweetHTML(t);
+            }
          }
+         return html;
+      },
+
+      /**
+       * Insert links into Tweet text to highlight users, hashtags and links
+       * 
+       * @method formatTweet
+       * @param {string} text The plain tweet text
+       * @return {string} The tweet text, with hyperlinks added
+       */
+      formatTweet: function TwitterUserTimeline_formatTweet(text)
+      {
+         return text.replace(
+               /https?:\/\/\S+[^\s.]/gm, "<a href=\"$&\">$&</a>").replace(
+               /@(\w+)/gm, "<a href=\"http://twitter.com/$1\">$&</a>").replace(
+               /#(\w+)/gm, "<a href=\"http://twitter.com/search?q=%23$1\">$&</a>");
       },
 
       /**
@@ -220,9 +318,17 @@
        * 
        * @method onTimelineLoadFailed
        */
-      onTimelineLoadFailed: function TwitterUserTimeline_onTimelineLoadFailed()
+      onTimelineLoadFailed: function TwitterUserTimeline_onTimelineLoadFailed(p_response)
       {
-         this.timeline.innerHTML = '<div class="detail-list-item first-item last-item">' + this.msg("label.error") + '</div>';
+         var status = p_response.serverResponse.status;
+         if (status == 401 || status == 404)
+         {
+            this.timeline.innerHTML = "<div class=\"detail-list-item first-item last-item\">" + this.msg("error.list." + status) + "</div>";
+         }
+         else
+         {
+            this.timeline.innerHTML = "<div class=\"detail-list-item first-item last-item\">" + this.msg("label.error") + "</div>";
+         }
       },
 
       /**
@@ -240,6 +346,7 @@
             {
                twitterUser: this.getTwitterUser(),
                maxId: this.getEarliestTweetId(),
+               pageSize: this.options.pageSize + 1,
                htmlid: this.id
             },
             successCallback:
@@ -267,7 +374,7 @@
        */
       onTimelineExtensionLoaded: function TwitterUserTimeline_onTimelineLoaded(p_response, p_obj)
       {
-         this.timeline.innerHTML += p_response.serverResponse.responseText;
+         this.timeline.innerHTML += this.generateTweetsHTML(p_response.json.slice(1)); // Do not include duplicate tweet
          this.moreButton.set("disabled", false);
       },
       
