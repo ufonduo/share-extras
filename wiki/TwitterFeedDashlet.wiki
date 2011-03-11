@@ -1,11 +1,12 @@
 #summary Describes the Twitter Feed Dashlet add-on for Alfresco Share
-#labels Dashlet,Twitter
+#labels Dashlet
 
 =Introduction=
 
-This project defines a custom dashlet that displays recent Tweets from any Twitter user, or any list belonging to a user.
+This project defines a custom dashlet that displays recent Tweets from any public Twitter user, or any public list belonging to a user.
 
-[http://share-extras.googlecode.com/svn/trunk/Twitter%20Feed%20Dashlet/screenshot.png]
+[http://share-extras.googlecode.com/svn/trunk/Twitter%20Feed%20Dashlet/twitter-timeline-dashlet-user.png] 
+[http://share-extras.googlecode.com/svn/trunk/Twitter%20Feed%20Dashlet/twitter-timeline-dashlet-list.png]
 
 =Installation=
 
