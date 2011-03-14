@@ -103,7 +103,16 @@
           * @type int
           * @default 20
           */
-         pageSize: 20
+         pageSize: 20,
+
+         /**
+          * How often the dashlet should poll for new Tweets, in seconds. Setting to zero disabled checking.
+          * 
+          * @property checkInterval
+          * @type int
+          * @default 60
+          */
+         checkInterval: 60
       },
 
       /**
@@ -125,6 +134,15 @@
       title: null,
 
       /**
+       * Notifications DOM container.
+       * 
+       * @property notifications
+       * @type object
+       * @default null
+       */
+      notifications: null,
+
+      /**
        * Load More button
        * 
        * @property moreButton
@@ -132,6 +150,25 @@
        * @default null
        */
       moreButton: null,
+
+      /**
+       * New Tweets cache. Populated by polling function, but cached so that the user
+       * can then choose to display the tweets by clicking a link.
+       * 
+       * @property newTweets
+       * @type object
+       * @default null
+       */
+      newTweets: null,
+
+      /**
+       * Timer for new tweets poll function
+       * 
+       * @property pollTimer
+       * @type object
+       * @default null
+       */
+      pollTimer: null,
 
       /**
        * Fired by YUI when parent element is available for scripting
@@ -147,6 +184,10 @@
          
          // The dashlet title container
          this.title = Dom.get(this.id + "-title");
+         
+         // The new tweets notification container
+         this.notifications = Dom.get(this.id + "-notifications");
+         Event.addListener(this.notifications, "click", this.onShowNewClick, null, this);
          
          // Set up the More Tweets button
          this.moreButton = new YAHOO.widget.Button(
@@ -241,6 +282,9 @@
          // Enable the Load More button
          this.moreButton.set("disabled", false);
          Dom.setStyle(this.id + "-buttons", "display", "block");
+         
+         // Start the timer to poll for new tweets, if enabled
+         this.resetTimer();
       },
       
       /**
@@ -414,7 +458,7 @@
       },
       
       /**
-       * Get the ID of the earlist Tweet in the timeline
+       * Get the ID of the earliest Tweet in the timeline
        * 
        * @method getEarliestTweetId
        * @return {string} The ID of the earliest Tweet shown in the timeline, or null if
@@ -453,6 +497,112 @@
             }
          }
          return null;
+      },
+      
+      /**
+       * Check for new Tweets since the last Tweet shown. Display a notice to the user
+       * indicating that new Tweets are available, if shown.
+       * 
+       * @method pollNew
+       */
+      pollNew: function TwitterUserTimeline_pollNew()
+      {
+         // Load the user timeline
+         Alfresco.util.Ajax.request(
+         {
+            url: Alfresco.constants.URL_SERVICECONTEXT + "components/dashlets/twitter-user-timeline/list",
+            dataObj:
+            {
+               twitterUser: this.getTwitterUser(),
+               minId: this.getLatestTweetId(),
+               pageSize: this.options.pageSize + 1,
+               htmlid: this.id
+            },
+            successCallback:
+            {
+               fn: this.onNewTweetsLoaded,
+               scope: this,
+               obj: null
+            },
+            failureCallback:
+            {
+               fn: this.onNewTweetsLoadFailure,
+               scope: this,
+               obj: null
+            },
+            scope: this,
+            noReloadOnAuthFailure: true
+         });
+      },
+      
+      /**
+       * New tweets loaded successfully
+       * 
+       * @method onNewTweetsLoaded
+       * @param p_response {object} Response object from request
+       */
+      onNewTweetsLoaded: function TwitterUserTimeline_onNewTweetsLoaded(p_response, p_obj)
+      {
+         this.newTweets = p_response.json;
+         
+         if (this.newTweets.length > 0)
+         {
+            // Create notification
+            if (this.newTweets.length == 1)
+            {
+               this.notifications.innerHTML = this.msg("message.newTweet");
+            }
+            else
+            {
+               this.notifications.innerHTML = this.msg("message.newTweets", this.newTweets.length);
+            }
+            Dom.setStyle(this.notifications, "display", "block");
+         }
+         else
+         {
+            // Remove notification
+            Dom.setStyle(this.notifications, "display", "none");
+         }
+         
+         // Schedule a new poll
+         this.resetTimer();
+      },
+      
+      /**
+       * New tweets load failed
+       * 
+       * @method onNewTweetsLoadFailure
+       * @param p_response {object} Response object from request
+       */
+      onNewTweetsLoadFailure: function TwitterUserTimeline_onNewTweetsLoadFailure(p_response, p_obj)
+      {
+         // Schedule a new poll
+         this.resetTimer();
+      },
+
+      /**
+       * Reset the poll timer
+       * 
+       * @method resetCounter
+       */
+      resetTimer: function TwitterUserTimeline_resetTimer()
+      {
+         this.stopTimer();
+         // Schedule next transition
+         this.pollTimer = YAHOO.lang.later(this.options.checkInterval * 1000, this, this.pollNew);
+      },
+
+      /**
+       * Stop the poll timer
+       * 
+       * @method stopTimer
+       */
+      stopTimer: function TwitterUserTimeline_stopTimer()
+      {
+         if (this.pollTimer != null)
+         {
+            this.pollTimer.cancel();
+         }
       },
 
       /**
@@ -521,6 +671,25 @@
          // Disable the button while we make the request
          this.moreButton.set("disabled", true);
          this.extendTimeline();
+      },
+
+      /**
+       * Click handler for show new tweets link
+       *
+       * @method onShowNewClick
+       * @param e {object} HTML event
+       */
+      onShowNewClick: function TwitterUserTimeline_onShowNewClick(e, obj)
+      {
+         if (this.newTweets !== null && this.newTweets.length > 0)
+         {
+            var thtml = this.generateTweetsHTML(this.newTweets);
+            this.timeline.innerHTML = thtml + this.timeline.innerHTML;
+            this.newTweets = null;
+         }
+         
+         // Fade out the notification
+         Dom.setStyle(this.notifications, "display", "none");
       }
       
    });
