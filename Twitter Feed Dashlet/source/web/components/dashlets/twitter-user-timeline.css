@@ -79,3 +79,33 @@
    padding-left: 8px;
    padding-right: 8px;
 }
+.twitter-user-timeline .notifications
+{
+   background-color: #FFFBDD;
+   border-bottom: 1px solid #DDD6A0;
+   padding-top: 5px;
+   padding-bottom: 5px;
+   text-align: center;
+	display: none;
+	cursor: pointer;
+}
+.twitter-user-timeline .refresh
+{
+   background-image: url('refresh-icon.png');
+   background-repeat: no-repeat;
+   float: right;
+   height: 16px;
+   left: -8px;
+   position: relative;
+   top: -22px;
+   width: 16px;
+}
+.twitter-user-timeline .refresh a,
+.twitter-user-timeline .refresh a:active,
+.twitter-user-timeline .refresh a:hover
+{
+   display: block;
+   height: 16px;
+   text-decoration: none;
+   width: 16px;
+}

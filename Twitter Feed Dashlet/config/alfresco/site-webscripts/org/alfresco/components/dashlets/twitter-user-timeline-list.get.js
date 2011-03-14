@@ -1,5 +1,6 @@
 var u = args.twitterUser ? args.twitterUser : "AlfrescoECM",
       maxId = args.maxId ? args.maxId : null,
+      minId = args.minId ? args.minId : null,
       perPage = args.pageSize ? args.pageSize : 20;
 
 function main()
@@ -19,6 +20,10 @@ function main()
    if (maxId != null)
    {
       theUrl += "&max_id=" + maxId;
+   }
+   if (minId != null)
+   {
+      theUrl += "&since_id=" + minId;
    }
    connector = remote.connect("http");
    result = connector.get(theUrl);
