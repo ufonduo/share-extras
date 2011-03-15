@@ -82,6 +82,10 @@
             <span class="field-label-right">${msg("label.node-type")}:</span>
             <span id="${el}-view-node-type" class="field-value"></span>
          </div>
+         <div class="field-row">
+            <span class="field-label-right">${msg("label.parent")}:</span>
+            <span id="${el}-view-node-parent" class="field-value"></span>
+         </div>
          
          <div class="header-bar">${msg("label.properties")}</div>
          <div class="node-properties list" id="${el}-view-node-properties"></div>
@@ -97,6 +101,9 @@
          
          <div class="header-bar">${msg("label.assocs")}</div>
          <div class="node-assocs list" id="${el}-view-node-assocs"></div>
+         
+         <div class="header-bar">${msg("label.source-assocs")}</div>
+         <div class="node-source-assocs list" id="${el}-view-node-source-assocs"></div>
       </div>
 
       <div class="yui-g">
