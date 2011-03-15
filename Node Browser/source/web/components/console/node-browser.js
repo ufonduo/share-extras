@@ -462,6 +462,7 @@
          
          onUpdate: function onUpdate()
          {
+            window.scrollTo(0, 0);
             var success = function(res)
             {
                var fnSetter = function(id, val)
@@ -469,19 +470,85 @@
                   Dom.get(parent.id + id).innerHTML = val ? $html(val) : "";
                };
                
-               var node = YAHOO.lang.JSON.parse(res.serverResponse.responseText);
+               var node = YAHOO.lang.JSON.parse(res.serverResponse.responseText),
+                  nodeRef = node.nodeRef;
+               
+               /**
+                * Node link custom datacell formatter
+                *
+                * @method renderName
+                */
+               var renderNodeLink = function renderNodeLink(elCell, oRecord, oColumn, oData)
+               {
+                  // Create view userlink
+                  var viewNodeLink = document.createElement("a");
+                  YAHOO.util.Dom.setAttribute(viewNodeLink, "href", "#");
+                  viewNodeLink.innerHTML = $html(oData);
+
+                  // fire the 'viewUserClick' event when the selected user in the list has changed
+                  YAHOO.util.Event.addListener(viewNodeLink, "click", function(e)
+                  {
+                     YAHOO.util.Event.preventDefault(e);
+                     YAHOO.Bubbling.fire('viewNodeClick',
+                     {
+                        nodeRef: oRecord.getData("nodeRef")
+                     });
+                  }, null, parent);
+                  elCell.appendChild(viewNodeLink);
+               };
+               
+               /**
+                * Property value custom datacell formatter
+                *
+                * @method renderPropertyValue
+                */
+               var renderPropertyValue = function renderPropertyValue(elCell, oRecord, oColumn, oData)
+               {
+                  if (oRecord.getData("type") == "d:content")
+                  {
+                     // Create new link
+                     var contentLink = document.createElement("a");
+                     contentLink.innerHTML = $html(oData);
+                     YAHOO.util.Dom.setAttribute(contentLink, "href", Alfresco.constants.PROXY_URI + "api/node/" + nodeRef.replace("://", "/") + "/content");
+                     elCell.appendChild(contentLink);
+                  }
+                  else
+                  {
+                     elCell.innerHTML = $html(oData);
+                  }
+               };
+
+               Dom.get(parent.id + "-view-title").innerHTML = node.name;
                
                // About section fields
                fnSetter("-view-node-ref", node.nodeRef);
                fnSetter("-view-node-path", node.qnamePath);
                fnSetter("-view-node-type", node.type);
+
+               Dom.get(parent.id + "-view-node-parent").innerHTML = "";
+               // Add parent noderef link
+               if (node.parent !== null)
+               {
+                  var nodeLink = document.createElement("a");
+                  Dom.setAttribute(nodeLink, "href", "#");
+                  nodeLink.innerHTML = $html(node.parentNodeRef);
+                  YAHOO.util.Event.addListener(nodeLink, "click", function(e)
+                  {
+                     YAHOO.util.Event.preventDefault(e);
+                     YAHOO.Bubbling.fire('viewNodeClick',
+                     {
+                        nodeRef: node.parentNodeRef
+                     });
+                  }, null, parent);
+                  Dom.get(parent.id + "-view-node-parent").appendChild(nodeLink);
+               }
                
                var propsData = new YAHOO.util.LocalDataSource(node.properties);
                
                var propsColumns = [
                  { key: "name", label: parent.msg("label.properties-name") },
                  { key: "type", label: parent.msg("label.properties-type") },
-                 { key: "value", label: parent.msg("label.properties-value") }
+                 { key: "value", label: parent.msg("label.properties-value"), formatter: renderPropertyValue }
                ];
                
                var propsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-properties", propsColumns, propsData);
@@ -498,7 +565,7 @@
                var childrenColumns = [
                  { key: "name", label: parent.msg("label.children-name") },
                  { key: "type", label: parent.msg("label.children-type") },
-                 { key: "nodeRef", label: parent.msg("label.children-node-ref") },
+                 { key: "nodeRef", label: parent.msg("label.children-node-ref"), formatter: renderNodeLink },
                  { key: "assocType", label: parent.msg("label.children-assoc-type") }
                ];
                
@@ -509,7 +576,7 @@
                var parentsColumns = [
                  { key: "name", label: parent.msg("label.parents-name") },
                  { key: "type", label: parent.msg("label.parents-type") },
-                 { key: "nodeRef", label: parent.msg("label.parents-node-ref") },
+                 { key: "nodeRef", label: parent.msg("label.parents-node-ref"), formatter: renderNodeLink },
                  { key: "assocType", label: parent.msg("label.parents-assoc-type") }
                ];
                
@@ -520,11 +587,22 @@
                var assocsColumns = [
                  { key: "name", label: parent.msg("label.assocs-name") },
                  { key: "type", label: parent.msg("label.assocs-type") },
-                 { key: "nodeRef", label: parent.msg("label.assocs-node-ref") },
+                 { key: "nodeRef", label: parent.msg("label.assocs-node-ref"), formatter: renderNodeLink },
                  { key: "assocType", label: parent.msg("label.assocs-assoc-type") }
                ];
                
                var assocsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-assocs", assocsColumns, assocsData);
+
+               var sourceAssocsData = new YAHOO.util.LocalDataSource(node.sourceAssocs);
+               
+               var sourceAssocsColumns = [
+                 { key: "name", label: parent.msg("label.source-assocs-name") },
+                 { key: "type", label: parent.msg("label.source-assocs-type") },
+                 { key: "nodeRef", label: parent.msg("label.source-assocs-node-ref"), formatter: renderNodeLink },
+                 { key: "assocType", label: parent.msg("label.source-assocs-assoc-type") }
+               ];
+               
+               var sourceAssocsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-source-assocs", sourceAssocsColumns, sourceAssocsData);
                
                // Make main panel area visible
                Dom.setStyle(parent.id + "-view-main", "visibility", "visible");
@@ -542,6 +620,19 @@
                },
                failureMessage: parent._msg("message.getnode-failure", $html(parent.currentUserId))   
             });
+         },
+         
+         /**
+          * View Node event handler
+          *
+          * @method onNodeClick
+          * @param e {object} DomEvent
+          * @param args {array} Event parameters (depends on event type)
+          */
+         onNodeClick: function ConsoleUsers_onNodeClick(e, args)
+         {
+            var nodeRef = args[1].nodeRef;
+            this.refreshUIState({"panel": "view", "nodeRef": nodeRef});
          }
       });
       new ViewPanelHandler();
@@ -691,9 +782,9 @@
       },
       
       /**
-       * View User event handler
+       * View Node event handler
        *
-       * @method onViewUserClick
+       * @method onViewNodeClick
        * @param e {object} DomEvent
        * @param args {array} Event parameters (depends on event type)
        */

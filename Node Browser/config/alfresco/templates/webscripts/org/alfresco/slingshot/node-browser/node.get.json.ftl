@@ -3,7 +3,7 @@
    "nodeRef": "${node.nodeRef}",
    "qnamePath": "${node.qnamePath}",
    "name": "${node.name}",
-   "parentNodeRef": "${node.parent.nodeRef}",
+   "parentNodeRef": "<#if node.parent?exists>${node.parent.nodeRef}</#if>",
    "type": "${node.type}",
    "typeShort": "${node.typeShort}",
    "id": "${node.id}",

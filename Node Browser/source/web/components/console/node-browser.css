@@ -141,7 +141,8 @@
 .node-browser .node-properties table,
 .node-browser .node-children table,
 .node-browser .node-parents table,
-.node-browser .node-assocs table
+.node-browser .node-assocs table,
+.node-browser .node-source-assocs table
 {
    border: 1px solid #D7D7D7;
 }
