@@ -52,6 +52,20 @@ function getAssocList(assocsArray)
    }
    return assocsList;
 }
+function getPermissionsList(n)
+{
+   var permissionsList = [], perms = n.getPermissions(), permArray;
+   for (var i = 0; i < perms.length; i++)
+   {
+      permArray = perms[i].split(";");
+      permissionsList.push({
+         authority: permArray[1],
+         permission: permArray[2],
+         rel: permArray[0]
+      });
+   }
+   return permissionsList;
+}
 function main()
 {
    var nodeRef = url.templateArgs.protocol + "://" + url.templateArgs.store + "/" + url.templateArgs.id,
@@ -102,6 +116,11 @@ function main()
    model.parents = nodeParents;
    model.assocs = nodeAssocs;
    model.sourceAssocs = nodeSourceAssocs;
+   model.permissions = {
+         inherit: node.inheritsPermissions(),
+         entries: getPermissionsList(node),
+         owner: node.getOwner()
+   };
    model.node = node;
 }
 main();

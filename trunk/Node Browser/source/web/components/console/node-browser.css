@@ -142,7 +142,35 @@
 .node-browser .node-children table,
 .node-browser .node-parents table,
 .node-browser .node-assocs table,
-.node-browser .node-source-assocs table
+.node-browser .node-source-assocs table,
+.node-browser .node-permissions table
 {
    border: 1px solid #D7D7D7;
+   border-right-width: 0px;
+}
+
+.node-browser .node-aspects
+{
+	line-height: 1.7em;
+}
+
+.node-browser .node-permissions .name-label
+{
+   margin-left: 5em;
+}
+
+.node-browser .node-permissions .field-label
+{
+   margin-left: 5em;
+}
+
+.node-browser .node-permissions-info .field-label-right
+{
+   width: 7em;
+   margin-left: 0em;
+}
+
+.node-browser .node-permissions-info .field-value
+{
+   margin-left: 8em;
 }

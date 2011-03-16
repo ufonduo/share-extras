@@ -51,5 +51,18 @@
          "assocType": "${p.assocType}"
       }<#if p_has_next>,</#if>
    </#list>
-   ]
+   ],
+   "permissions": {
+      "entries": [
+      <#list permissions.entries as p>
+         {
+            "permission": "${p.permission}",
+            "authority": "${p.authority}",
+            "rel": "${p.rel}"
+         }<#if p_has_next>,</#if>
+      </#list>
+      ],
+      "inherit": ${permissions.inherit?string},
+      "owner": "<#if permissions.owner?exists>${permissions.owner?js_string}</#if>"
+   }
 }

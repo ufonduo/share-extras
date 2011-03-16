@@ -104,6 +104,19 @@
          
          <div class="header-bar">${msg("label.source-assocs")}</div>
          <div class="node-source-assocs list" id="${el}-view-node-source-assocs"></div>
+         
+         <div class="header-bar">${msg("label.permissions")}</div>
+         <div class="node-permissions-info">
+            <div class="field-row">
+               <span class="field-label-right">${msg("label.node-inherits-permissions")}:</span>
+               <span id="${el}-view-node-inherits-permissions" class="field-value"></span>
+            </div>
+            <div class="field-row">
+               <span class="field-label-right">${msg("label.node-owner")}:</span>
+               <span id="${el}-view-node-owner" class="field-value"></span>
+            </div>
+         </div>
+         <div class="node-permissions list" id="${el}-view-node-permissions"></div>
       </div>
 
       <div class="yui-g">

@@ -321,11 +321,13 @@
             {
                // Create view userlink
                var viewNodeLink = document.createElement("a");
+               Dom.setAttribute(viewNodeLink, "href", "#");
                viewNodeLink.innerHTML = $html(oData);
 
                // fire the 'viewUserClick' event when the selected user in the list has changed
                YAHOO.util.Event.addListener(viewNodeLink, "click", function(e)
                {
+                  YAHOO.util.Event.preventDefault(e);
                   YAHOO.Bubbling.fire('viewNodeClick',
                   {
                      nodeRef: oRecord.getData("nodeRef")
@@ -339,7 +341,7 @@
             [
                { key: "name", label: parent._msg("label.name"), sortable: true, formatter: renderNodeLink },
                { key: "parentPath", label: parent._msg("label.parent_path"), sortable: true, formatter: renderCellSafeHTML },
-               { key: "nodeRef", label: parent._msg("label.node-ref"), sortable: true, formatter: renderCellSafeHTML }
+               { key: "nodeRef", label: parent._msg("label.node-ref"), sortable: true, formatter: renderNodeLink }
             ];
             
             // DataTable definition
@@ -543,15 +545,14 @@
                   Dom.get(parent.id + "-view-node-parent").appendChild(nodeLink);
                }
                
-               var propsData = new YAHOO.util.LocalDataSource(node.properties);
-               
-               var propsColumns = [
-                 { key: "name", label: parent.msg("label.properties-name") },
-                 { key: "type", label: parent.msg("label.properties-type") },
-                 { key: "value", label: parent.msg("label.properties-value"), formatter: renderPropertyValue }
-               ];
-               
-               var propsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-properties", propsColumns, propsData);
+               var propsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-properties", 
+                  [
+                     { key: "name", label: parent.msg("label.properties-name") },
+                     { key: "type", label: parent.msg("label.properties-type") },
+                     { key: "value", label: parent.msg("label.properties-value"), formatter: renderPropertyValue }
+                  ], 
+                  new YAHOO.util.LocalDataSource(node.properties)
+               );
                
                var aspects = "";
                for ( var i = 0; i < node.aspects.length; i++)
@@ -559,50 +560,57 @@
                   aspects += (i != 0 ? "<br />" : "") + $html(node.aspects[i]);
                }
                Dom.get(parent.id + "-view-node-aspects").innerHTML = aspects;
+               
+               var childrenDT = new YAHOO.widget.DataTable(parent.id + "-view-node-children", 
+                  [
+                     { key: "name", label: parent.msg("label.children-name"), formatter: renderNodeLink },
+                     { key: "type", label: parent.msg("label.children-type") },
+                     { key: "nodeRef", label: parent.msg("label.children-node-ref"), formatter: renderNodeLink },
+                     { key: "assocType", label: parent.msg("label.children-assoc-type") }
+                  ], 
+                  new YAHOO.util.LocalDataSource(node.children)
+               );
 
-               var childrenData = new YAHOO.util.LocalDataSource(node.children);
-               
-               var childrenColumns = [
-                 { key: "name", label: parent.msg("label.children-name") },
-                 { key: "type", label: parent.msg("label.children-type") },
-                 { key: "nodeRef", label: parent.msg("label.children-node-ref"), formatter: renderNodeLink },
-                 { key: "assocType", label: parent.msg("label.children-assoc-type") }
-               ];
-               
-               var childrenDT = new YAHOO.widget.DataTable(parent.id + "-view-node-children", childrenColumns, childrenData);
+               var parentsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-parents", 
+                   [
+                     { key: "name", label: parent.msg("label.parents-name"), formatter: renderNodeLink },
+                     { key: "type", label: parent.msg("label.parents-type") },
+                     { key: "nodeRef", label: parent.msg("label.parents-node-ref"), formatter: renderNodeLink },
+                     { key: "assocType", label: parent.msg("label.parents-assoc-type") }
+                  ], 
+                  new YAHOO.util.LocalDataSource(node.parents)
+               );
 
-               var parentsData = new YAHOO.util.LocalDataSource(node.parents);
+               var assocsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-assocs", 
+                  [
+                     { key: "name", label: parent.msg("label.assocs-name"), formatter: renderNodeLink },
+                     { key: "type", label: parent.msg("label.assocs-type") },
+                     { key: "nodeRef", label: parent.msg("label.assocs-node-ref"), formatter: renderNodeLink },
+                     { key: "assocType", label: parent.msg("label.assocs-assoc-type") }
+                  ], 
+                  new YAHOO.util.LocalDataSource(node.assocs)
+               );
                
-               var parentsColumns = [
-                 { key: "name", label: parent.msg("label.parents-name") },
-                 { key: "type", label: parent.msg("label.parents-type") },
-                 { key: "nodeRef", label: parent.msg("label.parents-node-ref"), formatter: renderNodeLink },
-                 { key: "assocType", label: parent.msg("label.parents-assoc-type") }
-               ];
+               var sourceAssocsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-source-assocs", 
+                  [
+                     { key: "name", label: parent.msg("label.source-assocs-name"), formatter: renderNodeLink },
+                     { key: "type", label: parent.msg("label.source-assocs-type") },
+                     { key: "nodeRef", label: parent.msg("label.source-assocs-node-ref"), formatter: renderNodeLink },
+                     { key: "assocType", label: parent.msg("label.source-assocs-assoc-type") }
+                  ], 
+                  new YAHOO.util.LocalDataSource(node.sourceAssocs)
+               );
                
-               var parentsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-parents", parentsColumns, parentsData);
-
-               var assocsData = new YAHOO.util.LocalDataSource(node.assocs);
-               
-               var assocsColumns = [
-                 { key: "name", label: parent.msg("label.assocs-name") },
-                 { key: "type", label: parent.msg("label.assocs-type") },
-                 { key: "nodeRef", label: parent.msg("label.assocs-node-ref"), formatter: renderNodeLink },
-                 { key: "assocType", label: parent.msg("label.assocs-assoc-type") }
-               ];
-               
-               var assocsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-assocs", assocsColumns, assocsData);
-
-               var sourceAssocsData = new YAHOO.util.LocalDataSource(node.sourceAssocs);
-               
-               var sourceAssocsColumns = [
-                 { key: "name", label: parent.msg("label.source-assocs-name") },
-                 { key: "type", label: parent.msg("label.source-assocs-type") },
-                 { key: "nodeRef", label: parent.msg("label.source-assocs-node-ref"), formatter: renderNodeLink },
-                 { key: "assocType", label: parent.msg("label.source-assocs-assoc-type") }
-               ];
-               
-               var sourceAssocsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-source-assocs", sourceAssocsColumns, sourceAssocsData);
+               var permissionsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-permissions", 
+                  [
+                     { key: "permission", label: parent.msg("label.permissions-permission") },
+                     { key: "authority", label: parent.msg("label.permissions-authority") },
+                     { key: "rel", label: parent.msg("label.permissions-access") }
+                  ], 
+                  new YAHOO.util.LocalDataSource(node.permissions.entries)
+               );
+               fnSetter("-view-node-inherits-permissions", "" + node.permissions.inherit);
+               fnSetter("-view-node-owner", node.permissions.owner);
                
                // Make main panel area visible
                Dom.setStyle(parent.id + "-view-main", "visibility", "visible");
