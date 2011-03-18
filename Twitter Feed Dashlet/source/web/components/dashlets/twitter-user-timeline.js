@@ -301,9 +301,9 @@
             isList = this.getTwitterUser().indexOf("/") > 0,
             profileUri = "http://twitter.com/" + encodeURIComponent(t.user.screen_name),
             userLink = "<a href=\"" + profileUri + "\" title=\"" + $html(t.user.name) + "\" class=\"theme-color-1\">" + $html(t.user.screen_name) + "</a>",
-            postedLink = "<a href=\"" + profileUri + "/status/" + encodeURIComponent(t.id) + "\">" + (typeof(Alfresco.util.relativeTime) === "function" ? Alfresco.util.relativeTime(new Date(t.created_at)) : Alfresco.util.formatDate(t.created_at)) + "</a>";
+            postedLink = "<a href=\"" + profileUri + "/status/" + encodeURIComponent(t.id_str) + "\">" + (typeof(Alfresco.util.relativeTime) === "function" ? Alfresco.util.relativeTime(new Date(t.created_at)) : Alfresco.util.formatDate(t.created_at)) + "</a>";
 
-         html += "<div class=\"" + (isList ? "list-tweet" : "user-tweet") + " detail-list-item\" id=\"" + $html(this.id) + "-tweet-" + $html(t.id) + "\">\n";
+         html += "<div class=\"" + (isList ? "list-tweet" : "user-tweet") + " detail-list-item\" id=\"" + $html(this.id) + "-tweet-" + $html(t.id_str) + "\">\n";
          html += "<div class=\"user-icon\"><a href=\"" + profileUri + "\" title=\"" + $html(t.user.name) + "\"><img src=\"" + $html(t.user.profile_image_url) + "\" alt=\"" + $html(t.user.screen_name) + "\" width=\"48\" height=\"48\" /></a></div>\n";
          html += "<div class=\"tweet\">\n";
          html += "<div class=\"tweet-hd\">\n";
