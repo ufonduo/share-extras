@@ -102,7 +102,7 @@
       /**
        * Notice title DOM container.
        * 
-       * @property title
+       * @property titleContainer
        * @type object
        */
       titleContainer: null,
@@ -110,13 +110,14 @@
       /**
        * Notice text DOM container.
        * 
-       * @property activityList
+       * @property textContainer
        * @type object
        */
       textContainer: null,
 
       /**
        * Fired by YUI when parent element is available for scripting
+       * 
        * @method onReady
        */
       onReady: function Notice_onReady()
@@ -134,8 +135,9 @@
       },
 
       /**
-       * Fired by YUI when parent element is available for scripting
-       * @method onReady
+       * Reload the contents of the dashlet
+       * 
+       * @method refresh
        */
       refresh: function Notice_refresh()
       {
@@ -217,8 +219,7 @@
          {
             this.configDialog.setOptions(
             {
-               actionUrl: actionUrl,
-               twitterUser: this.options.twitterUser
+               actionUrl: actionUrl
             });
          }
          this.configDialog.show();
