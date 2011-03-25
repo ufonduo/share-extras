@@ -23,7 +23,7 @@ svn checkout http://share-extras.googlecode.com/svn/trunk/Train%Times%20Dashlet
 Change into the new directory
 
 {{{
-cd "iCal Feed Dashlet"
+cd "Train Times Dashlet"
 }}}
 
 An Ant build script is provided to build a JAR file containing the custom files, which can then be installed into the `tomcat/shared/lib` folder of your Alfresco installation.
