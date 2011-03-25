@@ -4,7 +4,7 @@
 
 This project defines a custom dashlet which displays train status information from the National Rail Enquires web site.
 
-http://share-extras.googlecode.com/svn/trunk/Train%Times%20Dashlet/train-times-dashlet.png
+http://share-extras.googlecode.com/svn/trunk/Train%20Times%20Dashlet/train-times-dashlet.png
 
 =Installation=
 
