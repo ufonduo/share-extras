@@ -1,4 +1,4 @@
-var u = args.twitterUser ? args.twitterUser : "AlfrescoECM",
+   var u = args.twitterUser ? args.twitterUser : "AlfrescoECM",
       maxId = args.maxId ? args.maxId : null,
       minId = args.minId ? args.minId : null,
       perPage = args.pageSize ? args.pageSize : 20;
@@ -36,7 +36,8 @@ function main()
    }
    else
    {
-      status.setCode(result.status, "Encountered an error when loading remote data");
+      var resp = eval("(" + result.response + ")");
+      status.setCode(result.status, resp.error ? resp.error : "Encountered an unknown error when loading remote data");
       status.redirect = true;
    }
 }
