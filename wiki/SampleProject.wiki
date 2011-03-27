@@ -1,0 +1,40 @@
+#summary Describes the Sample Dashlet package for use with your own projects
+#labels Featured
+
+=Introduction=
+
+This project defines a common source directory layout, [http://www.eclipse.org/ Eclipse] project configuration and [http://ant.apache.org/ Ant] build script that is used by all the Share Extras add-ons, in addition to some sample files from a basic 'Hello World' dashlet.
+
+=Using the Sample Project=
+
+The sample project is intended to help you build your own Share customisations, using standard tools such as Eclipse and Ant.
+
+==Creating Your Own Projects==
+
+To use the sample project, download the `sample-project.zip` file from the Downloads area, and use this to start a new project using Eclipse's Import wizard.
+
+Once you have created your project, it should be named 'Sample Project' in Eclipse. You should rename this to something of your choosing and update the corresponding JAR file name specified in `build.properties`.
+
+You should also update the information in `README.txt` and `MAINTAINERS.txt` to give some basic information about your project.
+
+==Building Your Project==
+
+The Ant build script build.xml can be used to help you distribute your customisations for testing or deployment.
+
+  * Use the `build-jar` target to build a JAR file in the `dist` directory, suitable for deploying as a share library on any recent Share installation
+
+  * Use the `hotcopy-tomcat-zip` target to copy all the configuration and resources files into a local Tomcat installation on your system for testing. You will need to specify the location of your Tomcat installation by defining the variable `tomcat.home` when you call the script.
+
+===Examples===
+
+`ant build-jar`
+
+This will build a JAR file using the default file name specified in build.properties
+
+`ant -Djar.name=mycustom.jar build-jar`
+
+This will build a JAR file using the specified file name
+
+`ant -Dtomcat.home=C:\Alfresco\tomcat hotcopy-tomcat-zip`
+
+This will copy your project files into the local Tomcat instance at the specified directory location.
