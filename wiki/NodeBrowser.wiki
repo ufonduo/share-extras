@@ -49,7 +49,7 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
 
   # Log in to Alfresco Share and navigate to an Administration page such as Users or Groups
   # In the left-hand-side navigation, click *Node Browser*
-  # Enter a search to return some results
+  # Enter a [http://wiki.alfresco.com/wiki/Full_Text_Search_Query_Syntax search] to return some results, e.g. `cm:name:test*`
   # Click on a result to start browsing the nodes
 
 =Known Issues=
