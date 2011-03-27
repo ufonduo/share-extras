@@ -54,4 +54,4 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
 
 =Known Issues=
 
-  # In version 3.4 The Node Browser does not appear automatically in the _More..._ drop-down menu in the Share header component, however you can add it there with some basic configuration.
+  # In version 3.4 The Node Browser does not appear automatically in the _More..._ drop-down menu in the Share header component, however you can [http://wiki.alfresco.com/wiki/Share_Header add it there] with some basic configuration.
