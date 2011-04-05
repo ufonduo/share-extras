@@ -1,16 +1,16 @@
-Hello World dashlet for Alfresco Share
-======================================
+Document Geographic Details component for Alfresco Share
+========================================================
 
 Author: Will Abson
 
-This project defines a custom dashlet that prints the text 'Hello World' on
-the screen.
+This project provides an additional page component for the Document Details 
+page to display a small map view for geotagged content items. 
 
 Installation
 ------------
 
 The dashlet has been developed to install on top of an existing Alfresco
-3.3 installation.
+3.3/3.4 installation.
 
 An Ant build script is provided to build a JAR file containing the 
 custom files, which can then be installed into the 'tomcat/shared/lib' folder 
@@ -21,7 +21,7 @@ directory.
 
     ant clean dist-jar
 
-The command should build a JAR file named hello-world-dashlet.jar
+The command should build a JAR file named document-geographic-details.jar
 in the 'dist' directory within your project.
 
 To deploy the dashlet files into a local Tomcat instance for testing, you can 
@@ -33,11 +33,19 @@ property in Ant.
 Once you have run this you will need to restart Tomcat so that the classpath 
 resources in the JAR file are picked up.
 
-Using the dashlet
------------------
+Usage
+-----
 
-Log in to Alfresco Share and navigate to your user dashboard. Click the 
-Customize Dashboard button to edit the contents of the dashboard and drag 
-the dashlet into one of the columns from the list of dashlets.
-
-As well as user dashboards the dashlet can also be used on site dashboards.
+  1. Log in to Alfresco Share and navigate to a site containing geotagged 
+     content in the Document Library. Any content items with the Geographic 
+     aspect applied and Latitude/Longitude properties set can be used, but 
+     geotagged photos from camera phones will have this information populated 
+     automatically.
+     
+  2. Locate one of the geotagged content item(s) and click into the Document 
+     Details page.
+     
+  3. Scroll down the page to see the Geographic Information section below the 
+     metadata list. Note that this section will only be shown on the page if 
+     latitude and longitude values are available and the Geographic aspect 
+     has been applied.
