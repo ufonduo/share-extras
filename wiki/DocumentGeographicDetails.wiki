@@ -4,7 +4,7 @@
 
 This project provides an additional page component for the Document Details page to display a small map view for geotagged content items.
 
-http://share-extras.googlecode.com/svn/trunk/Document%20Geographic%20Details/document-geographic-info.png
+<img src="http://share-extras.googlecode.com/svn/trunk/Document%20Geographic%20Details/document-geographic-info.png" border="1" />
 
 =Installation=
 
@@ -48,7 +48,7 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
 = Usage =
 
   # Log in to Alfresco Share and navigate to a site containing geotagged content in the Document Library. Any content items with the Geographic aspect applied and Latitude/Longitude properties set can be used, but geotagged photos from camera phones will have this information populated automatically.
-  # Locate one of the geotagged content item(s) and click into the Document Details page.
-  # Scroll down the page to see the Geographic Information section below the metadata list. Note that this section will only be shown on the page if latitude and longitude values are available and the Geographic aspect has been applied.
+  # Locate one of the geotagged content item(s) and click into the _Document Details_ page.
+  # Scroll down the page to see the _Geographic Information_ section below the metadata list. Note that this section will only be shown on the page if latitude and longitude values are available and the Geographic aspect has been applied.
 
 =Known Issues=
