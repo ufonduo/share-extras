@@ -13,7 +13,7 @@ The sample project is intended to help you build your own Share customisations, 
 
 To use the sample project, download the `sample-dashlet.zip` file from the Downloads area, and use this to start a new project using Eclipse's Import wizard.
 
-Once you have created your project, it should be named 'Sample Project' in Eclipse. You should rename this to something of your choosing and update the corresponding JAR file name specified in `build.properties`.
+Once you have created your project, it should be named _Sample Dashlet_ in Eclipse. You should rename this to something of your choosing and update the corresponding JAR file name specified in `build.properties`.
 
 You should also update the information in `README.txt` and `MAINTAINERS.txt` to give some basic information about your project.
 
