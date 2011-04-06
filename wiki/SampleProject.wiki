@@ -31,9 +31,9 @@ The Ant build script `build.xml` can be used to help you distribute your customi
 
 `ant build-jar`
 
-This will build a JAR file using the default file name specified in `build.properties`
+This will build a JAR file using the default file name specified in `build.properties`, containing the custom files.
 
-`ant -Djar.name=my-custom.jar build-jar`, containing the custom files.
+`ant -Djar.name=my-custom.jar build-jar`
 
 This will build a JAR file named `my-custom.jar`
 
