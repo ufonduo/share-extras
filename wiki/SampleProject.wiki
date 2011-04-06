@@ -39,4 +39,4 @@ This will build a JAR file named `my-custom.jar`
 
 `ant -Dtomcat.home=C:\Alfresco\tomcat hotcopy-tomcat-zip`
 
-This will copy your project files into the Tomcat instance installed at `C:\Alfresco\tomcat`.
+This will copy all your custom files into the Tomcat instance installed at `C:\Alfresco\tomcat`. Configuration files will be placed into `shared/classes`, while resources will be copied below `webapps/share`.
