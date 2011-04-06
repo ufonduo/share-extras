@@ -39,7 +39,7 @@ To link to the client-side assets, you can use the resources servlet in the Shar
 <img src="${url.context}/res/mycompany/components/dashlets/refresh.png" alt="Image description here" />
 }}}
 
-The resources servlet will look for assets under the path following `/res`, first within the Share web application (from 3.4c / 3.4 Enterprise) and then in the META-INF folders of any JAR files on the web application's class path.
+The resources servlet will look for assets under the path following `/res`, first within the Share web application (from 3.4c / 3.4 Enterprise) and then in the `META-INF` folders of any JAR files on the web application's class path. The build targets defined in `build.xml` will ensure that resources are packaged up so as to be accessible via this method.
 
 ===Adding SpringSurf Configuration===
 
