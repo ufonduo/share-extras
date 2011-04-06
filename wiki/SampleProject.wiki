@@ -33,9 +33,9 @@ The Ant build script `build.xml` can be used to help you distribute your customi
 
 This will build a JAR file using the default file name specified in `build.properties`
 
-`ant -Djar.name=my-custom.jar build-jar`
+`ant -Djar.name=my-custom.jar build-jar`, containing the custom files.
 
-This will build a JAR file named `my-custom.jar`, containing the custom files.
+This will build a JAR file named `my-custom.jar`
 
 `ant -Dtomcat.home=C:\Alfresco\tomcat hotcopy-tomcat-zip`
 
