@@ -24,7 +24,7 @@ svn checkout http://share-extras.googlecode.com/svn/trunk/Wiki%20Rich%20Content
 Change into the new directory
 
 {{{
-cd "iCal Feed Dashlet"
+cd "Wiki Rich Content"
 }}}
 
 An Ant build script is provided to build a JAR file containing the custom files, which can then be installed into the `tomcat/shared/lib` folder of your Alfresco installation.
@@ -35,7 +35,7 @@ To build the JAR file, run the following command from the base project directory
 ant clean dist-jar
 }}}
 
-The command should build a JAR file named `ical-feed-dashlet.jar` in the `dist` directory within your project, which you can then copy into the `tomcat/shared/lib` folder of your Alfresco installation.
+The command should build a JAR file named `wiki-rich-content.jar` in the `dist` directory within your project, which you can then copy into the `tomcat/shared/lib` folder of your Alfresco installation.
 
 Alternatively, you can use the build script to _hot deploy_ the JAR file directly into a local Tomcat instance for testing. You will need to use the `hotcopy-tomcat-jar task` and set the `tomcat.home`
 property in Ant.
