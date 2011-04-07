@@ -2,7 +2,7 @@
 
 =Introduction=
 
-This project implements a number of customisations to the Alfresco Share wiki component to improve it's visual appearance, and add support for dynamic tables of contents and syntax-highlighted code using Google Code Prettify.
+This project implements a number of customisations to the Alfresco Share wiki component to improve it's visual appearance, and add support for dynamic tables of contents and syntax-highlighted code using [http://code.google.com/p/google-code-prettify Google Code Prettify].
 
 http://share-extras.googlecode.com/svn/trunk/Wiki%20Rich%20Content/wiki-toc.png
 http://share-extras.googlecode.com/svn/trunk/Wiki%20Rich%20Content/wiki-prettify.png
