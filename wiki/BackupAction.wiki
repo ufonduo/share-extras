@@ -21,33 +21,22 @@ Once the JAR file has been deployed into your application server you will need t
 Firstly, copy the web script configuration file 
 `WEB-INF/classes/alfresco/site-webscripts/org/alfresco/components/documentlibrary/documentlist.get.config.xml` 
 from the Share webapp into the directory 
-`alfresco/web-extension/site-webscripts/org/alfresco/components/documentlibrary` 
-in Tomcat’s shared/classes to override it. You should see a section 
-`<actionSet id="document">` which defines all the actions shown for a normal 
-document in the document list view.
+`alfresco/web-extension/site-webscripts/org/alfresco/components/documentlibrary` in Tomcat’s `shared/classes` to override it. You should see a section 
+`<actionSet id="document">` which defines all the actions shown for a normal document in the document list view.
 
-To add the backup action to this list, add the following line just before the 
-`</actionset>` element for that block.
+To add the backup action to this list, add the following line just before the `</actionset>` element for that block.
 
 {{{
 <action type="action-link" id="onActionBackup" permission="" label="actions.document.backup" />
 }}}
 
-If you also want the action to show up in the document details view, you need 
-to copy the file 
-`WEB-INF/classes/alfresco/site-webscripts/org/alfresco/components/document-details/document-actions.get.config.xml`
-into 
-`alfresco/web-extension/site-webscripts/org/alfresco/components/document-details` 
-in shared/classes, and add the extra `<action>` definition in the same way.
+If you also want the action to show up in the document details view, you need to copy the file `WEB-INF/classes/alfresco/site-webscripts/org/alfresco/components/document-details/document-actions.get.config.xml`
+into `alfresco/web-extension/site-webscripts/org/alfresco/components/document-details` in `shared/classes`, and add the extra `<action>` definition in the same way.
 
-Lastly, you need to ensure that the client-side JS and CSS assets get pulled 
-into the UI as unfortunately the config files do not allow us to specify these 
-dependencies.
+Lastly, you need to ensure that the client-side JS and CSS assets get pulled into the UI as unfortunately the config files do not allow us to specify these dependencies.
 
 To do this, you must override the file 
-`WEB-INF/classes/alfresco/site-webscripts/org/alfresco/components/documentlibrary/actions-common.get.head.ftl`. Copy this into the directory `alfresco/web-extension/site-webscripts/org/alfresco/components/documentlibrary` in 
-`shared/classes` and add the following lines at the bottom 
-of the file.
+`WEB-INF/classes/alfresco/site-webscripts/org/alfresco/components/documentlibrary/actions-common.get.head.ftl`. Copy this into the directory `alfresco/web-extension/site-webscripts/org/alfresco/components/documentlibrary` in `shared/classes` and add the following lines at the bottom of the file.
 
 {{{
 <#-- Custom Backup Action -->
@@ -55,8 +44,7 @@ of the file.
 <@script type="text/javascript" src="${page.url.context}/res/components/documentlibrary/backup-action.js"></@script>
 }}}
 
-Once you have made these changes you will need to restart Tomcat so that the 
-configuration and your classpath resources in the JAR file are picked up.
+Once you have made these changes you will need to restart Tomcat so that the configuration and your classpath resources in the JAR file are picked up.
 
 =Building from Source=
 
