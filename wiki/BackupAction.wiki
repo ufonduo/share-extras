@@ -6,9 +6,7 @@
 
 This add-on project for Alfresco Share defines a custom document action which can be configured into the Document Library component of Alfresco Share, for use by site members.
 
-The custom action has been developed to install on top of an existing Alfresco
-3.3 installation. *It does not currently work in version 3.4 due to changes made
-to the actions framework in that version.*
+The custom action has been developed to install on top of an existing Alfresco 3.3 or 3.4 installation.
 
 =Installation=
 
