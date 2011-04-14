@@ -4,7 +4,7 @@
 <beans>
    
    <!-- Override WebScript Messages - add slingshot application messages -->
-   <bean id="webscripts.resources.actions" class="org.alfresco.i18n.ResourceBundleBootstrapComponent">
+   <bean id="webscripts.resources.actions" class="org.springframework.extensions.surf.util.ResourceBundleBootstrapComponent">
       <property name="resourceBundles">
          <list>
             <value>alfresco.messages.slingshot-custom-backup-action</value>
