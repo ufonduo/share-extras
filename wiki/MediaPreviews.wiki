@@ -90,7 +90,15 @@ See the _Installing_ section above for information on configuring FFmpeg.
 
 =Troubleshooting=
 
-If you find that thumbnails do not get generated or the player does not render, you can make a direct request for the specific renditions to help diagnose the problem. In the URLs below you will need to replace the {nodeId} token with the GUID of the problematic file (which you can grab from the end of the Document Details page URL), and substitute in the hostname of your server.
+If you have problems, first check your `alfresco.log` for any errors being thrown at startup, relating to FFmpeg. If no errors are shown, you can force the transformers to give you a little more information by adding the following lines to the file `webapps/alfresco/WEB-INF/classes/log4j.properties`.
+
+{{{
+log4j.logger.org.alfresco.util.exec.RuntimeExec=debug
+log4j.logger.org.alfresco.repo.content.transform=debug
+log4j.logger.org.alfresco.repo.thumbnail=debug
+}}}
+
+If no problems are obvious and you _still_ find that thumbnails do not get generated or the player does not render, you can make a direct request for the specific renditions to help diagnose the problem. In the URLs below you will need to replace the {nodeId} token with the GUID of the problematic file (which you can grab from the end of the Document Details page URL), and substitute in the hostname of your server.
 
   * For thumbnail problems, hit http://hostname/share/proxy/alfresco/api/node/workspace/SpacesStore/{nodeId}/content/thumbnails/doclib?c=force
 
