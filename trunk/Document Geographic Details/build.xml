@@ -294,7 +294,16 @@
     -->
     <target name="hotcopy-tomcat-zip" depends="build-zip-tomcat" description="Hot copy individual files into a local Tomcat instance">
         <copy todir="${tomcat.home}" includeEmptyDirs="false">
-            <fileset dir="${build.zip.dir}" />
+            <fileset dir="${build.zip.dir}">
+                <!-- Spring config -->
+                <exclude name="**/classes/web-application-config.xml" />
+                <exclude name="**/classes/surf-config.xml" />
+                <exclude name="**/classes/alfresco/slingshot-application-context.xml" />
+                <exclude name="**/classes/alfresco/web-extension/custom-slingshot-application-context.xml" />
+                <!-- Surf config -->
+                <exclude name="**/classes/alfresco/share*-config.xml" />
+                <exclude name="**/classes/alfresco/web-extension/share-config-custom.xml" />
+            </fileset>
         </copy>
     </target>
 
@@ -303,7 +312,7 @@
         
         In version 3.3 and above the JAR file mechanism is recommended for distributing your 
         customisations, but this target can still be used during development as it allows you to
-        reload changes .
+        reload changes without restarting Tomcat.
     -->
     <target name="hotcopy-tomcat-jar" depends="dist-jar" description="Hot copy JAR file into a local Tomcat instance">
         <mkdir dir="${tomcat.home}/${build.lib.dir}" />
