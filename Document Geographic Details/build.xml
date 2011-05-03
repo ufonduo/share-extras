@@ -335,6 +335,9 @@
                expected="200"
                failonunexpected="true">
             <credentials username="${repo.admin.username}" password="${repo.admin.password}" />
+            <query>
+                <parameter name="reset" value="on" />
+            </query>
         </http>
     </target>
     
@@ -348,6 +351,9 @@
                expected="200"
                failonunexpected="true">
             <credentials username="${repo.admin.username}" password="${repo.admin.password}" />
+            <query>
+                <parameter name="reset" value="on" />
+            </query>
         </http>
     </target>
     
