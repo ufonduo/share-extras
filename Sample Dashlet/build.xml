@@ -40,15 +40,23 @@
     <property name="build.res.dir" value="webapps/share" />
     <property name="build.classes.dir" value="shared/classes" />
     <property name="build.lib.dir" value="shared/lib" />
-    <property name="post.verbose" value="false" />
+    <property name="yuicompress.warn" value="false" />
+    <!-- Tomcat properties to reload web scripts or the manager webapp -->
+    <property name="tomcat.url" value="http://localhost:8080" />
+    <property name="tomcat.repo.url" value="${tomcat.url}" />
+    <property name="tomcat.share.url" value="${tomcat.url}" />
+    <!-- Tomcat properties to reload web scripts -->
     <property name="webapp.alfresco.path" value="/alfresco" />
     <property name="webapp.share.path" value="/share" />
+    <property name="post.verbose" value="false" />
+    <property name="repo.admin.username" value="admin" />
+    <property name="repo.admin.password" value="admin" />
+    <property name="repo.scripts.index" value="${tomcat.repo.url}${webapp.alfresco.path}/service/index" />
+    <property name="share.scripts.index" value="${tomcat.share.url}${webapp.share.path}/page/index" />
     <!-- Properties to access the Tomcat Manager application -->
-    <property name="tomcat.url" value="http://localhost:8080" />
     <property name="webapp.manager.url" value="${tomcat.url}/manager" />
     <property name="webapp.manager.username" value="admin" />
     <property name="webapp.manager.password" value="" />
-    <property name="yuicompress.warn" value="false" />
    
    <!-- Additional property values. Generally should not be overridden -->
     <property name="config.dir" value="${basedir}/config" />
@@ -70,20 +78,37 @@
     <!-- Alias targets -->
     <target name="build-zip" depends="build-zip-tomcat" />
     <target name="dist-zip" depends="dist-zip-tomcat" />
-   
 
-   <path id="yuicompressor.classpath">
-       <fileset dir="lib">
-             <include name="yuicompressor-2.4.2.jar"/>
-             <include name="yui-compressor-ant-task-0.5.jar"/>
-       </fileset>
-   </path>
+    <!-- Additional classpath and task definitions -->
+
+    <path id="yuicompressor.classpath">
+        <fileset dir="lib">
+            <include name="yuicompressor-2.4.2.jar"/>
+            <include name="yui-compressor-ant-task-0.5.jar"/>
+        </fileset>
+    </path>
    
-   <taskdef name="yuicompress" classname="net.noha.tools.ant.yuicompressor.tasks.YuiCompressorTask">
-         <classpath>
-            <path refid="yuicompressor.classpath"/>
-         </classpath>
-   </taskdef>
+    <taskdef name="yuicompress" classname="net.noha.tools.ant.yuicompressor.tasks.YuiCompressorTask">
+        <classpath>
+            <path refid="yuicompressor.classpath" />
+        </classpath>
+    </taskdef>
+
+    <path id="ml-ant-http.classpath">
+        <fileset dir="lib">
+            <include name="ml-ant-http-1.1.1.jar" />
+        </fileset>
+    </path>
+   
+    <taskdef name="http" classname="org.missinglink.ant.task.http.HttpClientTask">
+        <classpath>
+            <path refid="ml-ant-http.classpath" />
+        </classpath>
+    </taskdef>
+    
+    
+    <!-- Main build target definitions -->
+    
     
    <!-- Clean out the build and distribution directories -->
    <target name="clean" description="Clean out all build directories">
@@ -269,7 +294,16 @@
     -->
     <target name="hotcopy-tomcat-zip" depends="build-zip-tomcat" description="Hot copy individual files into a local Tomcat instance">
         <copy todir="${tomcat.home}" includeEmptyDirs="false">
-            <fileset dir="${build.zip.dir}" />
+            <fileset dir="${build.zip.dir}">
+                <!-- Spring config -->
+                <exclude name="**/classes/web-application-config.xml" />
+                <exclude name="**/classes/surf-config.xml" />
+                <exclude name="**/classes/alfresco/slingshot-application-context.xml" />
+                <exclude name="**/classes/alfresco/web-extension/custom-slingshot-application-context.xml" />
+                <!-- Surf config -->
+                <exclude name="**/classes/alfresco/share*-config.xml" />
+                <exclude name="**/classes/alfresco/web-extension/share-config-custom.xml" />
+            </fileset>
         </copy>
     </target>
 
@@ -278,7 +312,7 @@
         
         In version 3.3 and above the JAR file mechanism is recommended for distributing your 
         customisations, but this target can still be used during development as it allows you to
-        reload changes .
+        reload changes without restarting Tomcat.
     -->
     <target name="hotcopy-tomcat-jar" depends="dist-jar" description="Hot copy JAR file into a local Tomcat instance">
         <mkdir dir="${tomcat.home}/${build.lib.dir}" />
@@ -288,27 +322,40 @@
     </target>
     
     <!--
-        Uncomment to enable web script reloading from Ant. These tasks use the HTTP Post task from 
-        http://ant-contrib.sourceforge.net/.
-        
-        To use these tasks you will need to add ant-contrib.jar to your Ant libs, uncomment the task
-        definitions at the start of this file and override the org/alfresco/index.post.js web script 
-        descriptor to set the authentication to 'none' (since the post task cannot handle HTTP 
-        authentication).
+        Web script reloading from Ant. These tasks use the HTTP task from 
+        http://code.google.com/p/missing-link/.
     -->
-    <!--
-    <target name="reload-webscripts-repo" depends="" description="Reload repository-tier webscripts">
-        <post to="${tomcat.url}${webapp.alfresco.path}/service/index" failonerror="true" verbose="${post.verbose}">
-            <prop name="reset" value="on" />
-        </post>
+    <target name="reload-webscripts-repo" depends="" description="Reload repository webscripts">
+        <http url="${repo.scripts.index}"
+               method="POST"
+               printrequest="false"
+               printrequestheaders="false"
+               printresponse="false"
+               printresponseheaders="false"
+               expected="200"
+               failonunexpected="true">
+            <credentials username="${repo.admin.username}" password="${repo.admin.password}" />
+            <query>
+                <parameter name="reset" value="on" />
+            </query>
+        </http>
     </target>
     
-    <target name="reload-webscripts-webtier" depends="" description="Reload web-tier webscripts">
-        <post to="${tomcat.url}${webapp.share.path}/service/index" failonerror="true" verbose="${post.verbose}">
-            <prop name="reset" value="on" />
-        </post>
+    <target name="reload-webscripts-share" depends="" description="Reload Share webscripts">
+        <http url="${share.scripts.index}"
+               method="POST"
+               printrequest="false"
+               printrequestheaders="false"
+               printresponse="false"
+               printresponseheaders="false"
+               expected="200"
+               failonunexpected="true">
+            <credentials username="${repo.admin.username}" password="${repo.admin.password}" />
+            <query>
+                <parameter name="reset" value="on" />
+            </query>
+        </http>
     </target>
-    -->
     
     <!--
         Uncomment to enable web application reloading from Ant. These tasks use the optional Tomcat
