@@ -9,9 +9,8 @@ Document Library component of Alfresco Share, for use by site members.
 Installation
 ------------
 
-The custom action has been developed to install on top of an existing Alfresco
-3.3 installation. It does not currently work in version 3.4 due to changes made
-to the actions framework in that version.
+The dashlet has been developed to install on top of an existing Alfresco
+3.3/3.4 installation.
 
 An Ant build script is provided to build a JAR file containing the 
 custom files, which can then be installed into the 'tomcat/shared/lib' folder 
@@ -23,8 +22,7 @@ directory.
     ant clean dist-jar
 
 The command should build a JAR file named share-backup-action.jar
-in the 'dist' directory within your project. The JAR file should be copied into
-the Share classpath, e.g. tomcat/shared/lib or webapps/share/WEB-INF/lib.
+in the 'dist' directory within your project.
 
 To deploy the JAR file into a local Tomcat instance for testing, you can 
 use the hotcopy-tomcat-jar task. You will need to set the tomcat.home
