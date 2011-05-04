@@ -6,11 +6,20 @@ This project provides an additional page component for the Document Details page
 
 <img src="http://share-extras.googlecode.com/svn/trunk/Document%20Geographic%20Details/document-geographic-info.png" border="1" />
 
+The page component will display automatically for content items which already have the Geographic aspect applied to them. For other items, a custom Document library action named _Geotag_ is supplied, which can be enabled at install time.
+
+http://share-extras.googlecode.com/svn/trunk/Document%20Geographic%20Details/geotag-action.png
+
+The dashlet has been developed to install on top of an existing Alfresco
+3.4 installation. It can work with version 3.3 if the `cm:geographic` aspect is added to the repository's content model - see _Known Issues_ below.
+
 =Installation=
 
 The component is packaged as a single JAR file for easy installation into Alfresco Share.
 
 To install the component, simply drop the `document-geographic-details.jar` file into the `tomcat/shared/lib` folder within your Alfresco installation, and restart the application server. You might need to create this folder if it does not already exist.
+
+See [http://code.google.com/p/share-extras/source/browse/trunk/Document%20Geographic%20Details/README.txt README.txt] for instructions on how to enable the Geotag custom action in the Document Library.
 
 =Building from Source=
 
@@ -52,3 +61,21 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
   # Scroll down the page to see the _Geographic Information_ section below the metadata list. Note that this section will only be shown on the page if latitude and longitude values are available and the Geographic aspect has been applied.
 
 =Known Issues=
+
+In order to work with version 3.3 of Alfresco, the `cm:geographic` aspect must be added to the file `contentModel.xml` in `tomcat/webapps/alfresco/WEB-INF/classes/alfresco/model`. Ensure you add it within the `<aspects>` element.
+
+{{{
+      <aspect name="cm:geographic">
+         <title>Geographic</title>
+         <properties>
+            <property name="cm:latitude">
+               <title>Latitude</title>
+               <type>d:double</type>
+            </property>
+            <property name="cm:longitude">
+               <title>Longitude</title>
+               <type>d:double</type>
+            </property>
+         </properties>
+      </aspect>
+}}}
