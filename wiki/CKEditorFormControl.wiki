@@ -6,7 +6,7 @@ This is an addon to Share forms that lets you use the CKEditor as a wysiwyg edit
 CKEditor, http://ckeditor.com/, is a separately developed tool, this addon provides the integration to Alfresco forms.
 CKEditor is GPL, LGPL MPL Triple copy left licensed. 
 
-http://share-extras.googlecode.com/svn/trunk/CKEditor%20form%20control/ckeditor-edit.png
+http://share-extras.googlecode.com/svn/trunk/CKEditor%20Form%20Control/ckeditor-edit.png
 ==Features==
   * Standard CKEditor features
   * Load custom configuration files for customized toolbar and looks
@@ -16,7 +16,7 @@ http://share-extras.googlecode.com/svn/trunk/CKEditor%20form%20control/ckeditor-
 =Usage=
 The control should appear when you create a new html file, or edit an existing html file online.
 To insert images from a Share site, select the images button, and then Browse Server.
-http://share-extras.googlecode.com/svn/trunk/CKEditor%20form%20control/ckeditor-filebrowser.png
+http://share-extras.googlecode.com/svn/trunk/CKEditor%20Form%20Control/ckeditor-filebrowser.png
 To get a larger preview, click the thumbnail image. To select an image, click the name.
 
 = Installation =
@@ -50,13 +50,13 @@ To load a custom javascript based file use
 </appearance>
 }}}
 Path to custom settings file should not have a starting /. More information on how to create custom configuration files can be found in http://docs.cksource.com/CKEditor_3.x/Developers_Guide.
-Use the http://share-extras.googlecode.com/svn/trunk/CKEditor%20form%20control/source/web/components/editors/ckeditor/config.js as a template.
+Use the http://share-extras.googlecode.com/svn/trunk/CKEditor%20Form%20Control/source/web/components/editors/ckeditor/config.js as a template.
 
 
 =Building from source=
 Check out the project if you have not already done so
 {{{
-svn checkout http://share-extras.googlecode.com/svn/trunk/CKEditor%20form%20control
+svn checkout http://share-extras.googlecode.com/svn/trunk/CKEditor%20Form%20Control
 }}}
 Change into the new directory
 {{{
