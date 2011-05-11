@@ -82,5 +82,9 @@ None at this time.
 Possible to add more out of the box configuration settings.
 Filters in image browser.
 
+==External Components==
+  * LightBox (Image Previews) by Lokesh Dhakar http://huddletogether.com/projects/lightbox/
+  * CKEditor, http://ckeditor.com/
+
 ==Contribution==
 This form control was contributed by Peter Löfgren, http://loftux.se (Swedish) http://loftux.com (English)
