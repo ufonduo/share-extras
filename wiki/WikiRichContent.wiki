@@ -2,7 +2,7 @@
 
 =Introduction=
 
-This project implements a number of customisations to the Alfresco Share wiki component to improve it's visual appearance, and add support for dynamic tables of contents and syntax-highlighted code using [http://code.google.com/p/google-code-prettify Google Code Prettify].
+This project implements a number of customisations to the Alfresco Share wiki component to improve it's visual appearance, and add support for dynamic tables of contents, embedded document previews, inline data lists/tables and syntax-highlighted code using [http://code.google.com/p/google-code-prettify Google Code Prettify].
 
 http://share-extras.googlecode.com/svn/trunk/Wiki%20Rich%20Content/wiki-toc-preview.png
 http://share-extras.googlecode.com/svn/trunk/Wiki%20Rich%20Content/wiki-prettify.png
@@ -49,7 +49,12 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
 = Usage =
 
   # Log in to Alfresco Share and navigate to a site with some wiki content
-  # Add some headings (at least 2) to have the table of contents be shown
-  # Add some preformatted text to show the code highlighting
+  # Locate a wiki page and click the *Edit Page* link at the top of the page, _or_ create a new page by hitting the *New Page* button. You can now edit the contents of the page in the inline editor.
+  # To have the *table of contents* be shown, add some headings (at least 2) to the page
+  # To show the *code highlighting*, add some preformatted text to the page
+  # To show a *document preview* or a YouTube or Vimeo *video*, use the *Insert/edit Link* button to add a link to the item and specify the target _Embed preview with link_ or _Embed preview with no link_ from the *Target* drop-down list
+  # To turn an existing table into a [http://developer.yahoo.com/yui/datatable/ YUI DataTable], add the class `datatable` to the table from the _Insert/edit new table_ dialogue.
+  # To embed a Data List, create a new empty table, specifying the class `datatable:aaaa-bbbb-cccc-dddd`, where the last part is the name of a Data List in the site (which you can find on the end of the List URL in your browser)
+  # If you want to show only specific columns from the Data List then add some column headings to the table, ensuring that these match the names of the properties in the Data List, e.g. `Name` or `cm_name`.
 
 =Known Issues=
