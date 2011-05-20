@@ -55,4 +55,4 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
 
 = Known Issues =
 
-  * If more than two instances of the dashlet are added to a dashboard, the dashlet may fail to update as it can exceed the rate limit imposed by Twitter on their API. To work around this you can increase the value of the checkInterval option in the client-side `twitter-user-timeline.js` from the default 60 seconds.
+  * If more than two instances of the dashlet are added to a dashboard, the dashlet may fail to update as it can exceed the rate limit imposed by Twitter on their API. To work around this you can increase the value of the `checkInterval` option in the client-side `twitter-user-timeline.js` from the default 60 seconds.
