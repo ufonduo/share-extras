@@ -174,7 +174,7 @@
             // Load the user timeline
             Alfresco.util.Ajax.request(
             {
-               url: Alfresco.constants.PROXY_URI + "slingshot/poll/" + this.options.nodeRef.replace("://", "/"),
+               url: Alfresco.constants.PROXY_URI + "extras/slingshot/poll/" + this.options.nodeRef.replace("://", "/"),
                successCallback:
                {
                   fn: this.onPollLoaded,
@@ -266,7 +266,7 @@
                         method: "POST",
                         requestContentType: Alfresco.util.Ajax.JSON,
                         responseContentType: Alfresco.util.Ajax.JSON,
-                        url: Alfresco.constants.PROXY_URI + "slingshot/poll/" + this.options.nodeRef.replace("://", "/") + "/response",
+                        url: Alfresco.constants.PROXY_URI + "extras/slingshot/poll/" + this.options.nodeRef.replace("://", "/") + "/response",
                         dataObj: 
                         {
                            site: this.options.siteId,
@@ -288,7 +288,7 @@
                            },
                            scope: this
                         },
-                        failureMessage: "Could not post response to '" + Alfresco.constants.PROXY_URI + "slingshot/poll/" + this.options.nodeRef.replace("://", "/") + "/response'.",
+                        failureMessage: "Could not post response to '" + Alfresco.constants.PROXY_URI + "extras/slingshot/poll/" + this.options.nodeRef.replace("://", "/") + "/response'.",
                         scope: this,
                         execScripts: true
                      });
@@ -376,13 +376,13 @@
 
          Alfresco.util.Ajax.jsonGet(
          {
-            url: Alfresco.constants.PROXY_URI + "slingshot/poll/" + this.options.nodeRef.replace("://", "/") + "/results",
+            url: Alfresco.constants.PROXY_URI + "extras/slingshot/poll/" + this.options.nodeRef.replace("://", "/") + "/results",
             successCallback: 
             {
                fn: this.onResultsSuccess,
                scope: this
             },
-            failureMessage: "Could not load poll results from '" + Alfresco.constants.PROXY_URI + "slingshot/poll/" + this.options.nodeRef.replace("://", "/") + "/results'.",
+            failureMessage: "Could not load poll results from '" + Alfresco.constants.PROXY_URI + "extras/slingshot/poll/" + this.options.nodeRef.replace("://", "/") + "/results'.",
             scope: this,
             noReloadOnAuthFailure: true
          });

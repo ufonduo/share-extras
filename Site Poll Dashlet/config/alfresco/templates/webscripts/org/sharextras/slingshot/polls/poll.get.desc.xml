@@ -2,7 +2,7 @@
    <shortname>Poll Information</shortname>
    <description>Return information on a specified poll</description>
    <format default="json">argument</format>
-   <url>/slingshot/poll/s/{site}/{pname}</url>
-   <url>/slingshot/poll/{protocol}/{store}/{id}</url>
+   <url>/extras/slingshot/poll/s/{site}/{pname}</url>
+   <url>/extras/slingshot/poll/{protocol}/{store}/{id}</url>
    <authentication>user</authentication>
 </webscript>
