@@ -1,6 +1,6 @@
 <import resource="classpath:alfresco/templates/webscripts/org/sharextras/slingshot/polls/polls.lib.js">
 
-var ACTIVITY_TYPE = "org.sharextras.polls.poll-voted", COMPONENT_ID = "pollComponent";
+var ACTIVITY_TYPE = "org.alfresco.polls.poll-voted", COMPONENT_ID = "pollComponent";
 
 function getActivityData(nd, siteId)
 {
