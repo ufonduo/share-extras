@@ -1,5 +1,0 @@
-<webscript>
-   <shortname>Notice Dashlet Config</shortname>
-   <description>Configuration dialogue for the notice dashlet</description>
-   <url>/modules/dashlets/notice/config</url>
-</webscript>
