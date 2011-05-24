@@ -269,7 +269,7 @@
                         url: Alfresco.constants.PROXY_URI + "slingshot/poll/" + this.options.nodeRef.replace("://", "/") + "/response",
                         dataObj: 
                         {
-                           site: this.options.site,
+                           site: this.options.siteId,
                            response: this.getSelectedOption()
                         },
                         successCallback: 

@@ -13,4 +13,13 @@
          </property>
    </bean>
    
+   <!-- Add custom global messages -->
+   <bean id="share-extras.site-poll.resources" class="org.springframework.extensions.surf.util.ResourceBundleBootstrapComponent">
+      <property name="resourceBundles">
+         <list>
+            <value>alfresco.messages.share-site-poll</value>
+         </list>
+      </property>
+   </bean>
+   
 </beans>

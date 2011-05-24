@@ -1,8 +1,26 @@
-<import resource="classpath:alfresco/extension/templates/webscripts/org/alfresco/slingshot/polls/polls.lib.js">
+<import resource="classpath:alfresco/templates/webscripts/org/alfresco/slingshot/polls/polls.lib.js">
+
+var ACTIVITY_TYPE = "org.alfresco.polls.poll-voted", COMPONENT_ID = "pollComponent";
+
+function getActivityData(nd, siteId)
+{
+   return {
+      userId: person.properties.userName,
+      userName: person.properties.userName,
+      firstName: person.properties.firstName,
+      lastName: person.properties.lastName,
+      name: nd.name,
+      title: nd.properties.title,
+      displayPath: nd.displayPath,
+      typeQName: nd.type,
+      nodeRef: nd.nodeRef
+   };
+}
 
 var nodeRef = url.templateArgs.protocol + "://" + url.templateArgs.store + "/" + url.templateArgs.id,
    jsonData = jsonUtils.toObject(requestbody.content),
    response = jsonData.response,
+   siteId = jsonData.site,
    username = person.properties.userName;
 
 // Locate the poll node
@@ -35,8 +53,15 @@ if (pollNode != null)
             {
                responseNode = pollNode.createNode(username, "pm:response", "pm:pollResponse");
                responseNode.properties["pm:response"] = response;
-               responseNode.save()
+               responseNode.save();
                model.result = true;
+               
+               // Update the activity feed
+               if (siteId != null)
+               {
+                  activities.postActivity(ACTIVITY_TYPE, siteId, COMPONENT_ID, 
+                        jsonUtils.toJSONString(getActivityData(pollNode)));
+               }
             }
             else
             {
