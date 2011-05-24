@@ -1,3 +1,4 @@
+<#macro dateFormat date>${date?string("dd MMM yyyy HH:mm:ss 'GMT'Z '('zzz')'")}</#macro>
 <#escape x as jsonUtils.encodeJSONString(x)>
 {
    "totalPolls" : ${polls.polls?size},
@@ -19,7 +20,7 @@
                 "${tag}"<#if tag_has_next>,</#if>
              </#list>  
            ],
-         "createdOn": "${poll.properties.created?string("MMM dd yyyy, HH:mm:ss")}",
+         "createdOn": "<@dateFormat poll.properties.created />",
          <#if p.createdBy??>
             <#assign createdBy = (p.createdBy.properties.firstName + " " + p.createdBy.properties.lastName)?trim>
             <#assign createdByUser = p.createdBy.properties.userName>
@@ -29,7 +30,7 @@
          </#if>
          "createdBy": "${createdBy}",
          "createdByUser": "${createdByUser}",
-         "modifiedOn": "${poll.properties.modified?string("MMM dd yyyy, HH:mm:ss")}",
+         "modifiedOn": "<@dateFormat poll.properties.modified />",
          <#if p.modifiedBy??>
             <#assign modifiedBy = (p.modifiedBy.properties.firstName + " " + p.modifiedBy.properties.lastName)?trim>
             <#assign modifiedByUser = p.modifiedBy.properties.userName>
