@@ -2,6 +2,6 @@
    <shortname>List polls</shortname>
    <description>List all polls in the specified site</description>
    <format default="json">argument</format>
-   <url>/slingshot/polls/site/{siteId}</url>
+   <url>/extras/slingshot/polls/site/{siteId}</url>
    <authentication>user</authentication>
 </webscript>

@@ -1,4 +1,4 @@
-<import resource="classpath:alfresco/templates/webscripts/org/alfresco/slingshot/polls/polls.lib.js">
+<import resource="classpath:alfresco/templates/webscripts/org/sharextras/slingshot/polls/polls.lib.js">
 
 var siteId = url.templateArgs.siteId;
 model.siteId = siteId;
