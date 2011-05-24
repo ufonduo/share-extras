@@ -1,4 +1,4 @@
-<#include "/org/alfresco/slingshot-common.lib.ftl">
+<#include "../../alfresco/slingshot-common.lib.ftl">
 <entry xmlns='http://www.w3.org/2005/Atom'>
    <title>Poll vote received on ${title?xml}</title>
    <link rel="alternate" type="text/html" href="" />
