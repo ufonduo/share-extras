@@ -33,6 +33,7 @@ The Project Owners will decide whether a sandboxed add-on should be promoted. Ty
   * All add-on files must be packaged in an appropriate directory structure and should avoid the use of Alfresco-reserved packages (e.g. `org/alfresco` for web scripts) in most cases
   * No core Alfresco or Share files should be duplicated or replaced by files within the add-on
   * Web scripts may be overridden only where required in order to implement the capabilities of the add-on. Where overridden only modified files should exist in the add-on source tree.
+  * Client-side JavaScript should be normally be declared as new classes within the Alfresco namespace, using the standard Share pattern utilising `YAHOO.Extend()`. JSDoc comments should be used to document classes.
   * All strings appearing in the add-on UI must be externalised in message bundles
   * It must be possible to package all add-on files in a single JAR file, using the SampleProject build script
   * No other files outside of the JAR file should be required in order for the add-on to function, aside from additional configuration which should be documented clearly
