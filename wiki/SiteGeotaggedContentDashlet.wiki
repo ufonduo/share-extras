@@ -54,5 +54,5 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
 
 =Known Issues=
 
-  * A maximum of 100 items is displayed on the map for performance reasons
-  * You can drag to pan the map and use the zoom controls, but these are not yet persisted to your preferences
+  * A maximum of 100 items is displayed on the map for performance reasons. However you can zoom in using the map controls to get more detail on a specific area.
+  * The map centre and zoom level are persisted to your user preferences but currently this is a global setting, rather than site-specific.
