@@ -93,9 +93,10 @@ The dashlet search box allows more search capabilities than the server side filt
   *  mutliline matches are enabled, ^ and $ will match beginning of lines for audit values, useful since there can be more than one line per audit entry
 
   *  query can match anywhere in the field by default. queries can be any valid javascript regular expression.
-    examples : ^romain, values:r.m...$ , id:\d\d8, -time:21 ...
-    The search will turn green or red if the regex is valid or invalid, respectively query can be restricted to the beginning by using ^romain (standard regex) for example.
-    See https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/regexp for more details.
+    * examples : ^romain, values:r.m...$ , id:\d\d8, -time:21 ...
+    * The search will turn green or red if the regex is valid or invalid, respectively.  
+    * query can be restricted to the beginning by using ^romain (standard regex) for example.
+    * See https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/regexp for more details.
 
     Each match of the regex in the audit entry will be highlighted. Deferred submatches are also supported for highlighting. 
 
