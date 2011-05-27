@@ -8,7 +8,7 @@ This project defines a custom dashlet to display events for a given audit applic
 The dashlet will need to have auditing application(s) already configured, and to be useful some events captured. 
 See http://wiki.alfresco.com/wiki/Auditing_(from_V3.4) on how to define audit applications and some samples. 
 
-http://share-extras.googlecode.com/svn/trunk/Sandbox/Sample_Audit_Dashlet/screenshots/en/audit-dashlet-default.png
+http://share-extras.googlecode.com/svn/trunk/Sandbox/Audit%20Dashlet/screenshots/en/audit-dashlet-default.png
 
 =Installation=
 
@@ -22,13 +22,13 @@ You might need to create this folder if it does not already exist.
 Check out the project if you have not already done so
 
 {{{
-svn checkout http://share-extras.googlecode.com/svn/trunk/Sandbox/Sample_Audit_Dashlet
+svn checkout http://share-extras.googlecode.com/svn/trunk/Sandbox/Audit Dashlet
 }}}
 
 Change into the new directory
 
 {{{
-cd "Sample_Audit_Dashlet"
+cd "Audit Dashlet"
 }}}
 
 An Ant build script is provided to build a JAR file containing the custom files, which can then be installed into the `tomcat/shared/lib` folder of your Alfresco installation.
@@ -106,7 +106,7 @@ The dashlet search box allows more search capabilities than the server side filt
 
   * example : 
 
-http://share-extras.googlecode.com/svn/trunk/Sandbox/Sample_Audit_Dashlet/screenshots/en/audit-dashlet-field-regex.png
+http://share-extras.googlecode.com/svn/trunk/Sandbox/Audit%20Dashlet/screenshots/en/audit-dashlet-field-regex.png
 
 This search is done by filtering out undesired entries coming from the datasource prior to browser display.
 
