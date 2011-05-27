@@ -22,7 +22,7 @@ You might need to create this folder if it does not already exist.
 Check out the project if you have not already done so
 
 {{{
-svn checkout http://share-extras.googlecode.com/svn/trunk/Sandbox/Audit Dashlet
+svn checkout "http://share-extras.googlecode.com/svn/trunk/Sandbox/Audit Dashlet"
 }}}
 
 Change into the new directory
