@@ -72,11 +72,11 @@ the dashlet into one of the columns from the list of dashlets.
 	-values:pro
 
     - mutliline matches are enabled, ^ and $ will match beginning of lines for audit values, 
-      useful since there can be more than one per audit entry
+      useful since there can be more than one line per audit entry
 
     - query can match anywhere in the field by default. queries can be any valid javascript regular expression.
       examples : ^romain, values:r.m...$ , id:\d\d8, -time:21 ...
-      The search will turn green or red if the regex is valid or invalid, respectively
+      The search box will turn green or red if the regex is valid or invalid, respectively
       query can be restricted to the beginning by using ^romain (standard regex) for example.
       See https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/regexp for more details.
 
@@ -87,9 +87,7 @@ the dashlet into one of the columns from the list of dashlets.
 
     - multi field search is currently not supported, e.g +id:95 -name:romain. Would have to support ( ) , and/or grouping ,etc ...
 
-
-    This search is done by filtering out undesired entries prior to browser display.
-
+    This search is done by filtering out undesired entries coming from the datasource prior to browser display.
 
 Changelog
 ---------
