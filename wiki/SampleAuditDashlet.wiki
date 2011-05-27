@@ -100,13 +100,18 @@ The dashlet search box allows more search capabilities than the server side filt
 
     Each match of the regex in the audit entry will be highlighted. Deferred submatches are also supported for highlighting. 
 
-  * to search for a colon (:), use the field prefix, eg; field:.+:.+ or values:[^:]+: or values:nodeName:.`*` etc... otherwise the colon will be interpreted as a field identifier
+  * to search for a colon (:), use the field prefix, eg; field:.+:.+ or values:`[`^:`]`+: or values:nodeName:.`*` etc... otherwise the colon will be interpreted as a field identifier
+
+  * noderefs in the audit values will be detected, and "enhanced" with a link to the docdetails page of that noderef
 
   * multi field search is currently not supported, e.g +id:95 -name:romain. Would have to support ( ) , and/or grouping ,etc ...
 
-  * example : 
+  * examples : 
+
 
 http://share-extras.googlecode.com/svn/trunk/Sandbox/Audit%20Dashlet/screenshots/en/audit-dashlet-field-regex.png
+
+http://share-extras.googlecode.com/svn/trunk/Sandbox/Audit%20Dashlet/screenshots/en/audit-dashlet-noderef-links.png
 
 This search is done by filtering out undesired entries coming from the datasource prior to browser display.
 
