@@ -212,16 +212,16 @@
          if (!p_response.json.hasVoted)
          {
             var pollEnabled = p_response.json.enabled;
-            var now = Date.now();
+            var now = new Date();
             if (pollEnabled && p_response.json.startDate)
             {
                var startDate = Date.parse(p_response.json.startDate);
-               pollEnabled = startDate < now;
+               pollEnabled = startDate < now.getTime();
             }
             if (pollEnabled && p_response.json.startDate)
             {
                var endDate = Date.parse(p_response.json.endDate);
-               pollEnabled = endDate > now;
+               pollEnabled = endDate > now.getTime();
             }
             
             if (pollEnabled)
