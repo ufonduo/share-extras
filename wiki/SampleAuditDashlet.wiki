@@ -6,7 +6,7 @@
 This project defines a custom dashlet to display events for a given audit application. 
 
 The dashlet will need to have auditing application(s) already configured, and to be useful some events captured. 
-See http://wiki.alfresco.com/wiki/Auditing_(from_V3.4) on how to define audit applications and some samples. 
+See [http://wiki.alfresco.com/wiki/Auditing_(from_V3.4) Auditing (from V3.4)] on how to define audit applications and some samples. 
 
 http://share-extras.googlecode.com/svn/trunk/Sandbox/Audit%20Dashlet/screenshots/en/audit-dashlet-default.png
 
