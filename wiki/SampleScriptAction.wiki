@@ -1,13 +1,18 @@
-#summary Describes the Sample Script Action add-on for Alfresco Share
+#summary Describes the Sample Script Action package for use with your own projects
 
 =Introduction=
 
-This add-on for Alfresco Share defines a [http://wiki.alfresco.com/wiki/Custom_Document_Library_Action custom Document Library action], which can be easily customised to run a [http://wiki.alfresco.com/wiki/JavaScript_API JavaScript] file of your choice when run by a 
-user.
+This project defines a common source directory layout, [http://www.eclipse.org/ Eclipse] project configuration and [http://ant.apache.org/ Ant] build script that is used by all the Share Extras add-ons, together with some sample files to help you implement a basic [http://wiki.alfresco.com/wiki/Custom_Document_Library_Action Document Library action].
+
+=Using the Sample Project=
+
+The sample project is intended to help you build your own Share Document Library action, using standard tools such as Eclipse and Ant.
+
+The action executes a basic [http://wiki.alfresco.com/wiki/JavaScript_API JavaScript] file when fired by the user. All you need to do is add your own JavaScript file to Data Dictionary/Scripts and customise the action definition to use it.
+
+==Creating Your Own Projects==
 
 You must create the JavaScript file yourself and place this directly into the Data Dictionary/Scripts space in the repository. Once you have done this you are ready to customise this action to use it.
-
-=Customisation=
 
 The folder `source/web/extras/components/documentlibrary` contains the client-side assets used by the custom action. You should rename `sample-script-action.css` and `sample-script-action.js` to something that better describes your action. This will ensure that your action can co-exist with any others you create using this method, but it is recommended you stick to lowercase letters and hyphens (-).
 
@@ -33,11 +38,33 @@ Lastly, update the property names inside the .property file, changing
 
 Now you are ready to install the action. Before you do, make sure you update the `jar.name` property in the `build.properties` file to give your JAR file a unique name.
 
-=Installation=
+==Building Your Project==
 
-Your dashlet will be packaged as a JAR file for easy installation into Alfresco Share, although some additional steps are required after installing the JAR file to configure the action into the Document Library.
+The Ant build script `build.xml` can be used to help you distribute your customisations for testing or deployment.
 
-To install the action, drop the `execute-script-action.jar` file into the `tomcat/shared/lib` folder within your Alfresco installation, and restart the application server. You might need to create this folder if it does not already exist.
+  * Use the `build-jar` target to build a JAR file in the `dist` directory, suitable for deploying as a shared library on any Share 3.3+ installation.
+
+  * Use the `hotcopy-tomcat-jar` target to copy the JAR file containing the customisations into a local Tomcat installation on your system. You will need to specify the location of your Tomcat installation by defining the variable `tomcat.home` when you call the script.
+
+  * Use the `hotcopy-tomcat-zip` target to copy all the individual configuration and resource files into a local Tomcat installation on your system for testing. Unlike `hotcopy-tomcat-jar`, this method allows you to reload changes to your files without having to restart the Tomcat server, and so is better suited for development. You will need to specify the location of your Tomcat installation by defining the variable `tomcat.home` when you call the script.
+
+For more information on these targets and the other targets available in `build.xml`, see the inline comments within the [http://code.google.com/p/share-extras/source/browse/trunk/Sample%20Dashlet/build.xml build script].
+
+===Examples===
+
+`ant build-jar`
+
+This will build a JAR file using the default file name specified in `build.properties`, containing the custom files.
+
+`ant -Djar.name=my-custom.jar build-jar`
+
+This will build a JAR file named `my-custom.jar`
+
+`ant -Dtomcat.home=C:\Alfresco\tomcat hotcopy-tomcat-zip`
+
+This will copy all your custom files into the Tomcat instance installed at `C:\Alfresco\tomcat`. Configuration files will be placed into `shared/classes`, while resources will be copied below `webapps/share`.
+
+=Configuring Share=
 
 Once the JAR file has been deployed into your application server you will need to configure the Share application to display the action.
 
@@ -78,40 +105,6 @@ client-side assets, as you renamed them in the [#Customisation] section above.
 Once you have made these changes you will need to restart Tomcat so that the configuration and your classpath resources in the JAR file are picked up.
 
 Note: If you want the action to appear in the repository browsing pages or in Web Quick Start or DOD sites, you will also need to update the corresponding `.config.xml` and `.head.ftl` files for those page components.
-
-=Building from Source=
-
-Check out the project if you have not already done so
-
-{{{
-svn checkout http://share-extras.googlecode.com/svn/trunk/Execute%20Script%20Action
-}}}
-
-Change into the new directory
-
-{{{
-cd "Execute Script Action"
-}}}
-
-An Ant build script is provided to build a JAR file containing the custom files, which can then be installed into the `tomcat/shared/lib` folder of your Alfresco installation.
-
-To build the JAR file, run the following command from the base project directory.
-
-{{{
-ant clean dist-jar
-}}}
-
-The command should build a JAR file named `execute-script-action.jar` in the `dist` directory within your project, which you can then copy into the `tomcat/shared/lib` folder of your Alfresco installation.
-
-Alternatively, you can use the build script to _hot deploy_ the JAR file directly into a local Tomcat instance for testing. You will need to use the `hotcopy-tomcat-jar task` and set the `tomcat.home` property in Ant.
-
-{{{
-ant -Dtomcat.home=C:/Alfresco/tomcat clean dist-jar hotcopy-tomcat-jar
-}}}
-
-After you have deployed the JAR file you will need to restart Tomcat to ensure it picks up the changes.
-
-See [#Installation], above for the additional steps, which are required after installing the JAR file to configure the action into the Document Library.
 
 = Usage =
 
