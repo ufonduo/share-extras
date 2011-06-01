@@ -4,7 +4,7 @@ Sample Script Action for Alfresco Share
 Author: Will Abson
 
 This project defines a custom Document Library action, which can be easily
-customised to run a JavaScript file of your choosing when run by a 
+customised to run a JavaScript file of your choice when run by a 
 user.
 
 You must create the JavaScript file yourself and place this directly into
@@ -55,7 +55,7 @@ bundle using dot notation. You should edit the part following the last dot
 to a unique value for your action. After you have done this, rename the 
 .properties file in config/alfresco/messages to match this value.
 
-Lastly, update the property names inside the .property files, changing
+Lastly, update the property names inside the .property file, changing
 'sample-script' to the value you specified in your MSG_BASE definition in 
 the client-side JavaScript.
 
@@ -101,9 +101,9 @@ document in the document list view.
 To add the backup action to this list, add the following line just before the 
 </actionset> element for that block.
 
-<action type="action-link" id="onActionExecuteScript" permission="edit" label="actions.document.execute-script" />
+<action type="action-link" id="onActionSampleScript" permission="edit" label="actions.document.sample-script" />
 
-Change onActionExecuteScript to the value you specified for FN_NAME in the Customisation
+Change `onActionSampleScript` to the value you specified for FN_NAME in the Customisation
 section above. Set the final part of the value for the 'label' attribute to the value you 
 specified in your MSG_BASE definition in the client-side JavaScript.
 
