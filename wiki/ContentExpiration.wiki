@@ -4,8 +4,11 @@
 
 This project provides a custom dashlet that lists 'expired' content owned by the current user, plus a full-page report implemented as a custom Surf page.
 
-Content is considered to have expired when the value of its `cm:to` date property (part of the out-of-the-box _Effectivity_ aspect) is in the past. Ownership is specified explicitly by the value of the `cm:owner` (part of the 
-out-of-the-box _Ownable_ aspect) property, which should be set the username of the owner.
+http://share-extras.googlecode.com/svn/trunk/Content%20Expiration/screenshots/my-expired-content-dashlet.png
+
+http://share-extras.googlecode.com/svn/trunk/Content%20Expiration/screenshots/expired-content-page.png
+
+Content is considered to have expired when the value of its `cm:to` date property (part of the out-of-the-box _Effectivity_ aspect) is in the past. Ownership is specified explicitly by the value of the `cm:owner` (part of the out-of-the-box _Ownable_ aspect) property, which should be set the username of the owner.
 
 ==Applying Expiration Policies==
 
@@ -19,7 +22,9 @@ You must add `apply-expiration.js` to the Data Dictionary/Scripts space in the r
 
 After the action has run the Validity Period and Owner can be changed at any time using the _Edit Metadata_ page for the document. The expiration date cannot be set directly, only indirectly via the validity period.
 
-To allow the expiration date to be extended when the document is reviewed, another repository script `update-expiration.js` is provided. Like `apply-expiration.js` this can be run on-demand from Explorer or via the [ExecuteScriptAction] action, but since this will be used more frequently by users you may wish to configure the custom action also supplied (see [#Custom Action Installation], below), which will allow users to run the script with a single click.
+To allow the expiration date to be extended when the document is reviewed, another repository script `update-expiration.js` is provided. Like `apply-expiration.js` this can be run on-demand from Explorer or via the [ExecuteScriptAction] action, but since this will be used more frequently by users you may wish to configure the custom action also supplied (see [#Custom_Action_Installation_(Optional)], below), which will allow users to run the script with a single click.
+
+http://share-extras.googlecode.com/svn/trunk/Content%20Expiration/screenshots/update-expiration-action.png
 
 Alternatively you can also set up a content rule to execute `update-expiration.js` whenever a user updates the content item. This may be preferable to adding custom actions in some circumstances.
 
@@ -101,7 +106,7 @@ ant -Dtomcat.home=C:/Alfresco/tomcat clean dist-jar hotcopy-tomcat-jar
 
 After you have deployed the JAR file you will need to restart Tomcat to ensure it picks up the changes.
 
-See [#Custom Action Installation (Optional)], above for the additional steps, which are required after installing the JAR file to configure the optional _Update Expiration_ action into the Document Library.
+See [#Custom_Action_Installation_(Optional)], above for the additional steps, which are required after installing the JAR file to configure the optional _Update Expiration_ action into the Document Library.
 
 = Usage =
 
