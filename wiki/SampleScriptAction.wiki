@@ -111,7 +111,7 @@ ant -Dtomcat.home=C:/Alfresco/tomcat clean dist-jar hotcopy-tomcat-jar
 
 After you have deployed the JAR file you will need to restart Tomcat to ensure it picks up the changes.
 
-See _Installation_, above for the additional steps, which are required after installing the JAR file to configure the action into the Document Library.
+See [#Installation], above for the additional steps, which are required after installing the JAR file to configure the action into the Document Library.
 
 = Usage =
 
