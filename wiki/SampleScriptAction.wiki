@@ -12,7 +12,21 @@ The action executes a basic [http://wiki.alfresco.com/wiki/JavaScript_API JavaSc
 
 ==Creating Your Own Projects==
 
-You must create the JavaScript file yourself and place this directly into the Data Dictionary/Scripts space in the repository. Once you have done this you are ready to customise this action to use it.
+To use the sample project, download the `sample-script-action.zip` file from the Downloads area, and use this to start a new project using Eclipse's Import wizard (select _General_ > _Existing Projects into Workspace_).
+
+Once you have created your project, it should be named _Sample Script Action_ in Eclipse. You should rename this to something of your choosing and update the corresponding JAR file name specified in `build.properties`.
+
+You should also update the information in `README.txt` and `MAINTAINERS.txt` to give some basic information about your project.
+
+===Create Repository JavaScript===
+
+Out of the box the action uses the `backup.js` script supplied by Alfresco, but it is likely you will want to create your own script.
+
+You must create the JavaScript file yourself and place this directly into the Data Dictionary/Scripts space in the repository. This must be done in each repository that you wish to install the action on, so you may want to add the script to your Eclipse project to ensure you keep a central copy.
+
+===Customise the Action===
+
+Once you have created your script you are ready to customise this action to use it.
 
 The folder `source/web/extras/components/documentlibrary` contains the client-side assets used by the custom action. You should rename `sample-script-action.css` and `sample-script-action.js` to something that better describes your action. This will ensure that your action can co-exist with any others you create using this method, but it is recommended you stick to lowercase letters and hyphens (-).
 
