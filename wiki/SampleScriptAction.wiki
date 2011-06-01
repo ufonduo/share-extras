@@ -28,13 +28,10 @@ Next you will need to define your message bundle labels. Rename the Spring confi
 
 Inside the `<value>` element, the bean defines the path to a single message bundle using dot notation. You should edit the part following the last dot to a unique value for your action. After you have done this, rename the .properties file in `config/alfresco/messages` to match this value.
 
-Lastly, update the property names inside the .property files, changing
-`sample-script` to the value you specified in your `MSG_BASE` definition in 
-the client-side JavaScript.
+Lastly, update the property names inside the .property file, changing
+`sample-script` to the value you specified in your `MSG_BASE` definition in the client-side JavaScript.
 
-Now you are ready to install the action. Before you do, make sure you update
-the `jar.name` property in the `build.properties` file to give your JAR file a 
-unique name.
+Now you are ready to install the action. Before you do, make sure you update the `jar.name` property in the `build.properties` file to give your JAR file a unique name.
 
 =Installation=
 
