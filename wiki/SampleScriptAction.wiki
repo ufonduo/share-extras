@@ -53,7 +53,7 @@ To add the action to this list, add the following line just before the `</action
 <action type="action-link" id="onActionSampleScript" permission="edit" label="actions.document.sample-script" />
 }}}
 
-Change `onActionSampleScript` to the value you specified for `FN_NAME` in the [SampleScriptAction#Customisation] section above. Set the final part of the value for the `label` attribute to the value you 
+Change `onActionSampleScript` to the value you specified for `FN_NAME` in the [#Customisation] section above. Set the final part of the value for the `label` attribute to the value you 
 specified in your `MSG_BASE` definition in the client-side JavaScript.
 
 To make the action appear for folder items in addition to documents, add the same line into the section `<actionSet id="folder">`.
@@ -73,7 +73,7 @@ To do this, you must override the file
 }}}
 
 You should edit the paths above to that the links point correctly to your 
-client-side assets, as you renamed them in the [SampleScriptAction#Customisation] section above.
+client-side assets, as you renamed them in the [#Customisation] section above.
 
 Once you have made these changes you will need to restart Tomcat so that the configuration and your classpath resources in the JAR file are picked up.
 
@@ -116,5 +116,9 @@ See [#Installation], above for the additional steps, which are required after in
 = Usage =
 
   # Log in to Alfresco Share and navigate to any Document Library where you are a Site Collaborator or a Site Manager.
-  # Locate a document in the document list view and hover over the actions list on the right hand-side of the row. You should see your action labelled _Execute Script_ in the _More..._ section when you expand this.
-  # If you have configured the action in the document details screen above, then click on the document in the list view to navigate to the Document Details screen. You should see the _Execute Script_ action in the Actions list on the right hand side of the screen.
+  # Locate a document in the document list view and hover over the actions list on the right hand-side of the row. You should see your action in the _More..._ section when you expand this.
+  # If you have configured the action in the document details screen above, then click on the document in the list view to navigate to the Document Details screen. You should see the action in the list on the right hand side of the screen.
+
+= Credits =
+
+Thanks to Mike Farman for the original suggestion.
