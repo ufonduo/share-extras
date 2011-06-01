@@ -2,7 +2,7 @@
 
 =Introduction=
 
-This add-on for Alfresco Share defines a [http://wiki.alfresco.com/wiki/Custom_Document_Library_Action custom Document Library action], which can be easily customised to run a [http://wiki.alfresco.com/wiki/JavaScript_API JavaScript] file of your choosing when run by a 
+This add-on for Alfresco Share defines a [http://wiki.alfresco.com/wiki/Custom_Document_Library_Action custom Document Library action], which can be easily customised to run a [http://wiki.alfresco.com/wiki/JavaScript_API JavaScript] file of your choice when run by a 
 user.
 
 You must create the JavaScript file yourself and place this directly into the Data Dictionary/Scripts space in the repository. Once you have done this you are ready to customise this action to use it.
