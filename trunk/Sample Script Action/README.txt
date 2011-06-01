@@ -32,10 +32,9 @@ the renamed JS file.
   * JSCRIPT_NAME should define the name of the script which you added
     to the repository's Data Dictionary/Scripts space.
     
-  * MSG_BASE is the prefix used for message bundle labels. Set the
-    part following the dot (.) to a unique value for your action. You
-    may want to use the same value you used when renaming the 
-    client-side files.
+  * MSG_BASE is the prefix used for message bundle labels, which should
+    be set to a unique value for your action. Generally you should use the 
+    same value you used when renaming the client-side files.
     
   * FN_NAME will be used as the name of the client-side function
     used to define the action. Again it should be unique, but it 
@@ -57,8 +56,8 @@ to a unique value for your action. After you have done this, rename the
 .properties file in config/alfresco/messages to match this value.
 
 Lastly, update the property names inside the .property files, changing
-'sample-script' to the value you specified (after 'message.') in your MSG_BASE 
-definition in the client-side JavaScript.
+'sample-script' to the value you specified in your MSG_BASE definition in 
+the client-side JavaScript.
 
 Now you are ready to install the action. Before you do, make sure you update
 the jar.name property in the build.properties file to give your JAR file a 
@@ -106,7 +105,7 @@ To add the backup action to this list, add the following line just before the
 
 Change onActionExecuteScript to the value you specified for FN_NAME in the Customisation
 section above. Set the final part of the value for the 'label' attribute to the value you 
-specified (after 'message.') in your MSG_BASE definition in the client-side JavaScript.
+specified in your MSG_BASE definition in the client-side JavaScript.
 
 To make the action appear for folder items in addition to documents, add the same
 line into the section <actionSet id="folder">.
