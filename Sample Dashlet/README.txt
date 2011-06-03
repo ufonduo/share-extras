@@ -9,7 +9,7 @@ the screen.
 Installation
 ------------
 
-The dashlet has been developed to install on top of an existing Alfresco
+The add-on has been developed to install on top of an existing Alfresco
 3.3 installation.
 
 An Ant build script is provided to build a JAR file containing the 
@@ -22,7 +22,7 @@ directory.
     ant clean dist-jar
 
 The command should build a JAR file named hello-world-dashlet.jar
-in the 'dist' directory within your project.
+in the 'build/dist' directory within your project.
 
 To deploy the dashlet files into a local Tomcat instance for testing, you can 
 use the hotcopy-tomcat-jar task. You will need to set the tomcat.home
