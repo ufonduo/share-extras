@@ -117,41 +117,54 @@ if (typeof Fme == "undefined" || !Fme)
  
          // Load Scripts from Repository
          Alfresco.util.Ajax.request(
-                 {
+         {
                     url: Alfresco.constants.PROXY_URI + "de/fme/jsconsole/listscripts.json",
                     method: Alfresco.util.Ajax.GET,
                     requestContentType: Alfresco.util.Ajax.JSON,
                     successCallback: {
                        fn: function(res) {
 
-                          var oMenuButton3 = new YAHOO.widget.Button({ 
-        						id: "scriptlist", 
-        						name: "scriptlist",
+                          var oLoadMenuButton = new YAHOO.widget.Button({ 
+        						id: "loadButton", 
+        						name: "loadButton",
         						label: this.msg("button.load.script"),
         						type: "menu",  
         						menu: res.json.scripts,
-        						container: this.id + "-scriptmanager"
+        						container: this.id + "-scriptload"
                           });
 
-                          oMenuButton3.getMenu().subscribe("click", this.onLoadScriptClick, this); 
+                          oLoadMenuButton.getMenu().subscribe("click", this.onLoadScriptClick, this);
+                          
+                          var oSaveMenuButton = new YAHOO.widget.Button({ 
+      						id: "saveButton", 
+      						name: "saveButton",
+      						label: this.msg("button.save.script"),
+      						type: "menu",  
+      						menu: res.json.scripts,
+      						container: this.id + "-scriptsave"
+                          });
+
+                          oSaveMenuButton.getMenu().subscribe("click", this.onSaveScriptClick, this);
+                          
                        },
                        scope: this
                     }
-                  });       
+         });       
          
-         //Attach the CodeMirror highlighting
-         this.shareCodeMirror = CodeMirror.fromTextArea(this.widgets.scriptInput,{
-	        	 lineNumbers: true,
-	        	 onKeyEvent: function(i, e) {
-	             // Hook into ctrl-enter
+         // Attach the CodeMirror highlighting
+         this.shareCodeMirror = CodeMirror.fromTextArea(this.widgets.scriptInput, {
+        	 lineNumbers: true,
+        	 onKeyEvent: function(i, e) {
+        		 // Hook into ctrl-enter
 	             if (e.keyCode == 13 && (e.ctrlKey || e.metaKey) && !e.altKey) {
 		               e.stop();
 		               i.owner.onExecuteClick(i.owner, e);
 		             }
 	         	}
          });
-         //Store this for use in event
-         this.shareCodeMirror.owner=this;
+         
+         // Store this for use in event
+         this.shareCodeMirror.owner = this;
       },
 
       /**
@@ -163,20 +176,29 @@ if (typeof Fme == "undefined" || !Fme)
 		 */      
       onExecuteClick: function ACJC_onExecuteClick(e, p_obj)
       {
-    	//Save any changes done in CodeMirror editor before submitting
+    	// Save any changes done in CodeMirror editor before submitting
     	this.shareCodeMirror.save();
-    	var ta = this.widgets.scriptInput;
-   	  	var selection = ta.value.substring(ta.selectionStart, ta.selectionEnd);
-
+    	
+    	// If something is selected, only get the selected part of the script
+    	var scriptCode = "";
+    	if (this.shareCodeMirror.somethingSelected()) {
+    		scriptCode = this.shareCodeMirror.getSelection();
+    	}
+    	else {
+    		scriptCode = this.widgets.scriptInput.value;
+    	}
+    	
+    	// Build JSON Object to send to the server
    	  	var input = { 
-     	   "input" : (selection.length > 0) ? selection : ta.value,
+     	   "input" : scriptCode,
    	  	   "context" : {},
            "space" : this.widgets.nodeField.value
    	  	};
 
+   	  	// Disable the result textarea
    	  	this.widgets.scriptOutput.disabled = true;
 
-         Alfresco.util.Ajax.request(
+   	  	Alfresco.util.Ajax.request(
          {
             url: Alfresco.constants.PROXY_URI + "de/fme/jsconsole/execute.json",
             method: Alfresco.util.Ajax.POST,
@@ -211,7 +233,7 @@ if (typeof Fme == "undefined" || !Fme)
 	  },
 	 
       /**
-		 * Fired when the user selects a script from the load scripte drop down menu.
+		 * Fired when the user selects a script from the load scripts drop down menu.
 		 * Calls a repository webscript to retrieve the script contents.
 		 * 
 		 * @method onLoadScriptClick
@@ -220,12 +242,11 @@ if (typeof Fme == "undefined" || !Fme)
 			 
           var callback = {
               success : function(o) {
-            	  //self.widgets.scriptInput.value = o.responseText;
-        	  	  //set the new editor content
+        	  	  // set the new editor content
             	  self.shareCodeMirror.setValue(o.responseText);
               },
               failure: function(o) {
-                  alert("Error loading script."); 
+            	  text: self.msg("error.script.load", filename)
               },
               scope: this
           }
@@ -234,7 +255,62 @@ if (typeof Fme == "undefined" || !Fme)
           var url = Alfresco.constants.PROXY_URI + "api/node/content/" + nodeRef.replace("://","/");
           YAHOO.util.Connect.asyncRequest('GET', url, callback);
        }, 
-      
+
+       /**
+		 * Fired when the user selects a script from the save scripts drop down menu.
+		 * Calls a repository webscript to store the script contents.
+		 * 
+		 * @method onLoadScriptClick
+		 */ 	  
+       onSaveScriptClick : function ACJC_onSaveScriptClick(p_sType, p_aArgs, self) { 
+    	  self.shareCodeMirror.save();
+    	   
+    	  var menuItem = p_aArgs[1];
+    	  var filename = menuItem.cfg.getProperty("text");
+    	  var nodeRef = menuItem.value;
+    	  
+          var saveCallback = {
+                  success : function(o) {
+                      Alfresco.util.PopupManager.displayMessage(
+                      {
+                        text: self.msg("message.save.successful", filename)
+                      });
+                  },
+                  failure: function(o) {
+                      Alfresco.util.PopupManager.displayMessage(
+                      {
+                        text: self.msg("error.script.save", filename)
+                      });                	  
+                  },
+                  scope: this
+              }
+    	   
+          Alfresco.util.PopupManager.displayPrompt
+          ({
+             title: self.msg("title.confirm.save"),
+             text: self.msg("message.confirm.save", filename),
+             buttons: [
+             {
+            	 text: self.msg("button.save"),
+            	 handler: function ACJC_onSaveScriptClick_save() 
+                 {
+            		 this.destroy();
+                     var url = Alfresco.constants.PROXY_URI + "api/node/content/" + nodeRef.replace("://","/");
+                     YAHOO.util.Connect.asyncRequest('PUT', url, saveCallback, 	self.widgets.scriptInput.value);
+                 }
+             },
+             {
+            	 text: self.msg("button.cancel"),
+            	 handler: function ACJC_onSaveScriptClick_cancel()
+                 {
+            		 this.destroy();
+                 },
+                 isDefault: true
+             }]
+          });    	   
+       }, 
+     
+       
       /**
 		 * Dialog select destination button event handler
 		 * 
