@@ -139,13 +139,19 @@ if (typeof Fme == "undefined" || !Fme)
                     }
                   });       
          
-         // Add Key Listener to handle Ctrl+Enter
-         YAHOO.util.Event.addListener(this.widgets.scriptInput, 'keypress', function(e) {
-     	    if (((e.keyCode == 13) || (e.keyCode == 10)) && (e.ctrlKey == true)) {
-     	    	this.onExecuteClick.call(this, e);
-     	    }
-      	}, this, true);
-         
+         //Attach the CodeMirror highlighting
+         this.shareCodeMirror = CodeMirror.fromTextArea(this.widgets.scriptInput,{
+	        	 lineNumbers: true,
+	        	 onKeyEvent: function(i, e) {
+	             // Hook into ctrl-enter
+	             if (e.keyCode == 13 && (e.ctrlKey || e.metaKey) && !e.altKey) {
+		               e.stop();
+		               i.owner.onExecuteClick(i.owner, e);
+		             }
+	         	}
+         });
+         //Store this for use in event
+         this.shareCodeMirror.owner=this;
       },
 
       /**
@@ -157,6 +163,8 @@ if (typeof Fme == "undefined" || !Fme)
 		 */      
       onExecuteClick: function ACJC_onExecuteClick(e, p_obj)
       {
+    	//Save any changes done in CodeMirror editor before submitting
+    	this.shareCodeMirror.save();
     	var ta = this.widgets.scriptInput;
    	  	var selection = ta.value.substring(ta.selectionStart, ta.selectionEnd);
 
@@ -212,7 +220,9 @@ if (typeof Fme == "undefined" || !Fme)
 			 
           var callback = {
               success : function(o) {
-            	  self.widgets.scriptInput.value = o.responseText;
+            	  //self.widgets.scriptInput.value = o.responseText;
+        	  	  //set the new editor content
+            	  self.shareCodeMirror.setValue(o.responseText);
               },
               failure: function(o) {
                   alert("Error loading script."); 
