@@ -13,8 +13,11 @@
 
 	<div id="${el}-main" class="hidden">
 	    <div class="buttonbar">
-	    	<div class="scriptloader">
-				<div id="${el}-scriptmanager"></div>
+	    	<div class="scriptmenu">
+				<div id="${el}-scriptload"></div>
+	    	</div>
+	    	<div class="scriptmenu">
+				<div id="${el}-scriptsave"></div>
 	    	</div>
 			${msg("label.run.with")} <b>var space = </b>
 			<span id="${el}-pathField" name="pathField" value=""></span> 	
