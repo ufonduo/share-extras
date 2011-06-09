@@ -53,3 +53,8 @@
    font-size: 116%;
 }
 
+.javascript-console .CodeMirror 
+{
+	font-size:10pt;
+}
+
