@@ -52,7 +52,20 @@ To load a custom javascript based file use
 Path to custom settings file should not have a starting /. More information on how to create custom configuration files can be found in http://docs.cksource.com/CKEditor_3.x/Developers_Guide.
 Use the http://share-extras.googlecode.com/svn/trunk/CKEditor%20Form%20Control/source/web/components/editors/ckeditor/config.js as a template.
 
-
+==Loading forms dependencies==
+The `ckeditor-form-control.jar` includes configuration to load javascript [http://wiki.alfresco.com/wiki/Forms#dependencies dependencies]. However if you have other configuration in a custom config file this may overwrite this configuration. _Only do this step if CKEditor fails to load._
+{{{
+   	<config>
+		<forms>
+	        <dependencies>
+	         <!-- Include some extra assets --> 
+				<js src="/modules/editors/ckeditor/ckeditor.js" />
+				<js src="/components/editors/ckeditor/ckeditorloader.js" />
+	        </dependencies>
+ 		</forms>
+	</config>
+}}}
+If you notice that the above javascript files do not load when creating or editing an html file, merge this configuration to your share-config-custom.xml file. Indication that this is happening is that the textarea is blank and the editor has failed to load.
 =Building from source=
 Check out the project if you have not already done so
 {{{
