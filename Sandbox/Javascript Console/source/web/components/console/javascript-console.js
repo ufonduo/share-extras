@@ -135,17 +135,22 @@ if (typeof Fme == "undefined" || !Fme)
 
                           oLoadMenuButton.getMenu().subscribe("click", this.onLoadScriptClick, this);
                           
+                          var saveMenuItems = [{
+                        	  text : this.msg("button.save.create.new"),
+                        	  value : "NEW"
+                          }];
+                          saveMenuItems.push(res.json.scripts);
+                          
                           var oSaveMenuButton = new YAHOO.widget.Button({ 
       						id: "saveButton", 
       						name: "saveButton",
       						label: this.msg("button.save.script"),
       						type: "menu",  
-      						menu: res.json.scripts,
+      						menu: saveMenuItems,
       						container: this.id + "-scriptsave"
                           });
 
                           oSaveMenuButton.getMenu().subscribe("click", this.onSaveScriptClick, this);
-                          
                        },
                        scope: this
                     }
@@ -256,6 +261,36 @@ if (typeof Fme == "undefined" || !Fme)
           YAHOO.util.Connect.asyncRequest('GET', url, callback);
        }, 
 
+       saveAsExistingScript : function ACJC_saveAsExistingScript(filename, nodeRef) {
+    	   var callback = this.createSaveCallback(filename);
+           var url = Alfresco.constants.PROXY_URI + "api/node/content/" + nodeRef.replace("://","/");
+           YAHOO.util.Connect.asyncRequest('PUT', url, callback, this.widgets.scriptInput.value);
+       },
+       
+       saveAsNewScript : function ACJC_saveAsNewScript(filename) {
+    	   var callback = this.createSaveCallback(filename);
+    	   var url = Alfresco.constants.PROXY_URI + "de/fme/jsconsole/createscript.json?name="+encodeURIComponent(filename);
+           YAHOO.util.Connect.asyncRequest('PUT', url, callback, this.widgets.scriptInput.value);
+       },
+       
+       createSaveCallback : function ACJC_createSaveCallback(filename) {
+           return {
+               success : function(o) {
+                   Alfresco.util.PopupManager.displayMessage(
+                   {
+                     text: this.msg("message.save.successful", filename)
+                   });
+               },
+               failure: function(o) {
+                   Alfresco.util.PopupManager.displayMessage(
+                   {
+                     text: this.msg("error.script.save", filename)
+                   });                	  
+               },
+               scope: this
+           };
+       },
+       
        /**
 		 * Fired when the user selects a script from the save scripts drop down menu.
 		 * Calls a repository webscript to store the script contents.
@@ -268,48 +303,44 @@ if (typeof Fme == "undefined" || !Fme)
     	  var menuItem = p_aArgs[1];
     	  var filename = menuItem.cfg.getProperty("text");
     	  var nodeRef = menuItem.value;
-    	  
-          var saveCallback = {
-                  success : function(o) {
-                      Alfresco.util.PopupManager.displayMessage(
-                      {
-                        text: self.msg("message.save.successful", filename)
-                      });
-                  },
-                  failure: function(o) {
-                      Alfresco.util.PopupManager.displayMessage(
-                      {
-                        text: self.msg("error.script.save", filename)
-                      });                	  
-                  },
-                  scope: this
-              }
-    	   
-          Alfresco.util.PopupManager.displayPrompt
-          ({
-             title: self.msg("title.confirm.save"),
-             text: self.msg("message.confirm.save", filename),
-             buttons: [
-             {
-            	 text: self.msg("button.save"),
-            	 handler: function ACJC_onSaveScriptClick_save() 
+
+    	  if (nodeRef == "NEW") {
+              Alfresco.util.PopupManager.getUserInput(
+              {
+            	  title: self.msg("title.save.choose.filename"),
+            	  text: self.msg("message.save.choose.filename"),
+            	  input: "text",
+            	  callback: {
+            		  fn: self.saveAsNewScript,
+            		  obj: [ ],
+            		  scope: self
+                  }
+              });                          
+    	  } else {
+              Alfresco.util.PopupManager.displayPrompt
+              ({
+                 title: self.msg("title.confirm.save"),
+                 text: self.msg("message.confirm.save", filename),
+                 buttons: [
                  {
-            		 this.destroy();
-                     var url = Alfresco.constants.PROXY_URI + "api/node/content/" + nodeRef.replace("://","/");
-                     YAHOO.util.Connect.asyncRequest('PUT', url, saveCallback, 	self.widgets.scriptInput.value);
-                 }
-             },
-             {
-            	 text: self.msg("button.cancel"),
-            	 handler: function ACJC_onSaveScriptClick_cancel()
-                 {
-            		 this.destroy();
+                	 text: self.msg("button.save"),
+                	 handler: function ACJC_onSaveScriptClick_save() 
+                     {
+                		 this.destroy();
+                		 self.saveAsExistingScript(filename, nodeRef);
+                     }
                  },
-                 isDefault: true
-             }]
-          });    	   
+                 {
+                	 text: self.msg("button.cancel"),
+                	 handler: function ACJC_onSaveScriptClick_cancel()
+                     {
+                		 this.destroy();
+                     },
+                     isDefault: true
+                 }]
+              });    	   
+    	  }
        }, 
-     
        
       /**
 		 * Dialog select destination button event handler
