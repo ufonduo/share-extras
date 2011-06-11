@@ -30,8 +30,7 @@
 		</div>
 		<div>
 			<div class="header-bar">${msg("label.input")}</div>
-			<textarea id="${el}-jsinput" name="jsinput" cols="80" rows="22" class="jsbox">var nodes = search.luceneSearch("TEXT:alfresco");
-print(nodes);</textarea>
+			<textarea id="${el}-jsinput" name="jsinput" cols="80" rows="22" class="jsbox"></textarea>
 		</div>
 		<div class="execute-buttonbar">
 			<button type="submit" name="${el}-execute-button" id="${el}-execute-button">${msg("button.execute")}</button>

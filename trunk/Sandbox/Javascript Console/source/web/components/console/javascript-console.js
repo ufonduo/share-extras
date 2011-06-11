@@ -112,12 +112,18 @@ if (typeof Fme == "undefined" || !Fme)
 	   
 	  createMenuButtons: function ACJC_createMenuButtons(listOfScripts) {
 
+          var loadMenuItems = [{
+        	  text : this.msg("button.load.create.new"),
+        	  value : "NEW"
+          }];
+          loadMenuItems.push(listOfScripts);
+		  
           var oLoadMenuButton = new YAHOO.widget.Button({ 
 				id: "loadButton", 
 				name: "loadButton",
 				label: this.msg("button.load.script"),
 				type: "menu",  
-				menu: listOfScripts,
+				menu: loadMenuItems,
 				container: this.id + "-scriptload"
           });
 
@@ -193,6 +199,9 @@ if (typeof Fme == "undefined" || !Fme)
 
              if (window.localStorage["javascript.console.script"]) {
             	 self.widgets.scriptInput.value = window.localStorage["javascript.console.script"];
+             }
+             else {
+            	 this.loadDemoScript();
              }
     	 }
          
@@ -291,7 +300,16 @@ if (typeof Fme == "undefined" || !Fme)
             }
          });
 	  },
-	 
+
+	  loadDemoScript: function ACJC_loadDemoScript() {
+		  this.widgets.codeMirror.setValue(
+			'var nodes = search.luceneSearch("@name:alfresco");\n'+
+			'\n'+
+			'for each(n in nodes) {\n'+
+	        '  print(n.name + " (" + n.typeShort + ") " + n.nodeRef);\n'+
+	        '}\n');
+	  },
+	  
       /**
 		 * Fired when the user selects a script from the load scripts drop down menu.
 		 * Calls a repository webscript to retrieve the script contents.
@@ -312,8 +330,14 @@ if (typeof Fme == "undefined" || !Fme)
           }
 
           var nodeRef = p_aArgs[1].value;
-          var url = Alfresco.constants.PROXY_URI + "api/node/content/" + nodeRef.replace("://","/");
-          YAHOO.util.Connect.asyncRequest('GET', url, callback);
+          
+    	  if (nodeRef == "NEW") {
+    		  self.loadDemoScript.call(self);
+    	  }
+    	  else {
+    		  var url = Alfresco.constants.PROXY_URI + "api/node/content/" + nodeRef.replace("://","/");
+    		  YAHOO.util.Connect.asyncRequest('GET', url, callback);
+    	  }
        }, 
 
        saveAsExistingScript : function ACJC_saveAsExistingScript(filename, nodeRef) {
