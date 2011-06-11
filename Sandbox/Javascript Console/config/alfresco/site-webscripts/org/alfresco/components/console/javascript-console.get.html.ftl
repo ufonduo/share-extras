@@ -19,6 +19,10 @@
 	    	<div class="scriptmenu">
 				<div id="${el}-scriptsave"></div>
 	    	</div>
+	    	<div class="scriptmenu">
+				<div id="${el}-documentation"></div>
+	    	</div>
+	    	
 			${msg("label.run.with")} <b>var space = </b>
 			<span id="${el}-pathField" name="pathField" value=""></span> 	
 			<input id="${el}-nodeRef" type="hidden" name="spaceNodeRef" value=""/>
