@@ -467,12 +467,18 @@
                },
                doSetupFormsValidation:
                {
-                  fn: function SitePoll_doSetupForm_callback(form)
+                  fn: function SitePoll_doSetupForm_callback(p_form)
                   {
                      var select = Dom.get(this.configDialog.id + "-poll-select");
                      if (select != null)
                      {
                         select.value = this.options.nodeRef;
+                        // Validation
+                        p_form.addValidation(this.configDialog.id + "-poll-select", function fnValidateConfig(field, args, event, form, silent, message)
+                        {
+                           return field.options[field.selectedIndex].value !== "-";
+                        }, null, "change");
+                        p_form.setShowSubmitStateDynamically(true, false);
                      }
                   },
                   scope: this
