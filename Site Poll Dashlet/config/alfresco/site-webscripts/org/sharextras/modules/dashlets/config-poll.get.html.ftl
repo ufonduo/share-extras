@@ -5,15 +5,16 @@
          <div class="yui-gd">
             <div class="yui-u first"><label for="${args.htmlid}-poll-select">${msg("label.poll-select")}:</label></div>
             <div class="yui-u">
-            <#if pollList.polls?size &gt; 0>
                <select name="nodeRef" id="${args.htmlid}-poll-select" style="width: 30em;">
-               <#list pollList.polls as p>
+               <#if pollList.polls?size &gt; 0>
+                  <option value="-">${msg("label.select-one")}</option>
+                  <#list pollList.polls as p>
                   <option value="${p.nodeRef}">${p.title}</option>
-               </#list>
+                  </#list>
+               <#else>
+                  <option value="-">${msg("label.no-polls")}</option>
+               </#if>
                </select>
-            <#else>
-                ${msg("label.no-polls")}
-            </#if>
             </div>
          </div>
          <div class="bdft">
