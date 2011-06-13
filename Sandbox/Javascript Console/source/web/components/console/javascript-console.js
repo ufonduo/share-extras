@@ -187,7 +187,22 @@ if (typeof Fme == "undefined" || !Fme)
          // Call super-class onReady() method
          Fme.JavascriptConsole.superclass.onReady.call(this);
          var self = this;
-
+         
+         // Attach the CodeMirror highlighting
+         this.widgets.codeMirror = CodeMirror.fromTextArea(this.widgets.scriptInput, {
+        	 lineNumbers: true,
+        	 onKeyEvent: function(i, e) {
+        		 // Hook into ctrl-enter
+	             if (e.keyCode == 13 && (e.ctrlKey || e.metaKey) && !e.altKey) {
+		               e.stop();
+		               i.owner.onExecuteClick(i.owner, e);
+		             }
+	         	}
+         });
+         
+         // Store this for use in event
+         this.widgets.codeMirror.owner = this;
+         
          YAHOO.Bubbling.on("folderSelected", this.onDestinationSelected, this);
          
          // Store and Restore script content to and from local storage
@@ -198,7 +213,7 @@ if (typeof Fme == "undefined" || !Fme)
              };
 
              if (window.localStorage["javascript.console.script"]) {
-            	 self.widgets.scriptInput.value = window.localStorage["javascript.console.script"];
+            	 this.widgets.codeMirror.setValue(window.localStorage["javascript.console.script"]);
              }
              else {
             	 this.loadDemoScript();
@@ -219,21 +234,7 @@ if (typeof Fme == "undefined" || !Fme)
             	scope: this
             }
          });       
-         
-         // Attach the CodeMirror highlighting
-         this.widgets.codeMirror = CodeMirror.fromTextArea(this.widgets.scriptInput, {
-        	 lineNumbers: true,
-        	 onKeyEvent: function(i, e) {
-        		 // Hook into ctrl-enter
-	             if (e.keyCode == 13 && (e.ctrlKey || e.metaKey) && !e.altKey) {
-		               e.stop();
-		               i.owner.onExecuteClick(i.owner, e);
-		             }
-	         	}
-         });
-         
-         // Store this for use in event
-         this.widgets.codeMirror.owner = this;
+
       },
 
       /**
