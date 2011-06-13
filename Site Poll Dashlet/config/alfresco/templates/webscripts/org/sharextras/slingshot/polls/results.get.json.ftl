@@ -1,13 +1,15 @@
+<#escape x as jsonUtils.encodeJSONString(x)>
 {
-    "totalVotes": ${jsonUtils.encodeJSONString(totalVotes)},
+    "totalVotes": ${totalVotes?c},
     "responses": [
     <#list responses as response>
         {
-            "response": "${jsonUtils.encodeJSONString(response.response)}",
-            "votes": ${jsonUtils.encodeJSONString(response.votes)}<#if (totalVotes > 0)>,
-            "share": ${jsonUtils.encodeJSONString(response.share)}</#if>
+            "response": "${response.response}",
+            "votes": ${response.votes?c}<#if (totalVotes > 0)>,
+            "share": ${response.share?c}</#if>
         }
         <#if response_has_next>,</#if>
     </#list>
     ]
 }
+</#escape>

@@ -1,7 +1,7 @@
 <#macro dateFormat date>${date?string("dd MMM yyyy HH:mm:ss 'GMT'Z '('zzz')'")}</#macro>
 <#escape x as jsonUtils.encodeJSONString(x)>
 {
-   "totalPolls" : ${polls.polls?size},
+   "totalPolls" : ${polls.polls?size?c},
    "permissions":
    {
       "create": ${polls.container.hasPermission("CreateChildren")?string}

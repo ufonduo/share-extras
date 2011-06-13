@@ -20,7 +20,7 @@
                <field id="cm:description">
                   <control template="/org/alfresco/components/form/controls/textarea.ftl" />
                </field>
-               <field id="pm:options" mandatory="true" help="Separate multiple options using commas">
+               <field id="pm:options" mandatory="true" help-id="polls.options.help">
                   <control template="/org/alfresco/components/form/controls/textarea.ftl" />
                </field>
             </appearance>
@@ -63,7 +63,7 @@
                <field id="cm:description">
                   <control template="/org/alfresco/components/form/controls/textarea.ftl" />
                </field>
-               <field id="pm:options" mandatory="true" help="Separate multiple options using commas">
+               <field id="pm:options" mandatory="true" help-id="polls.options.help">
                   <control template="/org/alfresco/components/form/controls/textarea.ftl" />
                </field>
             </appearance>
