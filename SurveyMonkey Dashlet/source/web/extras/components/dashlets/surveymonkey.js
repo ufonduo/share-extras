@@ -31,14 +31,18 @@ if (typeof (Extras.dashlet) == "undefined" || !Extras.dashlet)
     * YUI Library aliases
     */
    var Dom = YAHOO.util.Dom,
-      Event = YAHOO.util.Event,
-      Cookie = YAHOO.util.Cookie;
+      Event = YAHOO.util.Event;
 
    /**
     * Alfresco Slingshot aliases
     */
    var $html = Alfresco.util.encodeHTML,
       $combine = Alfresco.util.combinePaths;
+   
+   /**
+    * Constants
+    */
+   var SM_EMBED_BASE = "http://www.surveymonkey.com/jsEmbed.aspx?sm=";
 
    /**
     * Dashboard SurveyMonkey constructor.
@@ -99,7 +103,43 @@ if (typeof (Extras.dashlet) == "undefined" || !Extras.dashlet)
           * @type boolean
           * @default false
           */
-         usePanel: false
+         usePanel: false,
+         
+         /**
+          * CSS width of the panel
+          * 
+          * @property panelWidth
+          * @type string
+          * @default "700px"
+          */
+         panelWidth: "700px",
+         
+         /**
+          * CSS height of the panel
+          * 
+          * @property panelHeight
+          * @type string
+          * @default "618px"
+          */
+         panelHeight: "618px",
+         
+         /**
+          * Whether the panel should be set as modal
+          * 
+          * @property modalPanel
+          * @type boolean
+          * @default false
+          */
+         modalPanel: false,
+         
+         /**
+          * Whether the panel should be set as draggable
+          * 
+          * @property draggablePanel
+          * @type boolean
+          * @default false
+          */
+         draggablePanel: true
       },
       
       /**
@@ -129,15 +169,19 @@ if (typeof (Extras.dashlet) == "undefined" || !Extras.dashlet)
          // Configure button event listener
          Event.addListener(this.id + "-config-link", "click", this.onConfigClick, this, true);
          
+         // Move the panel to document.body to fix z-index issues
+         document.body.appendChild(Dom.get(this.id + "-panel"));
+         
          // Set up the panel
          this.widgets.panel = new YAHOO.widget.Panel(this.id + "-panel", {
-             draggable: true,
+             draggable: this.options.draggablePanel,
              visible: false,
-             width: "700px",
-             height: "618px",
+             width: this.options.panelWidth,
+             height: this.options.panelHeight,
+             modal: this.options.modalPanel,
              autofillheight: "body",
              constraintoviewport: true,
-             context: [this.id + "-panel-bd", this.id + "-panel-tl", this.id + "-panel-tl"]
+             context: ["bd", "tl", "tl"]
          });
          this.widgets.panel.render();
          this.widgets.panel.subscribe("hide", this.onPanelClose, this);
@@ -204,7 +248,7 @@ if (typeof (Extras.dashlet) == "undefined" || !Extras.dashlet)
          var se = document.createElement("script");
          se.type = "text/javascript";
          se.async = true;
-         se.src = "http://www.surveymonkey.com/jsEmbed.aspx?sm=" + this.options.surveyId;
+         se.src = SM_EMBED_BASE + this.options.surveyId;
          el.appendChild(se);
       },
 
@@ -239,7 +283,7 @@ if (typeof (Extras.dashlet) == "undefined" || !Extras.dashlet)
                      // Refresh the feed
                      this.options.surveyId = Dom.get(this.configDialog.id + "-survey-id").value;
                      this.options.title = Dom.get(this.configDialog.id + "-survey-title").value;
-                     this.options.usePanel = Dom.get(this.configDialog.id + "-use-panel").checked;
+                     this.options.usePanel = Dom.get(this.configDialog.id + "-use-panel-cb").checked;
                      this.refresh();
                   },
                   scope: this
@@ -250,7 +294,30 @@ if (typeof (Extras.dashlet) == "undefined" || !Extras.dashlet)
                   {
                      Dom.get(this.configDialog.id + "-survey-id").value = this.options.surveyId;
                      Dom.get(this.configDialog.id + "-survey-title").value = this.options.title;
-                     Dom.get(this.configDialog.id + "-use-panel").checked = this.options.usePanel;
+                     Dom.get(this.configDialog.id + "-use-panel-cb").checked = this.options.usePanel;
+
+                     // Survey ID is mandatory
+                     this.configDialog.form.addValidation(this.configDialog.id + "-survey-id", Alfresco.forms.validation.mandatory, null, "keyup");
+                     this.configDialog.form.addValidation(this.configDialog.id + "-survey-id", Alfresco.forms.validation.mandatory, null, "blur");
+                  },
+                  scope: this
+               },
+               doBeforeFormSubmit:
+               {
+                  fn: function SurveyMonkey_doBeforeFormSubmit()
+                  {
+                     // If survey ID is the full embed URL then truncate it
+                     var sid = Dom.get(this.configDialog.id + "-survey-id");
+                     if (sid.value.indexOf(SM_EMBED_BASE) == 0)
+                     {
+                        sid.value = sid.value.substring(SM_EMBED_BASE.length);
+                     }
+                     // Set the panel enabled field based on the checkbox
+                     Dom.get(this.configDialog.id + "-use-panel").value = 
+                        Dom.get(this.configDialog.id + "-use-panel-cb").checked ? "1" : "0";
+                     
+                     this.configDialog.widgets.okButton.set("disabled", true);
+                     this.configDialog.widgets.cancelButton.set("disabled", true);
                   },
                   scope: this
                }
