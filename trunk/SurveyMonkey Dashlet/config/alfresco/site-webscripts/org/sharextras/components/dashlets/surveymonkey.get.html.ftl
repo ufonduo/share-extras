@@ -13,11 +13,11 @@
 
 <div class="dashlet surveymonkey-dashlet">
    <div class="surveymonkey-panel" id="${args.htmlid}-panel" style="display: none;">
-      <div class="hd" id="${args.htmlid}-panel-hd">${args.title!msg("label.title")}</div>
+      <div class="hd" id="${args.htmlid}-panel-hd"><#if args.title?? && args.title!="">${args.title}<#else>${msg("label.title")}</#if></div>
       <div class="bd" id="${args.htmlid}-panel-bd"></div>
       <div class="ft" id="${args.htmlid}-panel-ft"></div>
    </div>
-   <div class="title" id="${args.htmlid}-title">${args.title!msg("label.title")}</div>
+   <div class="title" id="${args.htmlid}-title"><#if args.title?? && args.title!="">${args.title}<#else>${msg("label.title")}</#if></div>
    <div class="toolbar">
       <a id="${args.htmlid}-config-link" class="theme-color-1" href="#">${msg("link.configure")}</a>
    </div>
