@@ -21,6 +21,6 @@
    <div class="toolbar">
       <a id="${args.htmlid}-config-link" class="theme-color-1" href="#">${msg("link.configure")}</a>
    </div>
-   <div class="body scrollableList" id="${args.htmlid}-body" <#if args.height??>style="height: ${args.height}px;"</#if>>
+   <div class="body" id="${args.htmlid}-body" <#if args.height??>style="height: ${args.height}px;"</#if>>
    </div>
 </div>

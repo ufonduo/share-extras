@@ -1,0 +1,14 @@
+.surveymonkey-dashlet iframe,
+.surveymonkey-panel iframe
+{
+	width: 100%;
+	height: 100%;
+	border-collapse: collapse;
+	border-width: 0;
+}
+.surveymonkey-dashlet .body
+{
+	overflow: hidden;
+	margin-left: 0;
+	margin-right: 0;
+}

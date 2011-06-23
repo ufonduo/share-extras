@@ -42,7 +42,7 @@ if (typeof (Extras.dashlet) == "undefined" || !Extras.dashlet)
    /**
     * Constants
     */
-   var SM_EMBED_BASE = "http://www.surveymonkey.com/jsEmbed.aspx?sm=";
+   var SM_BASE = "http://www.surveymonkey.com/s/";
 
    /**
     * Dashboard SurveyMonkey constructor.
@@ -119,9 +119,9 @@ if (typeof (Extras.dashlet) == "undefined" || !Extras.dashlet)
           * 
           * @property panelHeight
           * @type string
-          * @default "618px"
+          * @default "500px"
           */
-         panelHeight: "618px",
+         panelHeight: "500px",
          
          /**
           * Whether the panel should be set as modal
@@ -216,6 +216,10 @@ if (typeof (Extras.dashlet) == "undefined" || !Extras.dashlet)
                this.widgets.panel.cfg.setProperty("visible", true);
                this.widgets.panel.render();
             }
+            else
+            {
+               this.widgets.panel.cfg.setProperty("visible", false);
+            }
          }
          else
          {
@@ -245,10 +249,11 @@ if (typeof (Extras.dashlet) == "undefined" || !Extras.dashlet)
        */
       _addScriptContent: function SurveyMonkey__addScriptContent(el)
       {
-         var se = document.createElement("script");
-         se.type = "text/javascript";
-         se.src = SM_EMBED_BASE + this.options.surveyId;
-         el.appendChild(se);
+         var iframe = document.createElement("iframe");
+         Dom.setAttribute(iframe, "src", SM_BASE + this.options.surveyId);
+         Dom.setAttribute(iframe, "frameBorder", "0");
+         Dom.setAttribute(iframe, "scrolling", "yes");
+         el.appendChild(iframe);
       },
 
       /**
@@ -307,9 +312,9 @@ if (typeof (Extras.dashlet) == "undefined" || !Extras.dashlet)
                   {
                      // If survey ID is the full embed URL then truncate it
                      var sid = Dom.get(this.configDialog.id + "-survey-id");
-                     if (sid.value.indexOf(SM_EMBED_BASE) == 0)
+                     if (sid.value.indexOf(SM_BASE) == 0)
                      {
-                        sid.value = sid.value.substring(SM_EMBED_BASE.length);
+                        sid.value = sid.value.substring(SM_BASE.length);
                      }
                      // Set the panel enabled field based on the checkbox
                      Dom.get(this.configDialog.id + "-use-panel").value = 
