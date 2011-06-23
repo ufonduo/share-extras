@@ -247,7 +247,6 @@ if (typeof (Extras.dashlet) == "undefined" || !Extras.dashlet)
       {
          var se = document.createElement("script");
          se.type = "text/javascript";
-         se.async = true;
          se.src = SM_EMBED_BASE + this.options.surveyId;
          el.appendChild(se);
       },
