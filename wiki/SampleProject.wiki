@@ -71,6 +71,8 @@ The Ant build script `build.xml` can be used to help you distribute your customi
 
   * Use the `hotcopy-tomcat-zip` target to copy all the individual configuration and resource files into a local Tomcat installation on your system for testing. Unlike `hotcopy-tomcat-jar`, this method allows you to reload changes to your files without having to restart the Tomcat server, and so is better suited for development. You will need to specify the location of your Tomcat installation by defining the variable `tomcat.home` when you call the script.
 
+  * Use the `reload-webscripts-repo` and `reload-webscripts-share` targets to reload the repository and web-tier web scripts respectively. This will not reload resources deployed in JAR files but is suitable for local testing in combination with the `hotcopy-tomcat-zip` target.
+
 For more information on these targets and the other targets available in `build.xml`, see the inline comments within the [http://code.google.com/p/share-extras/source/browse/trunk/Sample%20Dashlet/build.xml build script].
 
 ===Command line examples===
