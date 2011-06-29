@@ -19,15 +19,25 @@ You should also update the information in `README.txt` and `MAINTAINERS.txt` to 
 
 ===Adding Web Scripts===
 
-You can add both repository-tier and web-tier web scripts to your project. The scripts must be added in the following directories below `config`.
+All dashlet projects will define one web-tier [http://wiki.alfresco.com/wiki/Web_Scripts web script] for each dashlet, but may also use additional web-tier scripts, or repository scripts for loading data.
 
-  * For repository-tier web scripts, place in `alfresco/templates/webscripts` or `alfresco/extension/templates/webscripts` (if you are overriding existing repository scripts.
+The project supports any number of repository-tier and web-tier web scripts. The scripts must be added in the following directories below `config`.
 
-  * For web-tier web scripts, place in `alfresco/site-webscripts` or `alfresco/web-extension/site-webscripts` (if you are overriding existing web-tier scripts.
+For web-tier web scripts, place your scripts under
+
+  * `alfresco/site-webscripts` for your custom web scripts
+  * `alfresco/web-extension/site-webscripts` for any existing web-tier scripts that you want to override.
+
+For repository-tier web scripts, place scripts under
+
+  * `alfresco/templates/webscripts` for your custom web scripts
+  * `alfresco/extension/templates/webscripts` for any existing repository scripts that you want to override.
 
 Below these locations you should place scripts in a folder hierarchy as per standard web script packaging techniques, e.g. `org/mycompany/projectname` or `org/mycompany/components/dashlets`.
 
-An example directory structure containing the web script which defines the Hello World example web script is provided in the `config` directory. You can remove these files once you are happy defining your own scripts.
+An example directory structure containing a _Hello World_ example web script is provided in the `config` directory. You can remove these files once you have defined your own scripts.
+
+Note that Java web scripts are not supported by the sample project.
 
 ===Adding Resource Files===
 
@@ -49,11 +59,11 @@ For more advanced customisations, you can place additional global-scoped configu
 
 For even more advanced customisations, you can place additional Spring configuration in the directory `alfresco/web-extension` within `config`.
 
-Your configuration must reside in one or more XML files with the suffix `-context.xml` in order to be imported.
+In order to be imported, your configuration must reside in one or more XML files with the suffix `-context.xml` and each file must have a globally unique name.
 
 ==Building Your Project==
 
-The Ant build script `build.xml` can be used to help you distribute your customisations for testing or deployment.
+The Ant build script `build.xml` can be used to help you distribute your customisations for testing or deployment. You can run the script from a command line or using Eclipse's _External Tools Configurations_ dialogue (_Run_ > _External Tools_ > _External Tools Configurations_).
 
   * Use the `build-jar` target to build a JAR file in the `dist` directory, suitable for deploying as a shared library on any Share 3.3+ installation.
 
@@ -63,7 +73,9 @@ The Ant build script `build.xml` can be used to help you distribute your customi
 
 For more information on these targets and the other targets available in `build.xml`, see the inline comments within the [http://code.google.com/p/share-extras/source/browse/trunk/Sample%20Dashlet/build.xml build script].
 
-===Examples===
+===Command line examples===
+
+If you have Ant installed and have configured your system `PATH` correctly as per the [http://ant.apache.org/manual/ Ant manual], you can run the targets from a command line as per the following examples.
 
 `ant build-jar`
 
