@@ -12,3 +12,8 @@
 	margin-left: 0;
 	margin-right: 0;
 }
+
+.surveymonkey-dashlet .body > div
+{
+   margin: 10px 0;
+}
