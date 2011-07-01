@@ -51,5 +51,8 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
   # On the dashboard and click the *Customize Dashboard* button to edit the contents of the dashboard. Drag the iCal Feed dashlet into one of the columns from the list of dashlets to add it.
   # Click *OK* to save the configuration.
   # The dashlet should now be shown in your dashboard.
+  # Click *Configure* in the dashlet toolbar to enter the location of the iCal feed you want to be displayed, e.g. http://www.alfresco.com/about/events/feed/ical/
 
 =Known Issues=
+
+  * Feeds requiring authentication are [http://code.google.com/p/share-extras/issues/detail?id=14 not currently supported]
