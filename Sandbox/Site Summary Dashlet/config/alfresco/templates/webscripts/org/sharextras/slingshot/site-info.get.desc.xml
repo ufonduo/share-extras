@@ -1,0 +1,8 @@
+<webscript>
+   <shortname>Site Info</shortname>
+   <description>Return information about a collaboration site</description>
+   <url>/slingshot/site/{siteId}/info</url>
+   <url>/slingshot/s/{siteId}/info</url>
+   <authentication>user</authentication>
+   <format default="html">argument</format>
+</webscript>
