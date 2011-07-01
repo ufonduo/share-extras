@@ -3,7 +3,7 @@
 
 =Introduction=
 
-This add-on provides a modified page footer component, which integrates a client-side module to provide page tracking using Google Analytics.
+This add-on provides a modified page footer component, which integrates a client-side module to provide page tracking using [http://www.google.com/analytics/ Google Analytics].
 
 Tracking can be enabled on a per-site basis by adding the supplied _Trackable Container_ aspect to the site folder, using the Repository Browser. The _Tracking Enabled_ property supplied by the aspect must be set to true, and the _Tracking UID_ property should be set to the value of your Google Analytics site ID, i.e. UA-xxxxxx-x.
 
