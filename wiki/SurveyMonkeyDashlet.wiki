@@ -7,6 +7,8 @@ This project defines a custom dashlet to display a [http://www.surveymonkey.com/
 
 http://share-extras.googlecode.com/svn/trunk/SurveyMonkey%20Dashlet/screenshots/surveymonkey-dashlet.png
 
+The add-on should work with Alfresco version 3.3 and upwards.
+
 =Installation=
 
 The dashlet is packaged as a single JAR file for easy installation into Alfresco Share.
