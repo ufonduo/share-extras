@@ -1,5 +1,4 @@
 #summary Describes the SurveyMonkey Dashlet add-on for Alfresco Share
-#labels Draft
 
 =Introduction=
 
