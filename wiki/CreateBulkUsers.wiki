@@ -1,5 +1,4 @@
 #summary Describes the Create Bulk Users add-on for Alfresco Share
-#labels Draft
 
 =Introduction=
 
