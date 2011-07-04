@@ -1,5 +1,4 @@
 #summary Describes the Google Analytics Tracking add-on for Alfresco Share
-#labels Draft
 
 =Introduction=
 
