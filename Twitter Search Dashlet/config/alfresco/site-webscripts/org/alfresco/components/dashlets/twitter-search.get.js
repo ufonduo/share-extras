@@ -2,7 +2,7 @@ function main()
 {
    var s = new XML(config.script),
       defaultSearchTerm = s.defaultSearchTerm.toString(),
-      numResults = parseInt(s.numResults.toString()),
+      pageSize = parseInt(s.pageSize.toString(), 10),
       searchTerm = args.searchTerm ? args.searchTerm : defaultSearchTerm,
       hasConfigPermission = false;
    
@@ -30,7 +30,7 @@ function main()
       hasConfigPermission = true; // User dashboard
    }
 
-   model.numResults = numResults;
+   model.pageSize = pageSize;
    model.searchTerm = searchTerm;
    model.hasConfigPermission = hasConfigPermission;
    model.defaultSearchTerm = defaultSearchTerm;

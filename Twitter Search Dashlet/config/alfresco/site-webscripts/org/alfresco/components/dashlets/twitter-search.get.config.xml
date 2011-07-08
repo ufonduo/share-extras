@@ -1,4 +1,4 @@
 <twitter-search>
    <defaultSearchTerm>#Alfresco</defaultSearchTerm>
-   <numResults>20</numResults>
+   <pageSize>20</pageSize>
 </twitter-search>
