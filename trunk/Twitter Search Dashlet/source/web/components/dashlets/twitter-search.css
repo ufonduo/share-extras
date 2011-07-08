@@ -3,7 +3,7 @@
 }
 .twitter-search div.detail-list-item
 {
-   min-height: 2em;
+   min-height: 48px; /* No smaller that profile images */
 }
 .twitter-search h4, .twitter-search p
 {
@@ -34,4 +34,76 @@
 .twitter-search .list-tweet .user-icon
 {
    float: left;
+}
+.twitter-search > .scrollableList
+{
+   padding-top: 0;
+}
+.twitter-search > .body div.timeline
+{
+   padding-left: 0;
+   padding-right: 0;
+}
+.twitter-search .buttons
+{
+	padding-top: 1em;
+	text-align: center;
+	display: none;
+}
+.twitter-search .screen-name
+{
+   font-weight: 700;
+}
+.twitter-search .user-name
+{
+   color: #999999;
+}
+.twitter-search .retweeted
+{
+   background-image: url("twitter-user-timeline-rt.png");
+   background-position: left;
+   background-repeat: no-repeat;
+   padding-left: 18px;
+   color: #999999;
+}
+.twitter-search .tweet-hd,
+.twitter-search .tweet-bd
+{
+   padding-bottom: 0.2em;
+}
+.twitter-search .msg
+{
+   padding-top: 8px;
+   padding-left: 8px;
+   padding-right: 8px;
+}
+.twitter-search .notifications
+{
+   background-color: #FFFBDD;
+   border-bottom: 1px solid #DDD6A0;
+   padding-top: 5px;
+   padding-bottom: 5px;
+   text-align: center;
+	display: none;
+	cursor: pointer;
+}
+.twitter-search .refresh
+{
+   background-image: url('refresh-icon.png');
+   background-repeat: no-repeat;
+   float: right;
+   height: 16px;
+   left: -8px;
+   position: relative;
+   top: -22px;
+   width: 16px;
+}
+.twitter-search .refresh a,
+.twitter-search .refresh a:active,
+.twitter-search .refresh a:hover
+{
+   display: block;
+   height: 16px;
+   text-decoration: none;
+   width: 16px;
 }
