@@ -3,7 +3,8 @@
    {
       "componentId": "${instance.object.id}",
       "twitterUser": "${args.twitterUser!''}",
-      "defaultTwitterUser": "${defaultTwitterUser!""}"
+      "defaultTwitterUser": "${defaultTwitterUser!""}",
+      "pageSize": ${(pageSize!20)?c}
    }).setMessages(
       ${messages}
    );

@@ -1,3 +1,4 @@
 <twitter-user-timeline>
    <defaultUser>Alfresco</defaultUser>
+   <pageSize>20</pageSize>
 </twitter-user-timeline>

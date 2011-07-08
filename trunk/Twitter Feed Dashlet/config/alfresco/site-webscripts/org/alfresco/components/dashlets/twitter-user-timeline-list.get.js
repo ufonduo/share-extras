@@ -37,7 +37,7 @@ function main()
    else
    {
       var resp = eval("(" + result.response + ")");
-      status.setCode(result.status, resp.error ? resp.error : "Encountered an unknown error when loading remote data");
+      status.setCode(result.status, (resp != null && resp.error != null) ? resp.error : "Encountered an unknown error when loading remote data");
       status.redirect = true;
    }
 }
