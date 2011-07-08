@@ -1,11 +1,15 @@
 var searchTerm = args.q ? args.q : "#Alfresco",
         maxId = args.maxId ? args.maxId : null,
         minId = args.minId ? args.minId : null,
-        rpp = args.pageSize ? args.pageSize : 20;
+        pageSize = args.pageSize ? args.pageSize : 100;
 
 function main()
 {
-   var surl = "http://search.twitter.com/search.json?q=" + stringUtils.urlEncode(searchTerm) + "&rpp=" + stringUtils.urlEncode(rpp) + "&result_type=recent";
+   var surl = "http://search.twitter.com/search.json?q=" + stringUtils.urlEncode(searchTerm) + "&result_type=recent";
+   if (pageSize != null)
+   {
+       surl += "&rpp=" + stringUtils.urlEncode(pageSize);
+   }
    if (maxId != null)
    {
        surl += "&max_id=" + stringUtils.urlEncode(maxId);
