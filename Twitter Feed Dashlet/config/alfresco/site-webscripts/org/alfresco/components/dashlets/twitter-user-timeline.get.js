@@ -2,6 +2,7 @@ function main()
 {
    var s = new XML(config.script),
       defaultUser = s.defaultUser.toString(),
+      pageSize = parseInt(s.pageSize.toString(), 10),
       u = args.twitterUser ? args.twitterUser : defaultUser,
       hasConfigPermission = false;
    
@@ -29,6 +30,7 @@ function main()
       hasConfigPermission = true; // User dashboard
    }
 
+   model.pageSize = pageSize;
    model.twitterUser = u;
    model.hasConfigPermission = hasConfigPermission;
    model.defaultTwitterUser = defaultUser;

@@ -1,30 +1,5 @@
 /**
- * Copyright (C) 2005-2009 Alfresco Software Limited.
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
-
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-
- * As a special exception to the terms and conditions of version 2.0 of 
- * the GPL, you may redistribute this Program in connection with Free/Libre 
- * and Open Source Software ("FLOSS") applications as described in Alfresco's 
- * FLOSS exception.  You should have recieved a copy of the text describing 
- * the FLOSS exception, and it is also available here: 
- * http://www.alfresco.com/legal/licensing
- */
- 
-/**
- * Dashboard blog component.
+ * Twitter feed dashlet.
  * 
  * @namespace Alfresco
  * @class Alfresco.dashlet.TwitterUserTimeline
@@ -110,9 +85,9 @@
           * 
           * @property checkInterval
           * @type int
-          * @default 60
+          * @default 300
           */
-         checkInterval: 60
+         checkInterval: 300
       },
 
       /**
@@ -203,15 +178,15 @@
          );
          
          // Load the timeline
-         this.refreshTimeline();
+         this.load();
       },
 
       /**
        * Reload the timeline from the Twitter API and refresh the contents of the dashlet
        * 
-       * @method refreshTimeline
+       * @method load
        */
-      refreshTimeline: function TwitterUserTimeline_refreshTimeline()
+      load: function TwitterUserTimeline_load()
       {
          // Load the timeline
          Alfresco.util.Ajax.request(
@@ -219,19 +194,18 @@
             url: Alfresco.constants.URL_SERVICECONTEXT + "components/dashlets/twitter-user-timeline/list",
             dataObj:
             {
-               twitterUser: this.getTwitterUser(),
-               pageSize: this.options.pageSize,
-               htmlid: this.id
+               twitterUser: this._getTwitterUser(),
+               pageSize: this.options.pageSize
             },
             successCallback:
             {
-               fn: this.onTimelineLoaded,
+               fn: this.onLoadSuccess,
                scope: this,
                obj: null
             },
             failureCallback:
             {
-               fn: this.onTimelineLoadFailed,
+               fn: this.onLoadFailure,
                scope: this
             },
             scope: this,
@@ -242,15 +216,16 @@
       /**
        * Timeline loaded successfully
        * 
-       * @method onTimelineLoaded
+       * @method onLoadSuccess
        * @param p_response {object} Response object from request
+       * @param p_obj {object} Custom object passed to function
        */
-      onTimelineLoaded: function TwitterUserTimeline_onTimelineLoaded(p_response, p_obj)
+      onLoadSuccess: function TwitterUserTimeline_onLoadSuccess(p_response, p_obj)
       {
          // Update the dashlet title
-         this.title.innerHTML = this.msg("header.userTimeline", this.getTwitterUser());
+         this.title.innerHTML = this.msg("header.userTimeline", this._getTwitterUser());
          
-         var html = "", tweets, t,userLink, postedLink, isList = this.getTwitterUser().indexOf("/") > 0;
+         var html = "", tweets, t,userLink, postedLink, isList = this._getTwitterUser().indexOf("/") > 0;
          
          if (p_response.json)
          {
@@ -258,7 +233,7 @@
             
             if (tweets.length > 0)
             {
-               html += this.generateTweetsHTML(tweets);
+               html += this._generateTweetsHTML(tweets);
             }
             else
             {
@@ -284,92 +259,23 @@
          Dom.setStyle(this.id + "-buttons", "display", "block");
          
          // Start the timer to poll for new tweets, if enabled
-         this.resetTimer();
-      },
-      
-      /**
-       * Generate HTML markup for a single Tweet
-       * 
-       * @method generateTweetHTML
-       * @param t {object} Tweet object to render into HTML
-       * @param rt {object} Retweet object, if the Tweet has been RT'ed
-       * @return {string} HTML markup
-       */
-      generateTweetHTML: function TwitterUserTimeline_generateTweetHTML(t, rt)
-      {
-         var html = "", 
-            isList = this.getTwitterUser().indexOf("/") > 0,
-            profileUri = "http://twitter.com/" + encodeURIComponent(t.user.screen_name),
-            userLink = "<a href=\"" + profileUri + "\" title=\"" + $html(t.user.name) + "\" class=\"theme-color-1\">" + $html(t.user.screen_name) + "</a>",
-            postedRe = /([A-Za-z]{3}) ([A-Za-z]{3}) ([0-9]{2}) ([0-9]{2}:[0-9]{2}:[0-9]{2}) (\+[0-9]{4}) ([0-9]{4})/,
-            postedMatch = postedRe.exec(t.created_at),
-            postedOn = postedMatch != null ? new Date(postedMatch[1] + ", " + postedMatch[3] + " " + postedMatch[2] + " " + postedMatch[6] + " " + postedMatch[4] + " GMT" + postedMatch[5]) : new Date(t.created_at),
-            postedOnStr = typeof(Alfresco.util.relativeTime) === "function" ? Alfresco.util.relativeTime(new Date(postedOn)) : Alfresco.util.formatDate(postedOn),
-            postedLink = "<a href=\"" + profileUri + "\/status\/" + encodeURIComponent(t.id_str) + "\">" + postedOnStr + "<\/a>";
-
-         html += "<div class=\"" + (isList ? "list-tweet" : "user-tweet") + " detail-list-item\" id=\"" + $html(this.id) + "-tweet-" + $html(t.id_str) + "\">\n";
-         html += "<div class=\"user-icon\"><a href=\"" + profileUri + "\" title=\"" + $html(t.user.name) + "\"><img src=\"" + $html(t.user.profile_image_url) + "\" alt=\"" + $html(t.user.screen_name) + "\" width=\"48\" height=\"48\" /></a></div>\n";
-         html += "<div class=\"tweet\">\n";
-         html += "<div class=\"tweet-hd\">\n";
-         html += "<span class=\"screen-name\">" + userLink + "</span> <span class=\"user-name\">" + $html(t.user.name) + "</span>\n";
-         html += !YAHOO.lang.isUndefined(rt) ? " <span class=\"retweeted\">" + this.msg("label.retweetedBy", rt.user.screen_name) + "</span>\n" : "";
-         html += "</div>\n";
-         html += "<div class=\"tweet-bd\">" + this.formatTweet(t.text) + "</div>\n";
-         html += "<div class=\"tweet-details\">" + this.msg("text.tweetDetails", postedLink, t.source) + "</div>\n";
-         html += "</div>\n"; // end tweet
-         html += "</div>\n"; // end list-tweet
-         return html;
-      },
-      
-      /**
-       * Generate HTML markup for a collection of Tweets
-       * 
-       * @method generateHTML
-       * @param tweets {array} Tweet objects to render into HTML
-       * @return {string} HTML markup
-       */
-      generateTweetsHTML: function TwitterUserTimeline_generateTweetsHTML(tweets)
-      {
-         var html = "", t;
-         for (var i = 0; i < tweets.length; i++)
-         {
-            t = tweets[i];
-            if (t.retweeted_status)
-            {
-               html += this.generateTweetHTML(t.retweeted_status, t);
-            }
-            else
-            {
-               html += this.generateTweetHTML(t);
-            }
-         }
-         return html;
-      },
-
-      /**
-       * Insert links into Tweet text to highlight users, hashtags and links
-       * 
-       * @method formatTweet
-       * @param {string} text The plain tweet text
-       * @return {string} The tweet text, with hyperlinks added
-       */
-      formatTweet: function TwitterUserTimeline_formatTweet(text)
-      {
-         return text.replace(
-               /https?:\/\/\S+[^\s.]/gm, "<a href=\"$&\">$&</a>").replace(
-               /@(\w+)/gm, "<a href=\"http://twitter.com/$1\">$&</a>").replace(
-               /#(\w+)/gm, "<a href=\"http://twitter.com/search?q=%23$1\">$&</a>");
+         this._resetTimer();
       },
 
       /**
        * Timeline load failed
        * 
-       * @method onTimelineLoadFailed
+       * @method onLoadFailure
+       * @param p_response {object} Response object from request
+       * @param p_obj {object} Custom object passed to function
        */
-      onTimelineLoadFailed: function TwitterUserTimeline_onTimelineLoadFailed(p_response)
+      onLoadFailure: function TwitterUserTimeline_onLoadFailure(p_response, p_obj)
       {
+         // Update the dashlet title
+         this.title.innerHTML = this.msg("header.userTimeline", this._getTwitterUser());
+          
          var status = p_response.serverResponse.status,
-            isList = this.getTwitterUser().indexOf("/") > 0;
+            isList = this._getTwitterUser().indexOf("/") > 0;
          if (status == 401 || status == 404)
          {
             this.timeline.innerHTML = "<div class=\"msg\">" + this.msg("error." + (isList ? "list" : "user") + "." + status) + "</div>";
@@ -387,9 +293,9 @@
       /**
        * Load Tweets further back in time from the Twitter API and add to the dashlet contents
        * 
-       * @method extendTimeline
+       * @method extend
        */
-      extendTimeline: function TwitterUserTimeline_extendTimeline()
+      extend: function TwitterUserTimeline_extend()
       {
          // Load the user timeline
          Alfresco.util.Ajax.request(
@@ -397,20 +303,19 @@
             url: Alfresco.constants.URL_SERVICECONTEXT + "components/dashlets/twitter-user-timeline/list",
             dataObj:
             {
-               twitterUser: this.getTwitterUser(),
-               maxId: this.getEarliestTweetId(),
-               pageSize: this.options.pageSize + 1,
-               htmlid: this.id
+               twitterUser: this._getTwitterUser(),
+               maxId: this._getEarliestTweetId(),
+               pageSize: this.options.pageSize + 1
             },
             successCallback:
             {
-               fn: this.onTimelineExtensionLoaded,
+               fn: this.onExtensionLoaded,
                scope: this,
                obj: null
             },
             failureCallback:
             {
-               fn: this.onTimelineExtensionLoadFailure,
+               fn: this.onExtensionLoadFailure,
                scope: this,
                obj: null
             },
@@ -422,22 +327,25 @@
       /**
        * Extended timeline loaded successfully
        * 
-       * @method onTimelineExtensionLoaded
+       * @method onExtensionLoaded
        * @param p_response {object} Response object from request
+       * @param p_obj {object} Custom object passed to function
        */
-      onTimelineExtensionLoaded: function TwitterUserTimeline_onTimelineLoaded(p_response, p_obj)
+      onExtensionLoaded: function TwitterUserTimeline_onExtensionLoaded(p_response, p_obj)
       {
-         this.timeline.innerHTML += this.generateTweetsHTML(p_response.json.slice(1)); // Do not include duplicate tweet
+         this._refreshDates(); // Refresh existing dates
+         this.timeline.innerHTML += this._generateTweetsHTML(p_response.json.slice(1)); // Do not include duplicate tweet
          this.moreButton.set("disabled", false);
       },
       
       /**
        * Extended timeline load failed
        * 
-       * @method onTimelineExtensionLoadFailure
+       * @method onExtensionLoadFailure
        * @param p_response {object} Response object from request
+       * @param p_obj {object} Custom object passed to function
        */
-      onTimelineExtensionLoadFailure: function TwitterUserTimeline_onTimelineExtensionLoadFailure(p_response, p_obj)
+      onExtensionLoadFailure: function TwitterUserTimeline_onExtensionLoadFailure(p_response, p_obj)
       {
          Alfresco.util.PopupManager.displayMessage(
          {
@@ -449,61 +357,6 @@
       },
       
       /**
-       * Get the current Twitter user or list ID
-       * 
-       * @method getTwitterUser
-       * @return {string} The name of the currently-configured user or list, or the default
-       * user/list if unconfigured or blank
-       */
-      getTwitterUser: function TwitterUserTimeline_getTwitterUser()
-      {
-         return (this.options.twitterUser != null && this.options.twitterUser != "") ? 
-               this.options.twitterUser : this.options.defaultTwitterUser;
-      },
-      
-      /**
-       * Get the ID of the earliest Tweet in the timeline
-       * 
-       * @method getEarliestTweetId
-       * @return {string} The ID of the earliest Tweet shown in the timeline, or null if
-       * no Tweets are available or the last Tweet has no compatible ID on its element
-       */
-      getEarliestTweetId: function TwitterUserTimeline_getEarliestTweetId()
-      {
-         var div = Dom.getLastChild(this.timeline);
-         if (div !== null)
-         {
-            var id = Dom.getAttribute(div, "id");
-            if (id !== null && id.lastIndexOf("-") != -1)
-            {
-               return id.substring(id.lastIndexOf("-") + 1);
-            }
-         }
-         return null;
-      },
-      
-      /**
-       * Get the ID of the latest Tweet in the timeline
-       * 
-       * @method getLatestTweetId
-       * @return {string} The ID of the latest Tweet shown in the timeline, or null if
-       * no Tweets are available or the last Tweet has no compatible ID on its element
-       */
-      getLatestTweetId: function TwitterUserTimeline_getLatestTweetId()
-      {
-         var div = Dom.getFirstChild(this.timeline);
-         if (div !== null)
-         {
-            var id = Dom.getAttribute(div, "id");
-            if (id !== null && id.lastIndexOf("-") != -1)
-            {
-               return id.substring(id.lastIndexOf("-") + 1);
-            }
-         }
-         return null;
-      },
-      
-      /**
        * Check for new Tweets since the last Tweet shown. Display a notice to the user
        * indicating that new Tweets are available, if shown.
        * 
@@ -511,16 +364,17 @@
        */
       pollNew: function TwitterUserTimeline_pollNew()
       {
+         // Refresh existing dates
+         this._refreshDates();
+          
          // Load the user timeline
          Alfresco.util.Ajax.request(
          {
             url: Alfresco.constants.URL_SERVICECONTEXT + "components/dashlets/twitter-user-timeline/list",
             dataObj:
             {
-               twitterUser: this.getTwitterUser(),
-               minId: this.getLatestTweetId(),
-               pageSize: this.options.pageSize + 1,
-               htmlid: this.id
+               twitterUser: this._getTwitterUser(),
+               minId: this._getLatestTweetId()
             },
             successCallback:
             {
@@ -544,32 +398,15 @@
        * 
        * @method onNewTweetsLoaded
        * @param p_response {object} Response object from request
+       * @param p_obj {object} Custom object passed to function
        */
       onNewTweetsLoaded: function TwitterUserTimeline_onNewTweetsLoaded(p_response, p_obj)
       {
          this.newTweets = p_response.json;
-         
-         if (this.newTweets.length > 0)
-         {
-            // Create notification
-            if (this.newTweets.length == 1)
-            {
-               this.notifications.innerHTML = this.msg("message.newTweet");
-            }
-            else
-            {
-               this.notifications.innerHTML = this.msg("message.newTweets", this.newTweets.length);
-            }
-            Dom.setStyle(this.notifications, "display", "block");
-         }
-         else
-         {
-            // Remove notification
-            Dom.setStyle(this.notifications, "display", "none");
-         }
+         this._refreshNotification();
          
          // Schedule a new poll
-         this.resetTimer();
+         this._resetTimer();
       },
       
       /**
@@ -577,21 +414,161 @@
        * 
        * @method onNewTweetsLoadFailure
        * @param p_response {object} Response object from request
+       * @param p_obj {object} Custom object passed to function
        */
       onNewTweetsLoadFailure: function TwitterUserTimeline_onNewTweetsLoadFailure(p_response, p_obj)
       {
          // Schedule a new poll
-         this.resetTimer();
+         this._resetTimer();
+      },
+      
+      /**
+       * PRIVATE FUNCTIONS
+       */
+      
+      /**
+       * Generate HTML markup for a collection of Tweets
+       * 
+       * @method _generateTweetsHTML
+       * @private
+       * @param tweets {array} Tweet objects to render into HTML
+       * @return {string} HTML markup
+       */
+      _generateTweetsHTML: function TwitterUserTimeline__generateTweetsHTML(tweets)
+      {
+         var html = "", t;
+         for (var i = 0; i < tweets.length; i++)
+         {
+            t = tweets[i];
+            if (t.retweeted_status)
+            {
+               html += this._generateTweetHTML(t.retweeted_status, t);
+            }
+            else
+            {
+               html += this._generateTweetHTML(t);
+            }
+         }
+         return html;
+      },
+      
+      /**
+       * Generate HTML markup for a single Tweet
+       * 
+       * @method _generateTweetHTML
+       * @private
+       * @param t {object} Tweet object to render into HTML
+       * @param rt {object} Retweet object, if the Tweet has been RT'ed
+       * @return {string} HTML markup
+       */
+      _generateTweetHTML: function TwitterUserTimeline__generateTweetHTML(t, rt)
+      {
+         var html = "", 
+            isList = this._getTwitterUser().indexOf("/") > 0,
+            profileUri = "http://twitter.com/" + encodeURIComponent(t.user.screen_name),
+            userLink = "<a href=\"" + profileUri + "\" title=\"" + $html(t.user.name) + "\" class=\"theme-color-1\">" + $html(t.user.screen_name) + "</a>",
+            postedRe = /([A-Za-z]{3}) ([A-Za-z]{3}) ([0-9]{2}) ([0-9]{2}:[0-9]{2}:[0-9]{2}) (\+[0-9]{4}) ([0-9]{4})/,
+            postedMatch = postedRe.exec(t.created_at),
+            postedOn = postedMatch != null ? (postedMatch[1] + ", " + postedMatch[3] + " " + postedMatch[2] + " " + postedMatch[6] + " " + postedMatch[4] + " GMT" + postedMatch[5]) : (t.created_at),
+            postedLink = "<a href=\"" + profileUri + "\/status\/" + encodeURIComponent(t.id_str) + "\"><span class=\"tweet-date\" title=\"" + postedOn + "\">" + this._relativeTime(new Date(postedOn)) + "</span><\/a>";
+
+         html += "<div class=\"" + (isList ? "list-tweet" : "user-tweet") + " detail-list-item\" id=\"" + $html(this.id) + "-tweet-" + $html(t.id_str) + "\">\n";
+         html += "<div class=\"user-icon\"><a href=\"" + profileUri + "\" title=\"" + $html(t.user.name) + "\"><img src=\"" + $html(t.user.profile_image_url) + "\" alt=\"" + $html(t.user.screen_name) + "\" width=\"48\" height=\"48\" /></a></div>\n";
+         html += "<div class=\"tweet\">\n";
+         html += "<div class=\"tweet-hd\">\n";
+         html += "<span class=\"screen-name\">" + userLink + "</span> <span class=\"user-name\">" + $html(t.user.name) + "</span>\n";
+         html += !YAHOO.lang.isUndefined(rt) ? " <span class=\"retweeted\">" + this.msg("label.retweetedBy", rt.user.screen_name) + "</span>\n" : "";
+         html += "</div>\n";
+         html += "<div class=\"tweet-bd\">" + this._formatTweet(t.text) + "</div>\n";
+         html += "<div class=\"tweet-details\">" + this.msg("text.tweetDetails", postedLink, t.source) + "</div>\n";
+         html += "</div>\n"; // end tweet
+         html += "</div>\n"; // end list-tweet
+         return html;
+      },
+
+      /**
+       * Insert links into Tweet text to highlight users, hashtags and links
+       * 
+       * @method _formatTweet
+       * @private
+       * @param {string} text The plain tweet text
+       * @return {string} The tweet text, with hyperlinks added
+       */
+      _formatTweet: function TwitterUserTimeline__formatTweet(text)
+      {
+         return text.replace(
+               /https?:\/\/\S+[^\s.]/gm, "<a href=\"$&\">$&</a>").replace(
+               /@(\w+)/gm, "<a href=\"http://twitter.com/$1\">$&</a>").replace(
+               /#(\w+)/gm, "<a href=\"http://twitter.com/search?q=%23$1\">$&</a>");
+      },
+      
+      /**
+       * Get the current Twitter user or list ID
+       * 
+       * @method _getTwitterUser
+       * @private
+       * @return {string} The name of the currently-configured user or list, or the default
+       * user/list if unconfigured or blank
+       */
+      _getTwitterUser: function TwitterUserTimeline__getTwitterUser()
+      {
+         return (this.options.twitterUser != null && this.options.twitterUser != "") ? 
+               this.options.twitterUser : this.options.defaultTwitterUser;
+      },
+      
+      /**
+       * Get the ID of the earliest Tweet in the timeline
+       * 
+       * @method _getEarliestTweetId
+       * @private
+       * @return {string} The ID of the earliest Tweet shown in the timeline, or null if
+       * no Tweets are available or the last Tweet has no compatible ID on its element
+       */
+      _getEarliestTweetId: function TwitterUserTimeline__getEarliestTweetId()
+      {
+         var div = Dom.getLastChild(this.timeline);
+         if (div !== null)
+         {
+            var id = Dom.getAttribute(div, "id");
+            if (id !== null && id.lastIndexOf("-") != -1)
+            {
+               return id.substring(id.lastIndexOf("-") + 1);
+            }
+         }
+         return null;
+      },
+      
+      /**
+       * Get the ID of the latest Tweet in the timeline
+       * 
+       * @method _getLatestTweetId
+       * @private
+       * @return {string} The ID of the latest Tweet shown in the timeline, or null if
+       * no Tweets are available or the last Tweet has no compatible ID on its element
+       */
+      _getLatestTweetId: function TwitterUserTimeline__getLatestTweetId()
+      {
+         var div = Dom.getFirstChild(this.timeline);
+         if (div !== null)
+         {
+            var id = Dom.getAttribute(div, "id");
+            if (id !== null && id.lastIndexOf("-") != -1)
+            {
+               return id.substring(id.lastIndexOf("-") + 1);
+            }
+         }
+         return null;
       },
 
       /**
        * Reset the poll timer
        * 
-       * @method resetCounter
+       * @method _resetCounter
+       * @private
        */
-      resetTimer: function TwitterUserTimeline_resetTimer()
+      _resetTimer: function TwitterUserTimeline__resetTimer()
       {
-         this.stopTimer();
+         this._stopTimer();
          // Schedule next transition
          this.pollTimer = YAHOO.lang.later(this.options.checkInterval * 1000, this, this.pollNew);
       },
@@ -599,13 +576,70 @@
       /**
        * Stop the poll timer
        * 
-       * @method stopTimer
+       * @method _stopTimer
+       * @private
        */
-      stopTimer: function TwitterUserTimeline_stopTimer()
+      _stopTimer: function TwitterUserTimeline__stopTimer()
       {
          if (this.pollTimer != null)
          {
             this.pollTimer.cancel();
+         }
+      },
+      
+      /**
+       * Set up or refresh new tweets notification area
+       * 
+       * @method _refreshNotification
+       * @private
+       */
+      _refreshNotification: function TwitterSearch__refreshNotification()
+      {
+          if (this.newTweets != null && this.newTweets.length > 0)
+          {
+             // Create notification
+             if (this.newTweets.length == 1)
+             {
+                this.notifications.innerHTML = this.msg("message.newTweet");
+             }
+             else
+             {
+                this.notifications.innerHTML = this.msg("message.newTweets", this.newTweets.length);
+             }
+             Dom.setStyle(this.notifications, "display", "block");
+          }
+          else
+          {
+             // Remove notification
+             Dom.setStyle(this.notifications, "display", "none");
+          }
+      },
+      
+      /**
+       * Get relative time where possible, otherwise just return a simple string representation of the suppplied date
+       * 
+       * @method _relativeTime
+       * @private
+       * @param d {date} Date object
+       */
+      _relativeTime: function TwitterUserTimeline__getRelativeTime(d)
+      {
+          return typeof(Alfresco.util.relativeTime) === "function" ? Alfresco.util.relativeTime(d) : Alfresco.util.formatDate(d)
+      },
+
+      /**
+       * Re-render relative post times in the tweet stream
+       * 
+       * @method _refreshDates
+       * @private
+       */
+      _refreshDates: function TwitterUserTimeline__refreshDates()
+      {
+         var els = Dom.getElementsByClassName("tweet-date", this.timeline), dEl;
+         for (var i = 0; i < els.length; i++)
+         {
+            dEl = els[i];
+            dEl.innerHTML = this._relativeTime(new Date(Dom.getAttribute(dEl, "title")));
          }
       },
 
@@ -637,9 +671,14 @@
                   fn: function VideoWidget_onConfigFeed_callback(response)
                   {
                      // Refresh the feed
-                     var u = Dom.get(this.configDialog.id + "-twitterUser").value;
-                     this.options.twitterUser = (u != "") ? u : this.options.defaultTwitterUser;
-                     this.refreshTimeline();
+                     var u = YAHOO.lang.trim(Dom.get(this.configDialog.id + "-twitterUser").value),
+                        newUser = (u != "") ? u : this.options.defaultTwitterUser;
+                     
+                     if (this.options.twitterUser != newUser)
+                     {
+                        this.options.twitterUser = newUser;
+                        this.load();
+                     }
                   },
                   scope: this
                },
@@ -647,7 +686,11 @@
                {
                   fn: function VideoWidget_doSetupForm_callback(form)
                   {
-                     Dom.get(this.configDialog.id + "-twitterUser").value = this.getTwitterUser();
+                     Dom.get(this.configDialog.id + "-twitterUser").value = this._getTwitterUser();
+
+                     // Search term is mandatory
+                     this.configDialog.form.addValidation(this.configDialog.id + "-twitterUser", Alfresco.forms.validation.mandatory, null, "keyup");
+                     this.configDialog.form.addValidation(this.configDialog.id + "-twitterUser", Alfresco.forms.validation.mandatory, null, "blur");
                   },
                   scope: this
                }
@@ -674,7 +717,7 @@
       {
          // Disable the button while we make the request
          this.moreButton.set("disabled", true);
-         this.extendTimeline();
+         this.extend();
       },
 
       /**
@@ -685,15 +728,17 @@
        */
       onShowNewClick: function TwitterUserTimeline_onShowNewClick(e, obj)
       {
+         Event.stopEvent(e);
          if (this.newTweets !== null && this.newTweets.length > 0)
          {
-            var thtml = this.generateTweetsHTML(this.newTweets);
+            var thtml = this._generateTweetsHTML(this.newTweets);
+            this._refreshDates(); // Refresh existing dates
             this.timeline.innerHTML = thtml + this.timeline.innerHTML;
             this.newTweets = null;
          }
          
          // Fade out the notification
-         Dom.setStyle(this.notifications, "display", "none");
+         this._refreshNotification();
       }
       
    });
