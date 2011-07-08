@@ -609,7 +609,7 @@
        */
       _refreshDates: function TwitterUserTimeline__refreshDates()
       {
-         var els = Dom.getElementsByClassName("tweet-date", this.searchResults), dEl;
+         var els = Dom.getElementsByClassName("tweet-date", "span", this.searchResults), dEl;
          for (var i = 0; i < els.length; i++)
          {
             dEl = els[i];
