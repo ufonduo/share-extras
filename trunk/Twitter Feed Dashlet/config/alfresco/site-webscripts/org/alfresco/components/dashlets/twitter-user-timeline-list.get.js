@@ -1,7 +1,7 @@
    var u = args.twitterUser ? args.twitterUser : "AlfrescoECM",
       maxId = args.maxId ? args.maxId : null,
       minId = args.minId ? args.minId : null,
-      perPage = args.pageSize ? args.pageSize : 200;
+      perPage = args.pageSize ? args.pageSize : 100;
 
 function main()
 {
