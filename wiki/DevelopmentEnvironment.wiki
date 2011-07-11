@@ -79,6 +79,8 @@ If you are likely to regularly use the Sample Project, you may wish to check it 
 
 If you are a project committer, you can use the Subversive plug-in to commit your new project to the repository. When you do this, ensure that you include all files in the commit, aside from your `build` directory, which should be added to `svn:ignore`.
 
+General information on contributing to Share Extras is available on the [ContributionProcess] page.
+
 = Building Projects using Ant =
 
 Since Eclipse has built-in support for building projects using Ant, you can use this to build your projects, rather than invoking Ant from the command line.
