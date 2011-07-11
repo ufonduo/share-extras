@@ -1,3 +1,33 @@
+
+/*
+ * Set up a wrapper for the logger, to write logging information to the 
+ * output stream and yet keep all methods of the Java ScriptLogger available.
+ */
+var _$orglogger = logger;
+
+logger = {
+  log: function(text) {
+    print(text);
+    _$orglogger.log(text);
+  },
+  
+  warn: function(text) {
+    print(text);
+    _$orglogger.warn(text);
+  },
+  
+  isLoggingEnabled : function() {
+    return _$orglogger.isLoggingEnabled();
+  },
+  
+  isWarnLoggingEnabled : function() {
+    return _$orglogger.isWarnLoggingEnabled();
+  },
+  
+  system : _$orglogger.system
+}
+
+
 /*
  * Generic function to easily process nodes recursively in javascripts.
  */
