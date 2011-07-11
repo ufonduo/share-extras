@@ -3,7 +3,7 @@
 
 Anyone can help contribute to Share Extras by trying out the existing add-ons and providing feedback. Simple comments will be accepted on the individual wiki pages, but if you have specific issues please raise these in the Issues section for further investigation. Detailed issues that are posted as comments may be removed.
 
-==Enhancements==
+=Enhancements=
 
 An enhancement to an existing add-on may be a new feature, a translation in your local language or a fix for a specific issue.
 
@@ -11,7 +11,7 @@ If you have an idea for an enhancement that would benefit you or are willing to 
 
 By submitting any additional code, configuration or documentation, you agree to license the content under the current project license. At the time of writing this is the [http://www.apache.org/licenses/LICENSE-2.0 Apache License 2.0].
 
-==New Add-ons==
+=New Add-ons=
 
 Ideas for new add-ons can also be submitted as Enhancement requests. You are also recommended to send an email to the [http://groups.google.com/group/share-extras-devel development list].
 
@@ -21,7 +21,7 @@ The Project Owners will decide whether a new add-on should be accepted. If accep
 
 By submitting code, configuration or documentation for your add-on, you agree to license the content under the current project license. At the time of writing this is the [http://www.apache.org/licenses/LICENSE-2.0 Apache License 2.0]. You must have the authority to release your content under this license, but note this does not affect ownership of the content.
 
-===Top-Level Add-ons===
+==Top-Level Add-ons==
 
 Once an add-on is considered sufficiently mature, it can be promoted to a top-level add-on. Top-level add-ons are listed in the Project Description text on the Share Extras front page.
 
