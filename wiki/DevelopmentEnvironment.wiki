@@ -65,7 +65,7 @@ Specifically, the coding standards specify 4-space tabbing and spaces instead of
 
 It is straightforward to import existing Share Extras projects using Eclipse's _New Project_ dialog (*File* > *New* > *Project...*).
 
-When the dialog appears, select *SVN* > *Project from SVN* from the list of sources, and in the next step enter the SVN URL provided on the add-on's wiki page.
+When the dialog appears, select *SVN* > *Project from SVN* from the list of sources, and in the next step enter the SVN URL provided on the add-on's wiki page. If you have not yet configured a SVN Connector you should be prompted to do so here. See the instructions in [#Installing Subversion Team Provider], above for information on this.
 
 For read-only access, leave the username and password fields blank. If you are a project committer, you will need to use HTTPS instead of HTTP and specify your Google Code username and password.
 
