@@ -29,17 +29,19 @@ The Project Owners will decide whether a sandboxed add-on should be promoted. Ty
 
   * An acceptable project name has been defined and this is consistent across all add-on files
   * An appropriate source tree layout has been defined, consistent with the SampleProject dashlet, including the latest stock Ant build script `build.xml` and library dependencies from that project
+  * All code to be consistent with the Alfresco [http://wiki.alfresco.com/wiki/Coding_Standards Coding Standards], specifically using 4-space tabbing, spaces instead of tabs and braces generally on new lines within JavaScript and Java code.
   * A `MAINTAINERS.txt` and `README.txt` file exist in the add-on's base directory and contain complete and relevant information for the add-on
-  * All add-on files must be packaged in an appropriate directory structure and should avoid the use of Alfresco-reserved packages (e.g. `org/alfresco` for web scripts) in most cases
+  * All add-on files must be packaged in an appropriate directory structure and should avoid the use of Alfresco-reserved packages (e.g. `org/alfresco` for web scripts) in most cases. The package `org/sharextras` can be used as a base package.
   * No core Alfresco or Share files should be duplicated or replaced by files within the add-on
   * Web scripts may be overridden only where required in order to implement the capabilities of the add-on. Where overridden only modified files should exist in the add-on source tree.
-  * Client-side JavaScript should be normally be declared as new classes within the Alfresco namespace, using the standard Share pattern utilising `YAHOO.Extend()`. JSDoc comments should be used to document classes.
+  * Client-side files should be placed inside a project-specific directory, usually `extras/components`, and not in the base `components` or `modules` directories used by the core Share files
+  * Client-side JavaScript should be normally be implemented in dedicated classes within the `Extras` or `Extras.dashlet` namespaces, using the standard Share pattern utilising [http://developer.yahoo.com/yui/yahoo/#extend YAHOO.lang.extend]. JSDoc comments should be used to document classes and all public variables and functions.
   * All strings appearing in the add-on UI must be externalised in message bundles
-  * It must be possible to package all add-on files in a single JAR file, using the SampleProject build script
+  * It must be possible to package all add-on files in a single JAR file, using the SampleProject build script, and the build should run without errors
   * No other files outside of the JAR file should be required in order for the add-on to function, aside from additional configuration which should be documented clearly
   * No errors should occur during start-up of the repository or Share web applications with the add-on installed
   * A wiki page has been defined documenting the add-on with screen shots, installation instructions, build instructions and known issues documented
   * The add-on should function without errors, and should have been tested, in recent versions of Firefox, Google Chrome and Internet Explorer
-  * No issues tagged with Priority-Medium relating to the add-on should be open 
+  * No issues tagged with Priority-Medium or higher relating to the add-on should be open
 
 The Project Owners may decide to remove a sandboxed add-on which has not been promoted within a reasonable time.
