@@ -65,13 +65,17 @@ Specifically, the coding standards specify 4-space tabbing and spaces instead of
 
 It is straightforward to import existing Share Extras projects using Eclipse's _New Project_ dialog (*File* > *New* > *Project...*).
 
-When the dialog appears, select *SVN* > *Project from SVN* from the list of sources, and in the next stage enter the SVN URL provided on the add-on's wiki page.
+When the dialog appears, select *SVN* > *Project from SVN* from the list of sources, and in the next step enter the SVN URL provided on the add-on's wiki page.
 
 For read-only access, leave the username and password fields blank. If you are a project committer, you will need to use HTTPS instead of HTTP and specify your Google Code username and password.
+
+You will normally want to check out the _Head Revision_ when prompted by the wizard. Then, in the final step, select _Check out as a project with the name specified_ to re-use the existing project settings from SVN.
 
 = Creating New Projects =
 
 To create new projects of your own it is recommended that you use the [SampleProject] to provide a basic project structure and Ant build script.
+
+
 
 = Building Projects using Ant =
 
