@@ -1,6 +1,6 @@
 <webscript>
    <shortname>Twitter Search Results</shortname>
    <description>Return search results for a Twitter search</description>
-   <url>/components/dashlets/twitter-search/results</url>
+   <url>/extras/components/dashlets/twitter-search/results</url>
    <format default="json">extension</format>
 </webscript>
