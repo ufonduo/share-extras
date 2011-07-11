@@ -7,7 +7,7 @@ Share Extras utilises a single Subversion repository provided by the Google Code
 
 The [http://code.google.com/p/share-extras/source/checkout Source Code] page provides basic information on how to access the code using standard client tools, while this page contains more detailed information specific to the Eclipse-based development environment used by the majority of Share Extras projects (and which it is recommended you use if you are starting off yourself).
 
-= Installing Eclipse =
+= Installing Eclipse and Plug-ins =
 
 The [http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/heliossr1 Eclipse IDE for Java EE Developers] should be used as the base installation, since this includes the majority of IDE features required for both Java projects and for Web Development projects, as well as integration with the Ant build system. The current version is Helios (v3.6).
 
@@ -17,7 +17,7 @@ Lastly, it is recommended that the Freemarker Eclipse plugin, now part of the [h
 
 The remainder of this section contains further information on installing these components.
 
-== Helios ==
+== Installing Eclipse Helios and Plug-ins ==
 
 Firstly download the appropriate package of the [http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/heliossr1 Eclipse IDE for Java EE Developers] for your operating system and install this on your system.
 
