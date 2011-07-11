@@ -9,7 +9,7 @@ function main()
    {
       var uparts = u.split("/");
       var theUrl = "http://api.twitter.com/1/" + uparts[0] + "/lists/" + uparts[1] + 
-         "/statuses.json?;
+         "/statuses.json?";
       if (perPage != null)
       {
          theUrl += "per_page=" + stringUtils.urlEncode(perPage);
