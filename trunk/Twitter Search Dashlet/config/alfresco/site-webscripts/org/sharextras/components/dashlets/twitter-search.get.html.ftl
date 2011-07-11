@@ -2,9 +2,10 @@
    new Alfresco.dashlet.TwitterSearch("${args.htmlid}").setOptions(
    {
       "componentId": "${instance.object.id}",
-      "searchTerm": "${searchTerm!''}",
-      "defaultSearchTerm": "${defaultSearchTerm!""}",
-      "pageSize": ${(pageSize!20)?c}
+      "searchTerm": "${(searchTerm!"")?js_string}",
+      "defaultSearchTerm": "${(defaultSearchTerm!"")?js_string}",
+      "pageSize": ${(pageSize!20)?c},
+      "checkInterval": ${(config.script["twitter-search"].checkInterval!0)?number?c}
    }).setMessages(
       ${messages}
    );
