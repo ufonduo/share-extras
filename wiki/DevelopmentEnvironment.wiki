@@ -75,7 +75,7 @@ You will normally want to check out the _Head Revision_ when prompted by the wiz
 
 To create new projects of your own it is recommended that you use the [SampleProject] to provide a basic project structure and Ant build script.
 
-If you are likely to regularly use the Sample Project, you may wish to check it out from SVN - see [#Importing Existing Projects into Eclipse], above, using the URL `http://share-extras.googlecode.com/svn/trunk/Sample Dashlet`.
+If you are likely to regularly use the Sample Project, you may wish to check it out from SVN - see [#Importing Existing Projects into Eclipse], above, using the URL `http://share-extras.googlecode.com/svn/trunk/Sample Dashlet`. You can then quickly create new projects by copying and pasting the project folder in Eclipse's Project Explorer component, and choosing a new name, but ensure that you then disconnect the new project from SVN (*Team* > *Disconnect*) and remove the SVN meta-information from the file system.
 
 If you are a project committer, you can use the Subversive plug-in to commit your new project to the repository. When you do this, ensure that you include all files in the commit, aside from your `build` directory, which should be added to `svn:ignore`.
 
