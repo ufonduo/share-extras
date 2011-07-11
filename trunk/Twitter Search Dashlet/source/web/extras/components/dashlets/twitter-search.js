@@ -1,8 +1,8 @@
 /**
- * Twitter feed dashlet.
+ * Twitter search dashlet.
  * 
  * @namespace Alfresco
- * @class Alfresco.dashlet.TwitterUserTimeline
+ * @class Alfresco.dashlet.TwitterSearch
  */
 (function()
 {
@@ -20,21 +20,21 @@
 
 
    /**
-    * Dashboard TwitterUserTimeline constructor.
+    * Dashboard TwitterSearch constructor.
     * 
     * @param {String} htmlId The HTML id of the parent element
-    * @return {Alfresco.dashlet.TwitterUserTimeline} The new component instance
+    * @return {Alfresco.dashlet.TwitterSearch} The new component instance
     * @constructor
     */
-   Alfresco.dashlet.TwitterUserTimeline = function TwitterUserTimeline_constructor(htmlId)
+   Alfresco.dashlet.TwitterSearch = function TwitterSearch_constructor(htmlId)
    {
-      return Alfresco.dashlet.TwitterUserTimeline.superclass.constructor.call(this, "Alfresco.dashlet.TwitterUserTimeline", htmlId);
+      return Alfresco.dashlet.TwitterSearch.superclass.constructor.call(this, "Alfresco.dashlet.TwitterSearch", htmlId);
    };
 
    /**
     * Extend from Alfresco.component.Base and add class implementation
     */
-   YAHOO.extend(Alfresco.dashlet.TwitterUserTimeline, Alfresco.component.Base,
+   YAHOO.extend(Alfresco.dashlet.TwitterSearch, Alfresco.component.Base,
    {
       /**
        * Object container for initialization options
@@ -49,27 +49,26 @@
           *
           * @property componentId
           * @type string
-          * @default ""
           */
          componentId: "",
 
          /**
-          * Twitter username of the user to display the timeline for
+          * Twitter search term
           * 
-          * @property twitterUser
+          * @property searchTerm
           * @type string
           * @default ""
           */
-         twitterUser: "",
+         searchTerm: "",
 
          /**
-          * Default Twitter username of the user to display the timeline for, if no specific user is configured
+          * Default Twitter search term, if no specific search term is configured
           * 
-          * @property defaultTwitterUser
+          * @property defaultSearchTerm
           * @type string
           * @default ""
           */
-         defaultTwitterUser: "",
+         defaultSearchTerm: "",
 
          /**
           * Number of Tweets to load per batch
@@ -91,20 +90,18 @@
       },
 
       /**
-       * User timeline DOM container.
+       * Search results DOM container.
        * 
-       * @property activityList
+       * @property searchResults
        * @type object
-       * @default null
        */
-      timeline: null,
+      searchResults: null,
 
       /**
        * Dashlet title DOM container.
        * 
        * @property title
        * @type object
-       * @default null
        */
       title: null,
 
@@ -147,15 +144,14 @@
 
       /**
        * Fired by YUI when parent element is available for scripting
-       * 
        * @method onReady
        */
-      onReady: function TwitterUserTimeline_onReady()
+      onReady: function TwitterSearch_onReady()
       {
          Event.addListener(this.id + "-configure-link", "click", this.onConfigClick, this, true);
          
-         // The user timeline container
-         this.timeline = Dom.get(this.id + "-timeline");
+         // The search results container
+         this.searchResults = Dom.get(this.id + "-searchResults");
          
          // The dashlet title container
          this.title = Dom.get(this.id + "-title");
@@ -177,24 +173,23 @@
             }
          );
          
-         // Load the timeline
+         // Load the results
          this.load();
       },
 
       /**
-       * Reload the timeline from the Twitter API and refresh the contents of the dashlet
-       * 
+       * Reload the search results
        * @method load
        */
-      load: function TwitterUserTimeline_load()
+      load: function TwitterSearch_load()
       {
-         // Load the timeline
+         // Load the search results
          Alfresco.util.Ajax.request(
          {
-            url: Alfresco.constants.URL_SERVICECONTEXT + "components/dashlets/twitter-user-timeline/list",
+            url: Alfresco.constants.URL_SERVICECONTEXT + "extras/components/dashlets/twitter-search/results",
             dataObj:
             {
-               twitterUser: this._getTwitterUser(),
+               q: this._getSearchTerm(),
                pageSize: this.options.pageSize
             },
             successCallback:
@@ -214,22 +209,22 @@
       },
       
       /**
-       * Timeline loaded successfully
+       * Search results loaded successfully
        * 
        * @method onLoadSuccess
        * @param p_response {object} Response object from request
        * @param p_obj {object} Custom object passed to function
        */
-      onLoadSuccess: function TwitterUserTimeline_onLoadSuccess(p_response, p_obj)
+      onLoadSuccess: function TwitterSearch_onLoadSuccess(p_response, p_obj)
       {
          // Update the dashlet title
-         this.title.innerHTML = this.msg("header.userTimeline", this._getTwitterUser());
+         this.title.innerHTML = this.msg("header.search", encodeURIComponent(this._getSearchTerm()), this._getSearchTerm());
          
-         var html = "", tweets, t,userLink, postedLink, isList = this._getTwitterUser().indexOf("/") > 0;
+         var html = "", tweets, t,userLink, postedLink;
          
          if (p_response.json)
          {
-            tweets = p_response.json;
+            tweets = p_response.json.results;
             
             if (tweets.length > 0)
             {
@@ -237,22 +232,19 @@
             }
             else
             {
-               html += "<div class=\"detail-list-item first-item last-item\">\n";
+               html += "<div class=\"msg\">\n";
                html += "<span>\n";
-               if (isList)
-               {
-                  html += this.msg("list.noTweets");
-               }
-               else
-               {
-                  html += this.msg("user.noTweets");
-               }
+               html += this.msg("label.noTweets");
                html += "</span>\n";
                html += "</div>\n";
             }
          }
          
-         this.timeline.innerHTML = html;
+         this.searchResults.innerHTML = html;
+         
+         // Empty the new tweets cache and remove any notification
+         this.newTweets = [];
+         this._refreshNotification();
          
          // Enable the Load More button
          this.moreButton.set("disabled", false);
@@ -263,31 +255,89 @@
       },
 
       /**
-       * Timeline load failed
+       * Search results load failed
        * 
        * @method onLoadFailure
        * @param p_response {object} Response object from request
        * @param p_obj {object} Custom object passed to function
        */
-      onLoadFailure: function TwitterUserTimeline_onLoadFailure(p_response, p_obj)
+      onLoadFailure: function TwitterSearch_onLoadFailure(p_response, p_obj)
       {
          // Update the dashlet title
-         this.title.innerHTML = this.msg("header.userTimeline", this._getTwitterUser());
-          
-         var status = p_response.serverResponse.status,
-            isList = this._getTwitterUser().indexOf("/") > 0;
-         if (status == 401 || status == 404)
-         {
-            this.timeline.innerHTML = "<div class=\"msg\">" + this.msg("error." + (isList ? "list" : "user") + "." + status) + "</div>";
-         }
-         else
-         {
-            this.timeline.innerHTML = "<div class=\"msg\">" + this.msg("label.error") + "</div>";
-         }
+         this.title.innerHTML = this.msg("header.search", encodeURIComponent(this._getSearchTerm()), this._getSearchTerm());
+         
+         // Update the content
+         this.searchResults.innerHTML = "<div class=\"msg\">" + this.msg("label.error") + "</div>";
          
          // Disable the Load More button
          this.moreButton.set("disabled", true);
          Dom.setStyle(this.id + "-buttons", "display", "none");
+      },
+      
+      /**
+       * Check for new Tweets since the last Tweet shown. Display a notice to the user
+       * indicating that new Tweets are available, if shown.
+       * 
+       * @method pollNew
+       */
+      pollNew: function TwitterSearch_pollNew()
+      {
+         // Refresh existing dates
+         this._refreshDates();
+          
+         // Load the user timeline
+         Alfresco.util.Ajax.request(
+         {
+            url: Alfresco.constants.URL_SERVICECONTEXT + "extras/components/dashlets/twitter-search/results",
+            dataObj:
+            {
+               q: this._getSearchTerm(),
+               minId: this._getLatestTweetId()
+            },
+            successCallback:
+            {
+               fn: this.onNewTweetsLoaded,
+               scope: this,
+               obj: null
+            },
+            failureCallback:
+            {
+               fn: this.onNewTweetsLoadFailure,
+               scope: this,
+               obj: null
+            },
+            scope: this,
+            noReloadOnAuthFailure: true
+         });
+      },
+      
+      /**
+       * New tweets loaded successfully
+       * 
+       * @method onNewTweetsLoaded
+       * @param p_response {object} Response object from request
+       * @param p_obj {object} Custom object passed to function
+       */
+      onNewTweetsLoaded: function TwitterSearch_onNewTweetsLoaded(p_response, p_obj)
+      {
+         this.newTweets = p_response.json.results;
+         this._refreshNotification();
+         
+         // Schedule a new poll
+         this._resetTimer();
+      },
+      
+      /**
+       * New tweets load failed
+       * 
+       * @method onNewTweetsLoadFailure
+       * @param p_response {object} Response object from request
+       * @param p_obj {object} Custom object passed to function
+       */
+      onNewTweetsLoadFailure: function TwitterSearch_onNewTweetsLoadFailure(p_response, p_obj)
+      {
+         // Schedule a new poll
+         this._resetTimer();
       },
 
       /**
@@ -295,15 +345,15 @@
        * 
        * @method extend
        */
-      extend: function TwitterUserTimeline_extend()
+      extend: function TwitterSearch_extend()
       {
          // Load the user timeline
          Alfresco.util.Ajax.request(
          {
-            url: Alfresco.constants.URL_SERVICECONTEXT + "components/dashlets/twitter-user-timeline/list",
+            url: Alfresco.constants.URL_SERVICECONTEXT + "extras/components/dashlets/twitter-search/results",
             dataObj:
             {
-               twitterUser: this._getTwitterUser(),
+               q: this._getSearchTerm(),
                maxId: this._getEarliestTweetId(),
                pageSize: this.options.pageSize + 1
             },
@@ -331,10 +381,10 @@
        * @param p_response {object} Response object from request
        * @param p_obj {object} Custom object passed to function
        */
-      onExtensionLoaded: function TwitterUserTimeline_onExtensionLoaded(p_response, p_obj)
+      onExtensionLoaded: function TwitterSearch_onExtensionLoaded(p_response, p_obj)
       {
          this._refreshDates(); // Refresh existing dates
-         this.timeline.innerHTML += this._generateTweetsHTML(p_response.json.slice(1)); // Do not include duplicate tweet
+         this.searchResults.innerHTML += this._generateTweetsHTML(p_response.json.results.slice(1)); // Do not include duplicate tweet
          this.moreButton.set("disabled", false);
       },
       
@@ -345,7 +395,7 @@
        * @param p_response {object} Response object from request
        * @param p_obj {object} Custom object passed to function
        */
-      onExtensionLoadFailure: function TwitterUserTimeline_onExtensionLoadFailure(p_response, p_obj)
+      onExtensionLoadFailure: function TwitterSearch_onExtensionLoadFailure(p_response, p_obj)
       {
          Alfresco.util.PopupManager.displayMessage(
          {
@@ -354,72 +404,6 @@
          
          // Re-enable the button
          this.moreButton.set("disabled", false);
-      },
-      
-      /**
-       * Check for new Tweets since the last Tweet shown. Display a notice to the user
-       * indicating that new Tweets are available, if shown.
-       * 
-       * @method pollNew
-       */
-      pollNew: function TwitterUserTimeline_pollNew()
-      {
-         // Refresh existing dates
-         this._refreshDates();
-          
-         // Load the user timeline
-         Alfresco.util.Ajax.request(
-         {
-            url: Alfresco.constants.URL_SERVICECONTEXT + "components/dashlets/twitter-user-timeline/list",
-            dataObj:
-            {
-               twitterUser: this._getTwitterUser(),
-               minId: this._getLatestTweetId()
-            },
-            successCallback:
-            {
-               fn: this.onNewTweetsLoaded,
-               scope: this,
-               obj: null
-            },
-            failureCallback:
-            {
-               fn: this.onNewTweetsLoadFailure,
-               scope: this,
-               obj: null
-            },
-            scope: this,
-            noReloadOnAuthFailure: true
-         });
-      },
-      
-      /**
-       * New tweets loaded successfully
-       * 
-       * @method onNewTweetsLoaded
-       * @param p_response {object} Response object from request
-       * @param p_obj {object} Custom object passed to function
-       */
-      onNewTweetsLoaded: function TwitterUserTimeline_onNewTweetsLoaded(p_response, p_obj)
-      {
-         this.newTweets = p_response.json;
-         this._refreshNotification();
-         
-         // Schedule a new poll
-         this._resetTimer();
-      },
-      
-      /**
-       * New tweets load failed
-       * 
-       * @method onNewTweetsLoadFailure
-       * @param p_response {object} Response object from request
-       * @param p_obj {object} Custom object passed to function
-       */
-      onNewTweetsLoadFailure: function TwitterUserTimeline_onNewTweetsLoadFailure(p_response, p_obj)
-      {
-         // Schedule a new poll
-         this._resetTimer();
       },
       
       /**
@@ -434,20 +418,13 @@
        * @param tweets {array} Tweet objects to render into HTML
        * @return {string} HTML markup
        */
-      _generateTweetsHTML: function TwitterUserTimeline__generateTweetsHTML(tweets)
+      _generateTweetsHTML: function TwitterSearch__generateTweetsHTML(tweets)
       {
          var html = "", t;
          for (var i = 0; i < tweets.length; i++)
          {
             t = tweets[i];
-            if (t.retweeted_status)
-            {
-               html += this._generateTweetHTML(t.retweeted_status, t);
-            }
-            else
-            {
-               html += this._generateTweetHTML(t);
-            }
+            html += this._generateTweetHTML(t);
          }
          return html;
       },
@@ -461,26 +438,24 @@
        * @param rt {object} Retweet object, if the Tweet has been RT'ed
        * @return {string} HTML markup
        */
-      _generateTweetHTML: function TwitterUserTimeline__generateTweetHTML(t, rt)
+      _generateTweetHTML: function TwitterSearch__generateTweetHTML(t, rt)
       {
          var html = "", 
-            isList = this._getTwitterUser().indexOf("/") > 0,
-            profileUri = "http://twitter.com/" + encodeURIComponent(t.user.screen_name),
-            userLink = "<a href=\"" + profileUri + "\" title=\"" + $html(t.user.name) + "\" class=\"theme-color-1\">" + $html(t.user.screen_name) + "</a>",
+            profileUri = "http://twitter.com/" + encodeURIComponent(t.from_user),
+            userLink = "<a href=\"" + profileUri + "\" title=\"" + $html(t.from_user) + "\" class=\"theme-color-1\">" + $html(t.from_user) + "</a>",
             postedRe = /([A-Za-z]{3}) ([A-Za-z]{3}) ([0-9]{2}) ([0-9]{2}:[0-9]{2}:[0-9]{2}) (\+[0-9]{4}) ([0-9]{4})/,
             postedMatch = postedRe.exec(t.created_at),
             postedOn = postedMatch != null ? (postedMatch[1] + ", " + postedMatch[3] + " " + postedMatch[2] + " " + postedMatch[6] + " " + postedMatch[4] + " GMT" + postedMatch[5]) : (t.created_at),
             postedLink = "<a href=\"" + profileUri + "\/status\/" + encodeURIComponent(t.id_str) + "\"><span class=\"tweet-date\" title=\"" + postedOn + "\">" + this._relativeTime(new Date(postedOn)) + "</span><\/a>";
 
-         html += "<div class=\"" + (isList ? "list-tweet" : "user-tweet") + " detail-list-item\" id=\"" + $html(this.id) + "-tweet-" + $html(t.id_str) + "\">\n";
-         html += "<div class=\"user-icon\"><a href=\"" + profileUri + "\" title=\"" + $html(t.user.name) + "\"><img src=\"" + $html(t.user.profile_image_url) + "\" alt=\"" + $html(t.user.screen_name) + "\" width=\"48\" height=\"48\" /></a></div>\n";
+         html += "<div class=\"user-tweet detail-list-item\" id=\"" + $html(this.id) + "-tweet-" + $html(t.id_str) + "\">\n";
+         html += "<div class=\"user-icon\"><a href=\"" + profileUri + "\" title=\"" + $html(t.from_user) + "\"><img src=\"" + $html(t.profile_image_url) + "\" alt=\"" + $html(t.from_user) + "\" width=\"48\" height=\"48\" /></a></div>\n";
          html += "<div class=\"tweet\">\n";
          html += "<div class=\"tweet-hd\">\n";
-         html += "<span class=\"screen-name\">" + userLink + "</span> <span class=\"user-name\">" + $html(t.user.name) + "</span>\n";
-         html += !YAHOO.lang.isUndefined(rt) ? " <span class=\"retweeted\">" + this.msg("label.retweetedBy", rt.user.screen_name) + "</span>\n" : "";
+         html += "<span class=\"screen-name\">" + userLink + "</span>\n";
          html += "</div>\n";
          html += "<div class=\"tweet-bd\">" + this._formatTweet(t.text) + "</div>\n";
-         html += "<div class=\"tweet-details\">" + this.msg("text.tweetDetails", postedLink, t.source) + "</div>\n";
+         html += "<div class=\"tweet-details\">" + this.msg("text.tweetDetails", postedLink, Alfresco.util.decodeHTML(t.source)) + "</div>\n";
          html += "</div>\n"; // end tweet
          html += "</div>\n"; // end list-tweet
          return html;
@@ -494,7 +469,7 @@
        * @param {string} text The plain tweet text
        * @return {string} The tweet text, with hyperlinks added
        */
-      _formatTweet: function TwitterUserTimeline__formatTweet(text)
+      _formatTweet: function TwitterSearch__formatTweet(text)
       {
          return text.replace(
                /https?:\/\/\S+[^\s.]/gm, "<a href=\"$&\">$&</a>").replace(
@@ -503,17 +478,16 @@
       },
       
       /**
-       * Get the current Twitter user or list ID
+       * Get the current search term
        * 
-       * @method _getTwitterUser
+       * @method getSearchTerm
        * @private
-       * @return {string} The name of the currently-configured user or list, or the default
-       * user/list if unconfigured or blank
+       * @return {string} The currently-configured search term, or the default if no value is configured
        */
-      _getTwitterUser: function TwitterUserTimeline__getTwitterUser()
+      _getSearchTerm: function TwitterSearch__getSearchTerm()
       {
-         return (this.options.twitterUser != null && this.options.twitterUser != "") ? 
-               this.options.twitterUser : this.options.defaultTwitterUser;
+         return (this.options.searchTerm != "") ?
+                 this.options.searchTerm : this.options.defaultSearchTerm;
       },
       
       /**
@@ -524,9 +498,9 @@
        * @return {string} The ID of the earliest Tweet shown in the timeline, or null if
        * no Tweets are available or the last Tweet has no compatible ID on its element
        */
-      _getEarliestTweetId: function TwitterUserTimeline__getEarliestTweetId()
+      _getEarliestTweetId: function TwitterSearch__getEarliestTweetId()
       {
-         var div = Dom.getLastChild(this.timeline);
+         var div = Dom.getLastChild(this.searchResults);
          if (div !== null)
          {
             var id = Dom.getAttribute(div, "id");
@@ -546,9 +520,9 @@
        * @return {string} The ID of the latest Tweet shown in the timeline, or null if
        * no Tweets are available or the last Tweet has no compatible ID on its element
        */
-      _getLatestTweetId: function TwitterUserTimeline__getLatestTweetId()
+      _getLatestTweetId: function TwitterSearch__getLatestTweetId()
       {
-         var div = Dom.getFirstChild(this.timeline);
+         var div = Dom.getFirstChild(this.searchResults);
          if (div !== null)
          {
             var id = Dom.getAttribute(div, "id");
@@ -563,10 +537,10 @@
       /**
        * Reset the poll timer
        * 
-       * @method _resetCounter
+       * @method resetCounter
        * @private
        */
-      _resetTimer: function TwitterUserTimeline__resetTimer()
+      _resetTimer: function TwitterSearch__resetTimer()
       {
          this._stopTimer();
          // Schedule next transition
@@ -579,7 +553,7 @@
        * @method _stopTimer
        * @private
        */
-      _stopTimer: function TwitterUserTimeline__stopTimer()
+      _stopTimer: function TwitterSearch__stopTimer()
       {
          if (this.pollTimer != null)
          {
@@ -654,7 +628,7 @@
        * @method onConfigClick
        * @param e {object} HTML event
        */
-      onConfigClick: function TwitterUserTimeline_onConfigClick(e)
+      onConfigClick: function TwitterSearch_onConfigClick(e)
       {
          var actionUrl = Alfresco.constants.URL_SERVICECONTEXT + "modules/dashlet/config/" + encodeURIComponent(this.options.componentId);
          
@@ -665,18 +639,18 @@
             this.configDialog = new Alfresco.module.SimpleDialog(this.id + "-configDialog").setOptions(
             {
                width: "50em",
-               templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "modules/dashlets/twitter-user-timeline/config", actionUrl: actionUrl,
+               templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "extras/modules/dashlets/twitter-search/config", actionUrl: actionUrl,
                onSuccess:
                {
                   fn: function VideoWidget_onConfigFeed_callback(response)
                   {
                      // Refresh the feed
-                     var u = YAHOO.lang.trim(Dom.get(this.configDialog.id + "-twitterUser").value),
-                        newUser = (u != "") ? u : this.options.defaultTwitterUser;
+                     var u = YAHOO.lang.trim(Dom.get(this.configDialog.id + "-searchTerm").value),
+                         newSearchTerm = (u != "") ? u : this.options.defaultSearchTerm;
                      
-                     if (this.options.twitterUser != newUser)
+                     if (newSearchTerm != this.options.searchTerm)
                      {
-                        this.options.twitterUser = newUser;
+                        this.options.searchTerm = newSearchTerm;
                         this.load();
                      }
                   },
@@ -686,11 +660,11 @@
                {
                   fn: function VideoWidget_doSetupForm_callback(form)
                   {
-                     Dom.get(this.configDialog.id + "-twitterUser").value = this._getTwitterUser();
-
+                     Dom.get(this.configDialog.id + "-searchTerm").value = this._getSearchTerm();
+                     
                      // Search term is mandatory
-                     this.configDialog.form.addValidation(this.configDialog.id + "-twitterUser", Alfresco.forms.validation.mandatory, null, "keyup");
-                     this.configDialog.form.addValidation(this.configDialog.id + "-twitterUser", Alfresco.forms.validation.mandatory, null, "blur");
+                     this.configDialog.form.addValidation(this.configDialog.id + "-searchTerm", Alfresco.forms.validation.mandatory, null, "keyup");
+                     this.configDialog.form.addValidation(this.configDialog.id + "-searchTerm", Alfresco.forms.validation.mandatory, null, "blur");
                   },
                   scope: this
                }
@@ -701,8 +675,8 @@
             this.configDialog.setOptions(
             {
                actionUrl: actionUrl,
-               twitterUser: this.options.twitterUser
-            });
+               searchTerm: this.options.searchTerm
+            })
          }
          this.configDialog.show();
       },
@@ -713,7 +687,7 @@
        * @method onMoreButtonClick
        * @param e {object} HTML event
        */
-      onMoreButtonClick: function TwitterUserTimeline_onMoreButtonClick(e, obj)
+      onMoreButtonClick: function TwitterSearch_onMoreButtonClick(e, obj)
       {
          // Disable the button while we make the request
          this.moreButton.set("disabled", true);
@@ -726,14 +700,14 @@
        * @method onShowNewClick
        * @param e {object} HTML event
        */
-      onShowNewClick: function TwitterUserTimeline_onShowNewClick(e, obj)
+      onShowNewClick: function TwitterSearch_onShowNewClick(e, obj)
       {
          Event.stopEvent(e);
          if (this.newTweets !== null && this.newTweets.length > 0)
          {
             var thtml = this._generateTweetsHTML(this.newTweets);
             this._refreshDates(); // Refresh existing dates
-            this.timeline.innerHTML = thtml + this.timeline.innerHTML;
+            this.searchResults.innerHTML = thtml + this.searchResults.innerHTML;
             this.newTweets = null;
          }
          
