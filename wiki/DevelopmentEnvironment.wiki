@@ -9,7 +9,7 @@ The [http://code.google.com/p/share-extras/source/checkout Source Code] page pro
 
 = Installing Eclipse and Plug-ins =
 
-The [http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/heliossr1 Eclipse IDE for Java EE Developers] should be used as the base installation, since this includes the majority of IDE features required for both Java projects and for Web Development projects, as well as integration with the Ant build system. The current version is Helios (v3.6).
+The [http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/heliossr1 Eclipse IDE for Java EE Developers] should be used as the base installation, since this includes the majority of IDE features required for both Java projects and for Web Development projects, as well as integration with the Ant build system. The current version is *Helios* (v3.6).
 
 Unfortunately, the Eclipse IDE does not yet provide out-of-the-box support for integrating with Subversion repositories, and therefore an additional SVN module must also be installed to provide this.
 
