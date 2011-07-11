@@ -147,7 +147,8 @@ if (typeof Fme == "undefined" || !Fme)
           oSaveMenuButton.getMenu().subscribe("click", this.onSaveScriptClick, this);
           
           var docsMenuItems = [
-            [ { text : "W3Schools Javascript Reference", url : "http://www.w3schools.com/jsref/default.asp", target:"_blank"},
+            [ { text : "Mozilla Javascript Reference", url : "https://developer.mozilla.org/en/JavaScript/Reference", target:"_blank"},
+              { text : "W3Schools Javascript Reference", url : "http://www.w3schools.com/jsref/default.asp", target:"_blank"},
               { text : "Alfresco 3.4 Javascript API", url : "http://wiki.alfresco.com/wiki/3.4_JavaScript_API", target:"_blank" },
               { text : "Alfresco 3.4 Javascript Services API", url : "http://wiki.alfresco.com/wiki/3.4_JavaScript_Services_API", target:"_blank" },
               { text : "Alfresco Javascript Cookbook", url : "http://wiki.alfresco.com/wiki/JavaScript_API_Cookbook", target:"_blank" },
@@ -193,7 +194,7 @@ if (typeof Fme == "undefined" || !Fme)
         	 lineNumbers: true,
         	 onKeyEvent: function(i, e) {
         		 // Hook into ctrl-enter
-	             if (e.keyCode == 13 && (e.ctrlKey || e.metaKey) && !e.altKey) {
+	             if (e.type=="keyup" && e.keyCode == 13 && (e.ctrlKey || e.metaKey) && !e.altKey) {
 		               e.stop();
 		               i.owner.onExecuteClick(i.owner, e);
 		             }
