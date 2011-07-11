@@ -13,7 +13,7 @@ By submitting any additional code, configuration or documentation, you agree to 
 
 ==New Add-ons==
 
-Ideas for new add-ons can also be submitted as Enhancement requests. You are also recommended to send an email to the [http://groups.google.com/group/share-extras-devel development list]
+Ideas for new add-ons can also be submitted as Enhancement requests. You are also recommended to send an email to the [http://groups.google.com/group/share-extras-devel development list].
 
 If this is for a new add-on that you have implemented yourself, please mention this in the Enhancement request.
 
