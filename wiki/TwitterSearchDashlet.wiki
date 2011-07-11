@@ -4,7 +4,7 @@
 
 This project defines a custom dashlet that displays the results of a Twitter search in real-time, using the Twitter search API.
 
-[http://share-extras.googlecode.com/svn/trunk/Twitter%20Search%20Dashlet/screenshots/screenshot.png]
+[http://share-extras.googlecode.com/svn/trunk/Twitter%20Search%20Dashlet/screenshots/twitter-search-dashlet.png]
 
 =Installation=
 
