@@ -569,8 +569,11 @@
       _resetTimer: function TwitterUserTimeline__resetTimer()
       {
          this._stopTimer();
-         // Schedule next transition
-         this.pollTimer = YAHOO.lang.later(this.options.checkInterval * 1000, this, this.pollNew);
+         if (this.options.checkInterval > 0)
+         {
+            // Schedule next transition
+            this.pollTimer = YAHOO.lang.later(this.options.checkInterval * 1000, this, this.pollNew);
+         }
       },
 
       /**
