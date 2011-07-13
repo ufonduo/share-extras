@@ -9,13 +9,13 @@ Specifically the project provides enhancements to the web preview component to s
 
 The supplied Spring configuration extends the repository thumbnailing capabilities to support either H264 or FLV format 'thumbnails' for video content and MP3 format 'thumbnails' for audio content, using [http://ffmpeg.org/ FFmpeg].
 
-[http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshot.png http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshot-small.png]
+[http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshots/screenshot.png http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshots/screenshot-small.png]
 
 The previews do not require FFmpeg for content that is already encoded in these formats, but it is highly recommended to support the widest range of formats, and for thumbnail image generation.
 
 In addition to support for the additional media types in the Share Document Details screen, a custom site dashlet is provided, which can be configured to display a chosen video.
 
-[http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshot-dashlet.png http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshot-dashlet-small.png] [http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshot-browse.png http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshot-browse-small.png]
+[http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshots/screenshot-dashlet.png http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshots/screenshot-dashlet-small.png] [http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshots/screenshot-browse.png http://share-extras.googlecode.com/svn/trunk/Media%20Preview/screenshots/screenshot-browse-small.png]
 
 =Installation=
 
