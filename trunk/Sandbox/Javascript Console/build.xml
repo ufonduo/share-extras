@@ -143,6 +143,7 @@
         <!-- Minify JS -->
         <yuicompress fromdir="${res.dir}" todir="${build.jar.dir}/META-INF" excludes="**/*-min.js" warn="${yuicompress.warn}">
             <include name="components/**/*.js" />
+        	<exclude name="**/modules/editors/ckeditor/**" />
         </yuicompress>
     </target>
    
@@ -186,6 +187,7 @@
         <!-- Minify JS -->
         <yuicompress fromdir="${res.dir}" todir="${build.zip.dir}/${build.res.dir}" excludes="**/*-min.js" warn="${yuicompress.warn}">
             <include name="components/**/*.js" />
+        	<exclude name="**/modules/editors/ckeditor/**" />
         </yuicompress>
     </target>
 
@@ -250,6 +252,7 @@
        <!-- Minify JS -->
        <yuicompress fromdir="${res.dir}" todir="${build.amp.dir}/web" excludes="**/*-min.js" warn="${yuicompress.warn}">
           <include name="**/*.js" />
+       	  <exclude name="**/modules/editors/ckeditor/**" />
        </yuicompress>
     </target>
     
