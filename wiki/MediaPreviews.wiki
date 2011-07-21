@@ -1,11 +1,11 @@
-#summary Media Preview add-on for Alfresco Share
+#summary Media Previews add-on for Alfresco Share, providing video thumbnailing and previewing, audio previewing and a video dashlet
 #labels Dashlet,Video
 
 =Introduction=
 
-This add-on project for Alfresco Share provides the ability to preview audio and video files within the Share user interface.
+This add-on project for Alfresco Share 3.3/3.4 provides the ability to preview audio and video files within the Share user interface.
 
-Specifically the project provides enhancements to the web preview component to support Flash-based previews of audio and video content, using the open source [http://flv-player.net/ FLV Player] and [http://flash-mp3-player.net/ MP3 Player] media players by [http://www.neolao.com/ neolao].
+Specifically the project provides enhancements to the web preview component to support Flash-based previews of audio and video content, using the open source [http://flv-player.net/ FLV Player] and [http://flash-mp3-player.net/ MP3 Player] media players by [http://www.neolao.com/ neolao]. Based on the content's MIME type, the updated component automatically chooses the appropriate previewer to use.
 
 The supplied Spring configuration extends the repository thumbnailing capabilities to support either H264 or FLV format 'thumbnails' for video content and MP3 format 'thumbnails' for audio content, using [http://ffmpeg.org/ FFmpeg].
 
