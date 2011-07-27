@@ -6,5 +6,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/DataModel"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Repository"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SDK AlfrescoEmbedded"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
