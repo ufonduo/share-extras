@@ -81,18 +81,35 @@
           */
          onLoad: function onLoad()
          {
-            // Buttons
+             // selectedMenuItemChange handler to make menu buttons act like select lists
+             // shared by store menu and language menu
+             var onSelectedMenuItemChange = function (event) {
+                 var oMenuItem = event.newValue;
+                 this.set("label", (oMenuItem.cfg.getProperty("text")));
+                 this.set("value", (oMenuItem.cfg.getProperty("text")));
+                 return;
+            };
+            
+            // Search button
             parent.widgets.searchButton = Alfresco.util.createYUIButton(parent, "search-button", parent.onSearchClick);
-            parent.widgets.nodeMenuButton = new YAHOO.widget.Button(parent.id + "-store-menu-button", { 
+            
+            // Store menu button
+            parent.widgets.storeMenuButton = new YAHOO.widget.Button(parent.id + "-store-menu-button", { 
                type: "menu",
                menu: parent.id + "-store-menu-select"
             });
-            /*
-            parent.widgets.applyButton = Alfresco.util.createYUIButton(parent, "apply-button", null,
-            {
-               type: "submit"
-            });
-            */
+            parent.widgets.storeMenuButton.on("selectedMenuItemChange", onSelectedMenuItemChange);
+            parent.widgets.storeMenuButton.set("value", parent.store);
+            parent.widgets.storeMenuButton.set("label", parent.store);
+            
+            // Query language button
+            parent.widgets.langMenuButton = new YAHOO.widget.Button(parent.id + "-lang-menu-button", { 
+                type: "menu",
+                menu: parent.id + "-lang-menu-select"
+             });
+            parent.widgets.langMenuButton.on("selectedMenuItemChange", onSelectedMenuItemChange);
+            parent.widgets.langMenuButton.set("value", parent.searchLanguage);
+            parent.widgets.langMenuButton.set("label", parent.searchLanguage);
             
             // Form definition
             /*
@@ -193,6 +210,14 @@
             var searchTermElem = Dom.get(parent.id + "-search-text");
             searchTermElem.value = parent.searchTerm;
             
+            // Update language menu
+            parent.widgets.langMenuButton.set("value", parent.searchLanguage);
+            parent.widgets.langMenuButton.set("label", parent.searchLanguage);
+            
+            // Update language menu
+            parent.widgets.storeMenuButton.set("value", parent.store);
+            parent.widgets.storeMenuButton.set("label", parent.store);
+            
             // check search length again as we may have got here via history navigation
             if (!this.isSearching && parent.searchTerm !== undefined && parent.searchTerm.length >= parent.options.minSearchTermLength)
             {
@@ -241,7 +266,7 @@
                };
 
                // Send the query to the server
-               parent.widgets.dataSource.sendRequest(me._buildSearchParams(parent.searchTerm, parent.searchLanguage),
+               parent.widgets.dataSource.sendRequest(me._buildSearchParams(parent.searchTerm, parent.searchLanguage, parent.store),
                {
                   success: successHandler,
                   failure: failureHandler,
@@ -377,12 +402,14 @@
           *
           * @method _buildSearchParams
           * @param searchTerm {string} User search term
+          * @param store {string} Store name
           * @private
           */
-         _buildSearchParams: function _buildSearchParams(searchTerm, searchLanguage)
+         _buildSearchParams: function _buildSearchParams(searchTerm, searchLanguage, store)
          {
             return "?q=" + encodeURIComponent(searchTerm) + 
-               "&lang=" + searchLanguage + 
+               "&lang=" + encodeURIComponent(searchLanguage) + 
+               "&store=" + encodeURIComponent(store) + 
                "&maxResults=" + parent.options.maxSearchResults;
          },
          
@@ -686,12 +713,20 @@
       currentNodeRef: "",
       
       /**
+       * Name of the store to search against
+       * 
+       * @property store
+       * @type string
+       */
+      store: "workspace://SpacesStore",
+      
+      /**
        * Current search term, obtained from form input field.
        * 
        * @property searchTerm
        * @type string
        */
-      searchTerm: undefined,
+      searchTerm: "PATH:\"/\"",
       
       /**
        * Current search language, obtained from drop-down.
@@ -752,6 +787,14 @@
             var searchTerm = state.search;
             this.searchTerm = searchTerm;
             
+            // keep track of search language
+            var searchLanguage = state.lang;
+            this.searchLanguage = searchLanguage;
+            
+            // keep track of store name
+            var store = state.store;
+            this.store = store;
+            
             this.updateCurrentPanel();
          }
          
@@ -776,6 +819,12 @@
          var searchTermElem = Dom.get(this.id + "-search-text");
          var searchTerm = YAHOO.lang.trim(searchTermElem.value);
          
+         // Search language
+         var searchLanguage = this.widgets.langMenuButton.get("value");
+         
+         // Search language
+         var store = this.widgets.storeMenuButton.get("value");
+         
          // inform the user if the search term entered is too small
          if (searchTerm.length < this.options.minSearchTermLength)
          {
@@ -786,7 +835,7 @@
             return;
          }
          
-         this.refreshUIState({"search": searchTerm});
+         this.refreshUIState({"search": searchTerm, "lang": searchLanguage, "store": store});
       },
       
       /**
@@ -838,6 +887,14 @@
          {
             stateObj.search = this.searchTerm;
          }
+         if (this.searchLanguage !== undefined)
+         {
+            stateObj.lang = this.searchLanguage;
+         }
+         if (this.store !== undefined)
+         {
+            stateObj.store = this.store;
+         }
          
          // convert to encoded url history state - overwriting with any supplied values
          var state = "";
@@ -860,6 +917,22 @@
                state += "&";
             }
             state += "search=" + encodeURIComponent(obj.search !== undefined ? obj.search : stateObj.search);
+         }
+         if (obj.lang !== undefined || stateObj.lang !== undefined)
+         {
+            if (state.length !== 0)
+            {
+               state += "&";
+            }
+            state += "lang=" + encodeURIComponent(obj.lang !== undefined ? obj.lang : stateObj.lang);
+         }
+         if (obj.store !== undefined || stateObj.store !== undefined)
+         {
+            if (state.length !== 0)
+            {
+               state += "&";
+            }
+            state += "store=" + encodeURIComponent(obj.store !== undefined ? obj.store : stateObj.store);
          }
          return state;
       },
