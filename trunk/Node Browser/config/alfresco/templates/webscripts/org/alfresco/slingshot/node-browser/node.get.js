@@ -35,18 +35,19 @@ function getPropertyType(p)
 }
 function getAssocList(assocsArray)
 {
-   var assocsList = [], assocs, target;
+   var assocsList = [], assocs, target, qnamePath;
    for (assocType in assocsArray)
    {
       assocs = assocsArray[assocType];
       for (var i = 0; i < assocs.length; i++)
       {
          target = assocs[i];
+         qnamePath = target.qnamePath;
          assocsList.push({
-            name: target.name,
+            name: qnamePath.substring(qnamePath.lastIndexOf("/") + 1),
             nodeRef: target.nodeRef.toString(),
-            type: target.type,
-            assocType: assocType
+            type: utils.shortQName(target.type),
+            assocType: utils.shortQName(assocType)
          });
       }
    }
@@ -87,7 +88,7 @@ function main()
          if (nodeType == "d:text" || nodeType == "d:int" || nodeType == "d:boolean")
          {
             nodeProps.push({
-               name: p,
+               name: utils.shortQName(p),
                value: pv,
                type: nodeType
             });
@@ -95,7 +96,7 @@ function main()
          else if (nodeType == "d:datetime")
          {
             nodeProps.push({
-               name: p,
+               name: utils.shortQName(p),
                value: pv.toString(),
                type: nodeType
             });
@@ -103,7 +104,7 @@ function main()
          else if (nodeType == "d:content")
          {
             nodeProps.push({
-               name: p,
+               name: utils.shortQName(p),
                value: "mimetype=" + pv.mimetype + "|size=" + pv.size + "|encoding=" + pv.encoding,
                type: nodeType
             });

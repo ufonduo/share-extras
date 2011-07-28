@@ -10,7 +10,7 @@
    "nodeRef": "${node.nodeRef}",
    "aspects": [
    <#list node.aspects as aspect>
-      "${aspect}"<#if aspect_has_next>,</#if>
+      "${shortQName(aspect)}"<#if aspect_has_next>,</#if>
    </#list>
    ],
    "properties": [
@@ -44,6 +44,16 @@
    ],
    "assocs": [
    <#list assocs as p>
+      {
+         "name": "${p.name}",
+         "nodeRef": "${p.nodeRef}",
+         "type": "${p.type}",
+         "assocType": "${p.assocType}"
+      }<#if p_has_next>,</#if>
+   </#list>
+   ],
+   "sourceAssocs": [
+   <#list sourceAssocs as p>
       {
          "name": "${p.name}",
          "nodeRef": "${p.nodeRef}",

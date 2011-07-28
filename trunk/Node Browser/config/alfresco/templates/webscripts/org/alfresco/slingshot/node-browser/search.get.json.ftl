@@ -2,10 +2,11 @@
    "numResults": ${results?size},
    "results": [
    <#list results as result>
+   	<#assign qnamePath=result.qnamePath />
       {
-         "name": "${result.name}",
+         "name": "${qnamePath?substring(qnamePath?last_index_of('/') + 1)}",
          "path": "${result.qnamePath}",
-         "parentPath": "${result.qnamePath?substring(0, result.qnamePath?last_index_of('/'))}",
+         "parentPath": "${qnamePath?substring(0, qnamePath?last_index_of('/'))}",
          "parentNodeRef": "<#if result.parent??>${result.parent.nodeRef}</#if>",
          "nodeRef": "${result.nodeRef}"
       }<#if result_has_next>,</#if>
