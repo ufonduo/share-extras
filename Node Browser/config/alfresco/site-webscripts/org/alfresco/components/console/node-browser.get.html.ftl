@@ -20,7 +20,7 @@
             <!-- Store select list -->
             <div class="node-store-button">
                <label for="${el}-store-menu-button">${msg("label.select-store")}</label>
-               <input type="button" id="${el}-store-menu-button" name="store-button" value="workspace://SpacesStore" />
+               <input type="button" id="${el}-store-menu-button" name="store-button" />
                <select id="${el}-store-menu-select" name="store-select">
                    <option value="archive://SpacesStore">archive://SpacesStore</option>
                    <option value="system://system">system://system</option>
@@ -28,25 +28,30 @@
                    <option value="workspace://lightWeightVersionStore">workspace://lightWeightVersionStore</option>
                    <option value="workspace://SpacesStore">workspace://SpacesStore</option>
                    <option value="workspace://version2Store">workspace://version2Store</option>
-                   <option value="avm://sitestore">avm://sitestore</option>
                </select>
             </div>
          </div>
       </div>
       <div class="yui-g separator">
-         <div class="yui-u first">
-            <div class="search-text"><input type="text" id="${el}-search-text" name="-" value="" />
-               <!-- TODO add a query language drop-down -->
-               <!-- Search button -->
-               <div class="search-button">
-                  <span class="yui-button yui-push-button" id="${el}-search-button">
-                     <span class="first-child"><button>${msg("button.search")}</button></span>
-                  </span>
-               </div>
-            </div>
-         </div>
-         <div class="yui-u align-right">
-         </div>
+			<div class="search-text">
+			   <!-- Search field -->
+			   <input type="text" id="${el}-search-text" name="-" value="" />
+			   <!-- Query language menu -->
+			   <input type="button" id="${el}-lang-menu-button" name="lang-button" />
+			   <select id="${el}-lang-menu-select" name="lang-select">
+			       <option>noderef</option>
+			       <option>xpath</option>
+			       <option>jcr-xpath</option>
+			       <option>lucene</option>
+			       <option>fts-alfresco</option>
+			       <option>cmis-strict</option>
+			       <option>cmis-alfresco</option>
+			   </select>
+			   <!-- Search button -->
+			   <span class="yui-button yui-push-button" id="${el}-search-button">
+			      <span class="first-child"><button>${msg("button.search")}</button></span>
+			   </span>
+			</div>
       </div>
       <div class="search-main">
          <div id="${el}-search-bar" class="search-bar theme-bg-color-3">${msg("message.noresults")}</div>
