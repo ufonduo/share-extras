@@ -1,3 +1,4 @@
+<#escape x as jsonUtils.encodeJSONString(x)>
 <#macro printPropertyValue p><#if p.value?is_date>"${p.value?datetime?string}"</#if><#if p.value?is_boolean>${p.value?string}</#if><#if p.value?is_number>${p.value?c}</#if><#if p.value?is_string>"${p.value}"</#if></#macro>
 {
    "nodeRef": "${node.nodeRef}",
@@ -76,3 +77,4 @@
       "owner": "<#if permissions.owner?exists>${permissions.owner?js_string}</#if>"
    }
 }
+</#escape>
