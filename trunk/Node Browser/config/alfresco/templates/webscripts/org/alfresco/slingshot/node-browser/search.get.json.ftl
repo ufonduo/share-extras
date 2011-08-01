@@ -1,3 +1,4 @@
+<#escape x as jsonUtils.encodeJSONString(x)>
 {
    "numResults": ${results?size},
    "results": [
@@ -13,3 +14,4 @@
    </#list>
    ]
 }
+</#escape>
