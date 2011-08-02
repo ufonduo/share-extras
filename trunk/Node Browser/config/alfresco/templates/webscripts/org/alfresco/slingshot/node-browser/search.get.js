@@ -1,5 +1,6 @@
 function main()
 {
+    /*
     var query = args.q,
     store = args.store,
     lang = args.lang;
@@ -38,5 +39,6 @@ function main()
         };
         model.results = search.query(def);
     }
+    */
 }
 main();
