@@ -69,6 +69,7 @@ function getPermissionsList(n)
 }
 function main()
 {
+   /*
    var nodeRef = url.templateArgs.protocol + "://" + url.templateArgs.store + "/" + url.templateArgs.id,
       node = search.findNode(nodeRef),
       nodeProps = [],
@@ -123,5 +124,6 @@ function main()
          owner: node.getOwner()
    };
    model.node = node;
+   */
 }
 main();
