@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,6 +28,7 @@ import org.alfresco.service.cmr.repository.StoreRef;
 import org.alfresco.service.cmr.search.SearchService;
 import org.alfresco.service.cmr.security.AccessPermission;
 import org.alfresco.service.cmr.security.AccessStatus;
+import org.alfresco.service.cmr.security.OwnableService;
 import org.alfresco.service.cmr.security.PermissionService;
 import org.alfresco.service.namespace.NamespaceService;
 import org.alfresco.service.namespace.QName;
@@ -70,6 +72,7 @@ public class NodeBrowserScript extends DeclarativeWebScript
     transient private SearchService searchService;
     transient private NamespaceService namespaceService;
     transient private PermissionService permissionService;
+    transient private OwnableService ownableService;
     transient private AVMService avmService;
 
     /**
@@ -150,7 +153,17 @@ public class NodeBrowserScript extends DeclarativeWebScript
         return permissionService;
     }
 
-    /**
+	public void setOwnableService(OwnableService ownableService)
+	{
+		this.ownableService = ownableService;
+	}
+
+    public OwnableService getOwnableService()
+    {
+		return ownableService;
+	}
+
+	/**
      * @param avmService AVM service
      */
     public void setAVMService(AVMService avmService)
@@ -227,9 +240,14 @@ public class NodeBrowserScript extends DeclarativeWebScript
      * 
      * @return node aspects
      */
-    public List<QName> getAspects(NodeRef nodeRef)
+    public List<Aspect> getAspects(NodeRef nodeRef)
     {
-        List<QName> aspects = new ArrayList<QName>(getNodeService().getAspects(nodeRef));
+        Set<QName> qnames = getNodeService().getAspects(nodeRef);
+        List<Aspect> aspects = new ArrayList<Aspect>(qnames.size());
+        for (QName qname : qnames)
+        {
+			aspects.add(new Aspect(qname));
+		}
         return aspects;
     }
 
@@ -238,11 +256,15 @@ public class NodeBrowserScript extends DeclarativeWebScript
      * 
      * @return node parents
      */
-    public List<ChildAssociationRef> getParents(NodeRef nodeRef)
+    public List<ChildAssociation> getParents(NodeRef nodeRef)
     {
-        List<ChildAssociationRef> parents = null;
-        parents = getNodeService().getParentAssocs(nodeRef);
-        return parents;
+        List<ChildAssociationRef> parents = getNodeService().getParentAssocs(nodeRef);
+        List<ChildAssociation> assocs = new ArrayList<ChildAssociation>(parents.size());
+    	for (ChildAssociationRef ref : parents)
+    	{
+    		assocs.add(new ChildAssociation(ref));
+		}
+        return assocs;
     }
 
     /**
@@ -252,14 +274,12 @@ public class NodeBrowserScript extends DeclarativeWebScript
      */
     public List<Property> getProperties(NodeRef nodeRef)
     {
-        List<Property> properties = null;
         Map<QName, Serializable> propertyValues = getNodeService().getProperties(nodeRef);
-        List<Property> nodeProperties = new ArrayList<Property>(propertyValues.size());
+        List<Property> properties = new ArrayList<Property>(propertyValues.size());
         for (Map.Entry<QName, Serializable> property : propertyValues.entrySet())
         {
-            nodeProperties.add(new Property(property.getKey(), property.getValue()));
+            properties.add(new Property(property.getKey(), property.getValue()));
         }
-        properties = nodeProperties;
         return properties;
     }
 
@@ -279,24 +299,24 @@ public class NodeBrowserScript extends DeclarativeWebScript
      * 
      * @return the permissions
      */
-    public List<Serializable> getPermissions(NodeRef nodeRef)
+    public List<Permission> getPermissions(NodeRef nodeRef)
     {
-        List<Serializable> permissions = null;
+        List<Permission> permissions = null;
         AccessStatus readPermissions = this.getPermissionService().hasPermission(nodeRef, PermissionService.READ_PERMISSIONS);
         if (readPermissions.equals(AccessStatus.ALLOWED))
         {
-            List<Serializable> nodePermissions = new ArrayList<Serializable>();
+            List<Permission> nodePermissions = new ArrayList<Permission>();
             for (Iterator<AccessPermission> iterator = getPermissionService().getAllSetPermissions(nodeRef).iterator(); iterator
                     .hasNext();)
             {
-                Serializable serializable = (Serializable) iterator.next();
-                nodePermissions.add(serializable);
+            	AccessPermission ap = iterator.next();
+                nodePermissions.add(new Permission(ap.getPermission(), ap.getAuthority(), ap.getAccessStatus().toString()));
             }
             permissions = nodePermissions;
         }
         else
         {
-            List<Serializable> noReadPermissions = new ArrayList<Serializable>(1);
+            List<Permission> noReadPermissions = new ArrayList<Permission>(1);
             noReadPermissions.add(new NoReadPermissionGranted());
             permissions = noReadPermissions;
         }
@@ -308,25 +328,23 @@ public class NodeBrowserScript extends DeclarativeWebScript
      * 
      * @return the permissions
      */
-    public List<Serializable> getStorePermissionMasks(NodeRef nodeRef)
+    public List<Permission> getStorePermissionMasks(NodeRef nodeRef)
     {
-        List<Serializable> permissionMasks = null;
+        List<Permission> permissionMasks = null;
         if (nodeRef.getStoreRef().getProtocol().equals(StoreRef.PROTOCOL_AVM))
         {
-            List<Serializable> nodePermissions = new ArrayList<Serializable>();
+        	permissionMasks = new ArrayList<Permission>();
             for (Iterator<AccessPermission> iterator = getPermissionService().getAllSetPermissions(nodeRef.getStoreRef()).iterator(); iterator
                     .hasNext();)
             {
-                Serializable serializable = (Serializable) iterator.next();
-                nodePermissions.add(serializable);
+            	AccessPermission ap = iterator.next();
+            	permissionMasks.add(new Permission(ap.getPermission(), ap.getAuthority(), ap.getAccessStatus().toString()));
             }
-            permissionMasks = nodePermissions;
         }
         else
         {
-            List<Serializable> noReadPermissions = new ArrayList<Serializable>(1);
-            noReadPermissions.add(new NoStoreMask());
-            permissionMasks = noReadPermissions;
+        	permissionMasks = new ArrayList<Permission>(1);
+        	permissionMasks.add(new NoStoreMask());
         }
         return permissionMasks;
     }
@@ -336,9 +354,15 @@ public class NodeBrowserScript extends DeclarativeWebScript
      * 
      * @return node children
      */
-    public List<ChildAssociationRef> getChildren(NodeRef nodeRef)
+    public List<ChildAssociation> getChildren(NodeRef nodeRef)
     {
-        return getNodeService().getChildAssocs(nodeRef);
+    	List<ChildAssociationRef> refs = getNodeService().getChildAssocs(nodeRef);
+        List<ChildAssociation> assocs = new ArrayList<ChildAssociation>(refs.size());
+    	for (ChildAssociationRef ref : refs)
+    	{
+    		assocs.add(new ChildAssociation(ref));
+		}
+        return assocs;
     }
 
     /**
@@ -346,17 +370,46 @@ public class NodeBrowserScript extends DeclarativeWebScript
      * 
      * @return associations
      */
-    public List<AssociationRef> getAssocs(NodeRef nodeRef)
+    public List<PeerAssociation> getAssocs(NodeRef nodeRef)
     {
-        List<AssociationRef> assocs = null;
+        List<AssociationRef> refs = null;
         try
         {
-            assocs = getNodeService().getTargetAssocs(nodeRef, RegexQNamePattern.MATCH_ALL);
+            refs = getNodeService().getTargetAssocs(nodeRef, RegexQNamePattern.MATCH_ALL);
         }
         catch (UnsupportedOperationException err)
         {
            // some stores do not support associations
         }
+        List<PeerAssociation> assocs = new ArrayList<PeerAssociation>(refs.size());
+    	for (AssociationRef ref : refs)
+    	{
+    		assocs.add(new PeerAssociation(ref.getTypeQName(), ref.getSourceRef(), ref.getTargetRef()));
+		}
+        return assocs;
+    }
+
+    /**
+     * Gets the current source associations
+     * 
+     * @return associations
+     */
+    public List<PeerAssociation> getSourceAssocs(NodeRef nodeRef)
+    {
+        List<AssociationRef> refs = null;
+        try
+        {
+            refs = getNodeService().getSourceAssocs(nodeRef, RegexQNamePattern.MATCH_ALL);
+        }
+        catch (UnsupportedOperationException err)
+        {
+           // some stores do not support associations
+        }
+        List<PeerAssociation> assocs = new ArrayList<PeerAssociation>(refs.size());
+    	for (AssociationRef ref : refs)
+    	{
+    		assocs.add(new PeerAssociation(ref.getTypeQName(), ref.getSourceRef(), ref.getTargetRef()));
+		}
         return assocs;
     }
 
@@ -436,7 +489,7 @@ public class NodeBrowserScript extends DeclarativeWebScript
         }
         catch (Throwable e)
         {
-            throw new IOException("Search failed", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
@@ -476,7 +529,7 @@ public class NodeBrowserScript extends DeclarativeWebScript
 			catch (IOException e)
 			{
 				status.setCode(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				status.setMessage("An error occurred whilst executing the search");
+				status.setMessage(e.getMessage());
 				status.setException(e);
 				status.setRedirect(true);
 			}
@@ -484,29 +537,41 @@ public class NodeBrowserScript extends DeclarativeWebScript
     	}
     	else if (req.getPathInfo().equals("/slingshot/node/stores"))
     	{
-        	return null;
+    		Map<String, Object> model = new HashMap<String, Object>();
+    		model.put("stores", getStores());
+    		return model;
     	}
     	else // Assume we are looking for a node
     	{
-			if (req.getParameter("protocol") == null || req.getParameter("protocol").length() == 0 || 
-					req.getParameter("store") == null || req.getParameter("store").length() == 0 ||
-					req.getParameter("id") == null || req.getParameter("id").length() == 0)
+     		Map<String, String> templateVars = req.getServiceMatch().getTemplateVars();
+			if (templateVars.get("protocol") == null || templateVars.get("protocol").length() == 0 || 
+					templateVars.get("store") == null || templateVars.get("store").length() == 0 ||
+					templateVars.get("id") == null || templateVars.get("id").length() == 0)
 			{
 				status.setCode(HttpServletResponse.SC_BAD_REQUEST);
 				status.setMessage("Node not provided");
 				status.setRedirect(true);
 				return null;
 			}
-        	NodeRef nodeRef = new NodeRef(req.getParameter("protocol") + req.getParameter("store") + req.getParameter("id"));
-    		Map<String, Object> tmplMap = new HashMap<String, Object>(1);
-    		tmplMap.put("node", new Node(nodeRef));
-    		tmplMap.put("properties", getPermissions(nodeRef));
-    		tmplMap.put("children", getChildren(nodeRef));
-    		tmplMap.put("parents", getParents(nodeRef));
-    		tmplMap.put("assocs", getAssocs(nodeRef));
-    		//tmplMap.put("sourceAssocs", );
-    		tmplMap.put("permissions", getPermissions(nodeRef));
-    		return tmplMap;
+        	NodeRef nodeRef = new NodeRef(templateVars.get("protocol"), templateVars.get("store"), templateVars.get("id"));
+        	
+    		Map<String, Object> permissionInfo = new HashMap<String, Object>(3);
+    		permissionInfo.put("entries", getPermissions(nodeRef));
+    		permissionInfo.put("owner", this.getOwnableService().getOwner(nodeRef));
+    		permissionInfo.put("inherit", this.getInheritPermissions(nodeRef));
+    		permissionInfo.put("entries", getPermissions(nodeRef));
+    		permissionInfo.put("storePermissions", getStorePermissionMasks(nodeRef));
+
+    		Map<String, Object> model = new HashMap<String, Object>();
+    		model.put("node", new Node(nodeRef));
+    		model.put("properties", getProperties(nodeRef));
+    		model.put("aspects", getAspects(nodeRef));
+    		model.put("children", getChildren(nodeRef));
+    		model.put("parents", getParents(nodeRef));
+    		model.put("assocs", getAssocs(nodeRef));
+    		model.put("sourceAssocs", getSourceAssocs(nodeRef));
+    		model.put("permissions", permissionInfo);
+    		return model;
     	}
     }
 
@@ -523,6 +588,10 @@ public class NodeBrowserScript extends DeclarativeWebScript
         
         private NodeRef parentNodeRef;
         
+        private QNameBean childAssoc;
+        
+        private QNameBean type;
+        
         public Node(NodeRef nodeRef)
         {
         	this.nodeRef = nodeRef;
@@ -530,6 +599,9 @@ public class NodeBrowserScript extends DeclarativeWebScript
         	this.qnamePath = path.toString();
         	this.prefixedQNamePath = path.toPrefixString(getNamespaceService());
         	this.parentNodeRef = getPrimaryParent(nodeRef);
+        	ChildAssociationRef ref = getNodeService().getPrimaryParent(nodeRef);
+        	this.childAssoc = ref.getQName() != null ? new QNameBean(ref.getQName()) : null;
+        	this.type = new QNameBean(getNodeService().getType(nodeRef));
         }
 
 		public String getQnamePath()
@@ -537,24 +609,34 @@ public class NodeBrowserScript extends DeclarativeWebScript
 			return qnamePath;
 		}
 
-		public void setQnamePath(String qnamePath)
-		{
-			this.qnamePath = qnamePath;
-		}
-
 		public String getPrefixedQNamePath()
 		{
 			return prefixedQNamePath;
 		}
 
-		public void setPrefixedQNamePath(String prefixedQNamePath)
-		{
-			this.prefixedQNamePath = prefixedQNamePath;
-		}
-
 		public NodeRef getNodeRef()
 		{
 			return nodeRef;
+		}
+
+		public String getId()
+		{
+			return nodeRef.getId();
+		}
+
+		public String getName()
+		{
+			return childAssoc != null ? childAssoc.getName() : "";
+		}
+
+		public String getPrefixedName()
+		{
+			return childAssoc != null ? childAssoc.getPrefixedName() : "";
+		}
+
+		public QNameBean getType()
+		{
+			return type;
 		}
 
 		public void setNodeRef(NodeRef nodeRef)
@@ -574,19 +656,199 @@ public class NodeBrowserScript extends DeclarativeWebScript
     }
 
     /**
+     * Qname wrapper class
+     */
+    public class QNameBean implements Serializable
+    {
+		private static final long serialVersionUID = 6982292337846270774L;
+		
+		protected QName name;
+
+		public QNameBean(QName name)
+		{
+			this.name = name;
+		}
+		
+		public String getName()
+		{
+			return name.toString();
+		}
+		
+		public String getPrefixedName()
+		{
+			return name.toPrefixString(getNamespaceService());
+		}
+		
+		public String toString()
+		{
+			return getName();
+		}
+    }
+
+    /**
+     * Aspect wrapper class
+     */
+    public class Aspect extends QNameBean
+    {
+		private static final long serialVersionUID = -6448182941386934326L;
+
+		public Aspect(QName name)
+		{
+			super(name);
+		}
+    }
+
+    /**
+     * Association wrapper class
+     */
+    public class Association
+    {
+    	protected QNameBean name;
+    	protected QNameBean typeName;
+		
+		public Association(QName name, QName typeName)
+		{
+			this.name = name != null ? new QNameBean(name) : null;
+			this.typeName = new QNameBean(typeName);
+		}
+
+		public QNameBean getName()
+		{
+			return name;
+		}
+
+		public QNameBean getTypeName()
+		{
+			return typeName;
+		}
+    }
+
+    /**
+     * Child assoc wrapper class
+     */
+    public class ChildAssociation extends Association implements Serializable
+    {
+    	/**
+		 * 
+		 */
+		private static final long serialVersionUID = -52439282250891063L;
+		
+		protected NodeRef childRef;
+		protected NodeRef parentRef;
+		protected QNameBean childType;
+		protected QNameBean parentType;
+		protected boolean primary;
+    	
+    	// from Association
+    	protected QNameBean name;
+    	protected QNameBean typeName;
+
+		public ChildAssociation(ChildAssociationRef ref)
+		{
+			super(ref.getQName() != null ? ref.getQName() : null,
+					ref.getTypeQName() != null ? ref.getTypeQName() : null);
+			
+			this.childRef = ref.getChildRef();
+			this.parentRef = ref.getParentRef(); // could be null
+			if (childRef != null)
+				this.childType = new QNameBean(getNodeType(childRef));
+			if (parentRef != null)
+				this.parentType = new QNameBean(getNodeType(parentRef));
+			this.primary = ref.isPrimary();
+		}
+
+		public NodeRef getChildRef()
+		{
+			return childRef;
+		}
+
+		public QNameBean getChildTypeName()
+		{
+			return childType;
+		}
+
+		public NodeRef getParentRef()
+		{
+			return parentRef;
+		}
+
+		public QNameBean getParentTypeName()
+		{
+			return parentType;
+		}
+
+		public boolean isPrimary()
+		{
+			return primary;
+		}
+
+		public boolean getPrimary()
+		{
+			return this.isPrimary();
+		}
+    }
+
+    /**
+     * Peer assoc wrapper class
+     */
+    public class PeerAssociation extends Association
+    {
+    	protected NodeRef sourceRef;
+    	protected NodeRef targetRef;
+    	protected QNameBean sourceType;
+    	protected QNameBean targetType;
+    	
+    	// from Association
+    	protected QNameBean name;
+    	protected QNameBean typeName;
+    	
+		public PeerAssociation(QName typeName, NodeRef sourceRef, NodeRef targetRef)
+		{
+			super(null, typeName);
+			
+			this.sourceRef = sourceRef;
+			this.targetRef = targetRef;
+			if (sourceRef != null)
+				this.sourceType = new QNameBean(getNodeType(sourceRef));
+			if (targetRef != null)
+				this.targetType = new QNameBean(getNodeType(targetRef));
+		}
+
+		public NodeRef getSourceRef()
+		{
+			return sourceRef;
+		}
+
+		public QNameBean getSourceTypeName()
+		{
+			return sourceType;
+		}
+
+		public NodeRef getTargetRef()
+		{
+			return targetRef;
+		}
+
+		public QNameBean getTargetTypeName()
+		{
+			return targetType;
+		}
+    }
+
+    /**
      * Property wrapper class
      */
     public class Property
     {
-        private QName name;
+        private QNameBean name;
 
         private boolean isCollection = false;
 
         private List<Value> values;
 
-        private String datatype;
-
-        private String residual;
+        private boolean residual;
+        
+        private QNameBean typeName;
 
         /**
          * Construct
@@ -595,19 +857,20 @@ public class NodeBrowserScript extends DeclarativeWebScript
          * @param value property values
          */
         @SuppressWarnings("unchecked")
-        public Property(QName name, Serializable value)
+        public Property(QName qname, Serializable value)
         {
-            this.name = name;
+            this.name = new QNameBean(qname);
 
-            PropertyDefinition propDef = getDictionaryService().getProperty(name);
+            PropertyDefinition propDef = getDictionaryService().getProperty(qname);
             if (propDef != null)
             {
-                datatype = propDef.getDataType().getName().toString();
-                residual = "false";
+            	QName qn = propDef.getDataType().getName();
+                typeName = qn != null ? new QNameBean(propDef.getDataType().getName()) : null;
+                residual = false;
             }
             else
             {
-                residual = "true";
+                residual = true;
             }
 
             // handle multi/single values
@@ -619,34 +882,39 @@ public class NodeBrowserScript extends DeclarativeWebScript
                 isCollection = true;
                 for (Serializable multiValue : oldValues)
                 {
-                    values.add(new Value(multiValue));
+                    values.add(new Value(multiValue instanceof QName ? new QNameBean((QName) multiValue) : multiValue));
                 }
             }
             else
             {
-                values = Collections.singletonList(new Value(value));
+                values = Collections.singletonList(new Value(value instanceof QName ? new QNameBean((QName) value) : value));
             }
             this.values = values;
         }
 
-        /**
+		/**
          * Gets the property name
          * 
          * @return name
          */
-        public QName getName()
+        public QNameBean getName()
         {
-            return name;
+			return name;
         }
 
-        /**
-         * Gets the property data type
-         * 
-         * @return data type
-         */
-        public String getDataType()
+        public QNameBean getTypeName()
         {
-            return datatype;
+			return typeName;
+		}
+
+        /**
+         * Gets the prefixed property name
+         * 
+         * @return prefixed name
+         */
+        public String getPrefixedName()
+        {
+			return name.getPrefixedName();
         }
 
         /**
@@ -664,7 +932,7 @@ public class NodeBrowserScript extends DeclarativeWebScript
          * 
          * @return true => property is not defined in dictionary
          */
-        public String getResidual()
+        public boolean getResidual()
         {
             return residual;
         }
@@ -676,7 +944,7 @@ public class NodeBrowserScript extends DeclarativeWebScript
          */
         public boolean isAny()
         {
-            return (datatype == null) ? false : datatype.equals(DataTypeDefinition.ANY.toString());
+            return (getTypeName() == null) ? false : getTypeName().getName().equals(DataTypeDefinition.ANY.toString());
         }
 
         /**
@@ -723,7 +991,7 @@ public class NodeBrowserScript extends DeclarativeWebScript
              */
             public String getDataType()
             {
-                String datatype = Property.this.getDataType();
+                String datatype = Property.this.getTypeName().getName();
                 if (datatype == null || datatype.equals(DataTypeDefinition.ANY.toString()))
                 {
                     if (value != null)
@@ -773,45 +1041,68 @@ public class NodeBrowserScript extends DeclarativeWebScript
     }
 
     /**
+     * Permission bean
+     */
+    public static class Permission
+    {
+    	private String permission;
+    	private String authority;
+    	private String accessStatus;
+    	
+		public Permission(String permission, String authority, String accessStatus)
+		{
+			this.permission = permission;
+			this.authority = authority;
+			this.accessStatus = accessStatus;
+		}
+
+		public String getPermission()
+		{
+			return permission;
+		}
+		
+		public void setPermission(String permission)
+		{
+			this.permission = permission;
+		}
+		
+		public String getAuthority()
+		{
+			return authority;
+		}
+		
+		public void setAuthority(String authority)
+		{
+			this.authority = authority;
+		}
+		
+		public String getAccessStatus()
+		{
+			return accessStatus;
+		}
+		
+		public void setAccessStatus(String accessStatus)
+		{
+			this.accessStatus = accessStatus;
+		}
+    }
+
+    /**
      * Permission representing the fact that "Read Permissions" has not been granted
      */
-    public static class NoReadPermissionGranted implements Serializable
+    public static class NoReadPermissionGranted extends Permission
     {
-        private static final long serialVersionUID = -6256369557521402921L;
-
-        public String getPermission()
+        public NoReadPermissionGranted()
         {
-            return PermissionService.READ_PERMISSIONS;
-        }
-
-        public String getAuthority()
-        {
-            return "[Current Authority]";
-        }
-
-        public String getAccessStatus()
-        {
-            return "Not Granted";
+            super(PermissionService.READ_PERMISSIONS, "[Current Authority]", "Not Granted");
         }
     }
 
-    public static class NoStoreMask implements Serializable
+    public static class NoStoreMask extends Permission
     {
-        private static final long serialVersionUID = -6256369557521402921L;
-
-        public String getPermission()
+        public NoStoreMask()
         {
-            return "All <No Mask>";
-        }
-
-        public String getAuthority()
-        {
-            return "All";
-        }
-
-        public String getAccessStatus()
-        {
-            return "Allowed";
+            super("All <No Mask>", "All", "Allowed");
         }
     }
 

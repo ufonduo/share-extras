@@ -336,6 +336,46 @@
             {
                elCell.innerHTML = $html(oData);
             };
+
+            /**
+             * Qname renderer
+             *
+             * @method renderQName
+             */
+            var renderQName = function renderQName(elCell, oRecord, oColumn, oData)
+            {
+                elCell.innerHTML = $html(oData[parent._qnamePropertyName()]);
+            }
+
+            /**
+             * Parent Qname path renderer
+             *
+             * @method renderParentPath
+             */
+            var renderParentPath = function renderParentPath(elCell, oRecord, oColumn, oData)
+            {
+                if (oData != "")
+                {
+                    var path = oData[parent._qnamePropertyName()];
+                    // Remove last part
+                    var index = parent.options.shortQNames ? path.lastIndexOf("/") : path.lastIndexOf("/{");
+                    path = index != -1 ? path.substring(0, index) : path;
+                    elCell.innerHTML = $html(path);
+                }
+            }
+
+            /**
+             * Node name renderer
+             *
+             * @method renderNodeName
+             */
+            var renderNodeName = function renderNodeName(elCell, oRecord, oColumn, oData)
+            {
+                if (oData != "")
+                {
+                    renderNodeLink(elCell, oRecord, oColumn, $html(oData[parent._qnamePropertyName()]));
+                }
+            }
             
             /**
              * Node name custom datacell formatter
@@ -364,8 +404,8 @@
             // DataTable column defintions
             var columnDefinitions =
             [
-               { key: "name", label: parent._msg("label.name"), sortable: true, formatter: renderNodeLink },
-               { key: "parentPath", label: parent._msg("label.parent_path"), sortable: true, formatter: renderCellSafeHTML },
+               { key: "name", label: parent._msg("label.name"), sortable: true, formatter: renderNodeName },
+               { key: "qnamePath", label: parent._msg("label.parent_path"), sortable: true, formatter: renderParentPath },
                { key: "nodeRef", label: parent._msg("label.node-ref"), sortable: true, formatter: renderNodeLink }
             ];
             
@@ -501,29 +541,59 @@
                
                var node = YAHOO.lang.JSON.parse(res.serverResponse.responseText),
                   nodeRef = node.nodeRef;
-               
+
                /**
                 * Node link custom datacell formatter
                 *
                 * @method renderName
                 */
-               var renderNodeLink = function renderNodeLink(elCell, oRecord, oColumn, oData)
+               var renderNodeLink = function renderNodeLink(elCell, oRecord, oColumn, oData, oParams)
                {
-                  // Create view userlink
+                  oParams = oParams || {};
                   var viewNodeLink = document.createElement("a");
                   YAHOO.util.Dom.setAttribute(viewNodeLink, "href", "#");
                   viewNodeLink.innerHTML = $html(oData);
 
-                  // fire the 'viewUserClick' event when the selected user in the list has changed
+                  // fire the 'viewNodeClick' event when the selected node in the list has changed
                   YAHOO.util.Event.addListener(viewNodeLink, "click", function(e)
                   {
                      YAHOO.util.Event.preventDefault(e);
                      YAHOO.Bubbling.fire('viewNodeClick',
                      {
-                        nodeRef: oRecord.getData("nodeRef")
+                        nodeRef: oParams.nodeRef || oRecord.getData("nodeRef")
                      });
                   }, null, parent);
                   elCell.appendChild(viewNodeLink);
+               };
+
+               /**
+                * QName custom formatter
+                *
+                * @method renderQName
+                */
+               var renderQName = function renderQName(elCell, oRecord, oColumn, oData)
+               {
+                  elCell.innerHTML = $html(oData[parent._qnamePropertyName()]);
+               };
+
+               /**
+                * Child name formatter
+                *
+                * @method renderQName
+                */
+               var renderChildName = function renderChildName(elCell, oRecord, oColumn, oData)
+               {
+                   renderNodeLink(elCell, oRecord, oColumn, oData[parent._qnamePropertyName()]);
+               };
+
+               /**
+                * Assoc nodeRef formatter
+                *
+                * @method renderSourceNodeRef
+                */
+               var renderAssocNodeRef = function renderChildName(elCell, oRecord, oColumn, oData)
+               {
+                   renderNodeLink(elCell, oRecord, oColumn, oData, { nodeRef: oData });
                };
                
                /**
@@ -533,26 +603,54 @@
                 */
                var renderPropertyValue = function renderPropertyValue(elCell, oRecord, oColumn, oData)
                {
-                  if (oRecord.getData("type") == "d:content")
+                  var renderValue = function(val, el)
                   {
-                     // Create new link
-                     var contentLink = document.createElement("a");
-                     contentLink.innerHTML = $html(oData);
-                     YAHOO.util.Dom.setAttribute(contentLink, "href", Alfresco.constants.PROXY_URI + "api/node/" + nodeRef.replace("://", "/") + "/content");
-                     elCell.appendChild(contentLink);
+                      if (val.dataType == "{http://www.alfresco.org/model/dictionary/1.0}content")
+                      {
+                         // Create new link
+                         var html = "<a ";
+                         html += "href=\"" + Alfresco.constants.PROXY_URI + "api/node/" + nodeRef.replace("://", "/") + "/content" + "\">";
+                         html += $html(val.value);
+                         html += "</a>";
+                         // Create new link
+                         var contentLink = document.createElement("a");
+                         contentLink.innerHTML = $html(val.value);
+                         YAHOO.util.Dom.setAttribute(contentLink, "href", Alfresco.constants.PROXY_URI + "api/node/" + nodeRef.replace("://", "/") + "/content;" + oRecord.getData("name").prefixedName);
+                         el.appendChild(contentLink);
+                      }
+                      else if (val.dataType == "{http://www.alfresco.org/model/dictionary/1.0}noderef")
+                      {
+                          renderNodeLink(el, oRecord, oColumn, val.value, { nodeRef: val.value });
+                      }
+                      else
+                      {
+                          el.innerHTML = $html(val.value);
+                      }
+                  };
+                  
+                  if (oRecord.getData("multiple") == false)
+                  {
+                      renderValue(oData[0], elCell);
                   }
                   else
                   {
-                     elCell.innerHTML = $html(oData);
+                      var html = "";
+                      for (var i = 0; i < oData.length; i++)
+                      {
+                          renderValue(oData[i], elCell);
+                          if (i < oData.length - 1)
+                              elCell.appendChild(document.createElement("br"), elCell);
+                      }
                   }
+                  
                };
 
-               Dom.get(parent.id + "-view-title").innerHTML = node.name;
+               Dom.get(parent.id + "-view-title").innerHTML = node.name[parent._qnamePropertyName()];
                
                // About section fields
                fnSetter("-view-node-ref", node.nodeRef);
-               fnSetter("-view-node-path", node.qnamePath);
-               fnSetter("-view-node-type", node.type);
+               fnSetter("-view-node-path", node.qnamePath[parent._qnamePropertyName()]);
+               fnSetter("-view-node-type", node.type[parent._qnamePropertyName()]);
 
                Dom.get(parent.id + "-view-node-parent").innerHTML = "";
                // Add parent noderef link
@@ -574,9 +672,10 @@
                
                var propsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-properties", 
                   [
-                     { key: "name", label: parent.msg("label.properties-name") },
-                     { key: "type", label: parent.msg("label.properties-type") },
-                     { key: "value", label: parent.msg("label.properties-value"), formatter: renderPropertyValue }
+                     { key: "name", label: parent.msg("label.properties-name"), formatter: renderQName },
+                     { key: "type", label: parent.msg("label.properties-type"), formatter: renderQName },
+                     { key: "values", label: parent.msg("label.properties-value"), formatter: renderPropertyValue },
+                     { key: "residual", label: parent.msg("label.properties-residual") }
                   ], 
                   new YAHOO.util.LocalDataSource(node.properties)
                );
@@ -584,50 +683,51 @@
                var aspects = "";
                for ( var i = 0; i < node.aspects.length; i++)
                {
-                  aspects += (i != 0 ? "<br />" : "") + $html(node.aspects[i]);
+                  aspects += (i != 0 ? "<br />" : "") + $html(node.aspects[i][parent._qnamePropertyName()]);
                }
                Dom.get(parent.id + "-view-node-aspects").innerHTML = aspects;
                
                var childrenDT = new YAHOO.widget.DataTable(parent.id + "-view-node-children", 
                   [
-                     { key: "name", label: parent.msg("label.children-name"), formatter: renderNodeLink },
-                     { key: "type", label: parent.msg("label.children-type") },
+                     { key: "name", label: parent.msg("label.children-name"), formatter: renderChildName },
+                     { key: "type", label: parent.msg("label.children-type"), formatter: renderQName },
                      { key: "nodeRef", label: parent.msg("label.children-node-ref"), formatter: renderNodeLink },
-                     { key: "assocType", label: parent.msg("label.children-assoc-type") }
+                     { key: "primary", label: parent.msg("label.children-primary") },
+                     { key: "assocType", label: parent.msg("label.children-assoc-type"), formatter: renderQName },
+                     { key: "index", label: parent.msg("label.children-index") }
                   ], 
                   new YAHOO.util.LocalDataSource(node.children)
                );
 
                var parentsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-parents", 
                    [
-                     { key: "name", label: parent.msg("label.parents-name"), formatter: renderNodeLink },
-                     { key: "type", label: parent.msg("label.parents-type") },
+                     { key: "name", label: parent.msg("label.parents-name"), formatter: renderChildName },
+                     { key: "type", label: parent.msg("label.parents-type"), formatter: renderQName },
                      { key: "nodeRef", label: parent.msg("label.parents-node-ref"), formatter: renderNodeLink },
-                     { key: "assocType", label: parent.msg("label.parents-assoc-type") }
+                     { key: "primary", label: parent.msg("label.parents-primary") },
+                     { key: "assocType", label: parent.msg("label.parents-assoc-type"), formatter: renderQName }
                   ], 
                   new YAHOO.util.LocalDataSource(node.parents)
                );
 
                var assocsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-assocs", 
                   [
-                     { key: "name", label: parent.msg("label.assocs-name"), formatter: renderNodeLink },
-                     { key: "type", label: parent.msg("label.assocs-type") },
-                     { key: "nodeRef", label: parent.msg("label.assocs-node-ref"), formatter: renderNodeLink },
-                     { key: "assocType", label: parent.msg("label.assocs-assoc-type") }
+                     { key: "assocType", label: parent.msg("label.assocs-assoc-type"), formatter: renderQName },
+                     { key: "targetRef", label: parent.msg("label.assocs-node-ref"), formatter: renderAssocNodeRef },
+                     { key: "type", label: parent.msg("label.assocs-type"), formatter: renderQName }
                   ], 
                   new YAHOO.util.LocalDataSource(node.assocs)
                );
                
                var sourceAssocsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-source-assocs", 
                   [
-                     { key: "name", label: parent.msg("label.source-assocs-name"), formatter: renderNodeLink },
-                     { key: "type", label: parent.msg("label.source-assocs-type") },
-                     { key: "nodeRef", label: parent.msg("label.source-assocs-node-ref"), formatter: renderNodeLink },
-                     { key: "assocType", label: parent.msg("label.source-assocs-assoc-type") }
+                     { key: "assocType", label: parent.msg("label.source-assocs-assoc-type"), formatter: renderQName },
+                     { key: "sourceRef", label: parent.msg("label.source-assocs-node-ref"), formatter: renderAssocNodeRef },
+                     { key: "type", label: parent.msg("label.source-assocs-type"), formatter: renderQName }
                   ], 
                   new YAHOO.util.LocalDataSource(node.sourceAssocs)
                );
-               
+
                var permissionsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-permissions", 
                   [
                      { key: "permission", label: parent.msg("label.permissions-permission") },
@@ -636,6 +736,16 @@
                   ], 
                   new YAHOO.util.LocalDataSource(node.permissions.entries)
                );
+               
+               var storePermissionsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-store-permissions", 
+                       [
+                          { key: "permission", label: parent.msg("label.permissions-store-permission") },
+                          { key: "authority", label: parent.msg("label.permissions-authority") },
+                          { key: "rel", label: parent.msg("label.permissions-access") }
+                       ], 
+                       new YAHOO.util.LocalDataSource(node.permissions.masks)
+                    );
+               
                fnSetter("-view-node-inherits-permissions", "" + node.permissions.inherit);
                fnSetter("-view-node-owner", node.permissions.owner);
                
@@ -701,7 +811,16 @@
           * @type int
           * @default 100
           */
-         maxSearchResults: 100
+         maxSearchResults: 100,
+
+         /**
+          * Whether to use short QNames when displaying node information
+          * 
+          * @property shortQNames
+          * @type boolean
+          * @default true
+          */
+         shortQNames: true
       },
       
       /**
@@ -948,6 +1067,18 @@
       _msg: function ConsoleNodeBrowser__msg(messageId)
       {
          return Alfresco.util.message.call(this, messageId, "Alfresco.ConsoleNodeBrowser", Array.prototype.slice.call(arguments).slice(1));
+      },
+      
+      /**
+       * Returns the qname property name to use for display purposes, based on shortQNames setting
+       *
+       * @method _qnamePropertyName
+       * @return {string} The name of the property to display from QName objects
+       * @private
+       */
+      _qnamePropertyName: function ConsoleNodeBrowser__qnamePropertyName()
+      {
+         return this.options.shortQNames == true ? "prefixedName": "name";
       }
    });
 })();

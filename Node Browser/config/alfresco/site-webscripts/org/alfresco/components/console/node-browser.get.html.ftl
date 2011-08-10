@@ -122,13 +122,14 @@
             </div>
          </div>
          <div class="node-permissions list" id="${el}-view-node-permissions"></div>
+         <div class="node-permissions list" id="${el}-view-node-store-permissions"></div>
       </div>
 
       <div class="yui-g">
          <!-- Cancel view node button -->
          <div class="goback-button">
             <span class="yui-button yui-push-button" id="${el}-goback-button">
-               <span class="first-child"><button>${msg("button.goback")}</button></span>
+               <span class="first-child"><button>${msg("button.searchback")}</button></span>
             </span>
          </div>
       </div>
