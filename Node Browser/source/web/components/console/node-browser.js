@@ -684,7 +684,12 @@
                   }, null, parent);
                   Dom.get(parent.id + "-view-node-parent").appendChild(nodeLink);
                }
-               
+
+               var dtConfig = {
+                       MSG_EMPTY: parent._msg("message.datatable.empty"),
+                       MSG_ERROR: parent._msg("message.datatable.error")
+               };
+
                var propsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-properties", 
                   [
                      { key: "name", label: parent.msg("label.properties-name"), formatter: renderQName },
@@ -692,7 +697,8 @@
                      { key: "values", label: parent.msg("label.properties-value"), formatter: renderPropertyValue },
                      { key: "residual", label: parent.msg("label.properties-residual") }
                   ], 
-                  new YAHOO.util.LocalDataSource(node.properties)
+                  new YAHOO.util.LocalDataSource(node.properties),
+                  dtConfig
                );
                
                var aspects = "";
@@ -711,10 +717,10 @@
                      { key: "assocType", label: parent.msg("label.children-assoc-type"), formatter: renderQName },
                      { key: "index", label: parent.msg("label.children-index") }
                   ], 
-                  new YAHOO.util.LocalDataSource(node.children)
+                  new YAHOO.util.LocalDataSource(node.children),
+                  dtConfig
                );
-               me._setDefaultDataTableErrors(childrenDT);
-
+               
                var parentsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-parents", 
                    [
                      { key: "name", label: parent.msg("label.parents-name"), formatter: renderChildName },
@@ -722,10 +728,11 @@
                      { key: "nodeRef", label: parent.msg("label.parents-node-ref"), formatter: renderNodeLink },
                      { key: "primary", label: parent.msg("label.parents-primary") },
                      { key: "assocType", label: parent.msg("label.parents-assoc-type"), formatter: renderQName }
+                     
                   ], 
-                  new YAHOO.util.LocalDataSource(node.parents)
+                  new YAHOO.util.LocalDataSource(node.parents),
+                  dtConfig
                );
-               me._setDefaultDataTableErrors(parentsDT);
 
                var assocsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-assocs", 
                   [
@@ -733,7 +740,8 @@
                      { key: "targetRef", label: parent.msg("label.assocs-node-ref"), formatter: renderAssocNodeRef },
                      { key: "type", label: parent.msg("label.assocs-type"), formatter: renderQName }
                   ], 
-                  new YAHOO.util.LocalDataSource(node.assocs)
+                  new YAHOO.util.LocalDataSource(node.assocs),
+                  dtConfig
                );
                
                var sourceAssocsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-source-assocs", 
@@ -742,7 +750,8 @@
                      { key: "sourceRef", label: parent.msg("label.source-assocs-node-ref"), formatter: renderAssocNodeRef },
                      { key: "type", label: parent.msg("label.source-assocs-type"), formatter: renderQName }
                   ], 
-                  new YAHOO.util.LocalDataSource(node.sourceAssocs)
+                  new YAHOO.util.LocalDataSource(node.sourceAssocs),
+                  dtConfig
                );
 
                var permissionsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-permissions", 
@@ -751,7 +760,8 @@
                      { key: "authority", label: parent.msg("label.permissions-authority") },
                      { key: "rel", label: parent.msg("label.permissions-access") }
                   ], 
-                  new YAHOO.util.LocalDataSource(node.permissions.entries)
+                  new YAHOO.util.LocalDataSource(node.permissions.entries),
+                  dtConfig
                );
                
                var storePermissionsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-store-permissions", 
@@ -760,7 +770,8 @@
                           { key: "authority", label: parent.msg("label.permissions-authority") },
                           { key: "rel", label: parent.msg("label.permissions-access") }
                        ], 
-                       new YAHOO.util.LocalDataSource(node.permissions.masks)
+                       new YAHOO.util.LocalDataSource(node.permissions.masks),
+                       dtConfig
                     );
                
                fnSetter("-view-node-inherits-permissions", "" + node.permissions.inherit);
@@ -795,20 +806,6 @@
          {
             var nodeRef = args[1].nodeRef;
             this.refreshUIState({"panel": "view", "nodeRef": nodeRef});
-         },
-         
-         /**
-          * Resets the YUI DataTable errors to our custom messages
-          * NOTE: Scope could be YAHOO.widget.DataTable, so can't use "this"
-          *
-          * @method _setDefaultDataTableErrors
-          * @param dataTable {object} Instance of the DataTable
-          * @private
-          */
-         _setDefaultDataTableErrors: function _setDefaultDataTableErrors(dataTable)
-         {
-            dataTable.set("MSG_EMPTY", parent._msg("message.datatable.empty"));
-            dataTable.set("MSG_ERROR", parent._msg("message.datatable.error"));
          }
          
       });
