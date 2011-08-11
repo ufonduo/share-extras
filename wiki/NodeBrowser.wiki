@@ -12,8 +12,8 @@ The component is packaged as a single JAR file for easy installation into Alfres
 
 To install the component, drop the `node-browser.jar` file into the following two directories within your Alfresco installation, and restart the application server.
 
-  * `tomcat/webapps/alfresco/WEB-INF/lib`
-  * `tomcat/webapps/share/WEB-INF/lib`
+  * tomcat/webapps/alfresco/WEB-INF/lib
+  * tomcat/webapps/share/WEB-INF/lib
 
 =Building from Source=
 
