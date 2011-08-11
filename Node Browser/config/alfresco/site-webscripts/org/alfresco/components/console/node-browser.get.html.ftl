@@ -21,14 +21,6 @@
             <div class="node-store-button">
                <label for="${el}-store-menu-button">${msg("label.select-store")}</label>
                <input type="button" id="${el}-store-menu-button" name="store-button" />
-               <select id="${el}-store-menu-select" name="store-select">
-                   <option value="archive://SpacesStore">archive://SpacesStore</option>
-                   <option value="system://system">system://system</option>
-                   <option value="user://alfrescoUserStore">user://alfrescoUserStore</option>
-                   <option value="workspace://lightWeightVersionStore">workspace://lightWeightVersionStore</option>
-                   <option value="workspace://SpacesStore">workspace://SpacesStore</option>
-                   <option value="workspace://version2Store">workspace://version2Store</option>
-               </select>
             </div>
          </div>
       </div>
