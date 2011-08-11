@@ -90,17 +90,44 @@
                  return;
             };
             
+            var onMenuClick = function (p_sType, p_aArgs) {
+                var oEvent = p_aArgs[0],    //  DOM event
+                    oMenuItem = p_aArgs[1]; //  MenuItem instance that was the target of the event
+                
+                if (oMenuItem)
+                {
+                    this.set("label", (oMenuItem.cfg.getProperty("text")));
+                    this.set("value", (oMenuItem.cfg.getProperty("text")));
+                }
+            };
+            
+            var onMenuRender = function (type, args, button) {
+                button.set("selectedMenuItem", this.getItem(0));
+            };
+            
             // Search button
             parent.widgets.searchButton = Alfresco.util.createYUIButton(parent, "search-button", parent.onSearchClick);
             
             // Store menu button
-            parent.widgets.storeMenuButton = new YAHOO.widget.Button(parent.id + "-store-menu-button", { 
-               type: "menu",
-               menu: parent.id + "-store-menu-select"
+            Alfresco.util.Ajax.request({
+                url: Alfresco.constants.PROXY_URI + "slingshot/node/stores",
+                successCallback:
+                {
+                   fn: function(p_obj) {
+                       var stores = p_obj.json.stores;
+                       parent.widgets.storeMenuButton = new YAHOO.widget.Button(parent.id + "-store-menu-button", { 
+                           type: "menu",
+                           menu: stores,
+                           lazyloadmenu: false
+                        });
+                       parent.widgets.storeMenuButton.set("value", parent.store);
+                       parent.widgets.storeMenuButton.set("label", parent.store);
+                       parent.widgets.storeMenuButton.on("selectedMenuItemChange", onSelectedMenuItemChange);
+                   },
+                   scope: this
+                },
+                failureMessage: parent._msg("message.getstores-failure")
             });
-            parent.widgets.storeMenuButton.on("selectedMenuItemChange", onSelectedMenuItemChange);
-            parent.widgets.storeMenuButton.set("value", parent.store);
-            parent.widgets.storeMenuButton.set("label", parent.store);
             
             // Query language button
             parent.widgets.langMenuButton = new YAHOO.widget.Button(parent.id + "-lang-menu-button", { 
@@ -110,22 +137,6 @@
             parent.widgets.langMenuButton.on("selectedMenuItemChange", onSelectedMenuItemChange);
             parent.widgets.langMenuButton.set("value", parent.searchLanguage);
             parent.widgets.langMenuButton.set("label", parent.searchLanguage);
-            
-            // Form definition
-            /*
-            var form = new Alfresco.forms.Form(parent.id + "-options-form");
-            form.setSubmitElements([parent.widgets.applyButton]);
-            form.setSubmitAsJSON(true);
-            form.setAJAXSubmit(true,
-            {
-               successCallback:
-               {
-                  fn: this.onSuccess,
-                  scope: this
-               }
-            });
-            form.init();
-            */
             
             // DataTable and DataSource setup
             parent.widgets.dataSource = new YAHOO.util.DataSource(Alfresco.constants.PROXY_URI + "slingshot/node/search",
@@ -215,8 +226,11 @@
             parent.widgets.langMenuButton.set("label", parent.searchLanguage);
             
             // Update language menu
-            parent.widgets.storeMenuButton.set("value", parent.store);
-            parent.widgets.storeMenuButton.set("label", parent.store);
+            if (parent.widgets.storeMenuButton)
+            {
+                parent.widgets.storeMenuButton.set("value", parent.store);
+                parent.widgets.storeMenuButton.set("label", parent.store);
+            }
             
             // check search length again as we may have got here via history navigation
             if (!this.isSearching && parent.searchTerm !== undefined && parent.searchTerm.length >= parent.options.minSearchTermLength)
@@ -433,8 +447,8 @@
           */
          _setDefaultDataTableErrors: function _setDefaultDataTableErrors(dataTable)
          {
-            dataTable.set("MSG_EMPTY", parent._msg("message.empty", "Alfresco.ConsoleUsers"));
-            dataTable.set("MSG_ERROR", parent._msg("message.error", "Alfresco.ConsoleUsers"));
+            dataTable.set("MSG_EMPTY", parent._msg("message.datatable.empty"));
+            dataTable.set("MSG_ERROR", parent._msg("message.datatable.error"));
          },
          
          /**
@@ -531,6 +545,7 @@
          
          onUpdate: function onUpdate()
          {
+            var me = this;
             window.scrollTo(0, 0);
             var success = function(res)
             {
@@ -698,6 +713,7 @@
                   ], 
                   new YAHOO.util.LocalDataSource(node.children)
                );
+               me._setDefaultDataTableErrors(childrenDT);
 
                var parentsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-parents", 
                    [
@@ -709,6 +725,7 @@
                   ], 
                   new YAHOO.util.LocalDataSource(node.parents)
                );
+               me._setDefaultDataTableErrors(parentsDT);
 
                var assocsDT = new YAHOO.widget.DataTable(parent.id + "-view-node-assocs", 
                   [
@@ -753,7 +770,7 @@
                Dom.setStyle(parent.id + "-view-main", "visibility", "visible");
             };
             
-            // make an ajax call to get user details
+            // make an ajax call to get node details
             Alfresco.util.Ajax.request(
             {
                url: Alfresco.constants.PROXY_URI + "slingshot/node/" + parent.currentNodeRef.replace("://", "/"),
@@ -778,7 +795,22 @@
          {
             var nodeRef = args[1].nodeRef;
             this.refreshUIState({"panel": "view", "nodeRef": nodeRef});
+         },
+         
+         /**
+          * Resets the YUI DataTable errors to our custom messages
+          * NOTE: Scope could be YAHOO.widget.DataTable, so can't use "this"
+          *
+          * @method _setDefaultDataTableErrors
+          * @param dataTable {object} Instance of the DataTable
+          * @private
+          */
+         _setDefaultDataTableErrors: function _setDefaultDataTableErrors(dataTable)
+         {
+            dataTable.set("MSG_EMPTY", parent._msg("message.datatable.empty"));
+            dataTable.set("MSG_ERROR", parent._msg("message.datatable.error"));
          }
+         
       });
       new ViewPanelHandler();
       
