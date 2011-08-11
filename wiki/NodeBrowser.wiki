@@ -39,10 +39,6 @@ ant clean dist-jar
 
 The command should build a JAR file named `node-browser.jar` in the `dist` directory within your project, which you can then copy into the webapp folders in your Alfresco installation, as in _Installation_, above.
 
-{{{
-ant -Dtomcat.home=C:/Alfresco/tomcat clean dist-jar hotcopy-tomcat-jar
-}}}
-
 After you have deployed the JAR file you will need to restart Tomcat to ensure it picks up the changes.
 
 = Usage =
