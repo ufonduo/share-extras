@@ -4,7 +4,7 @@
 
 This project defines a Share administration console component to navigate and view information on nodes stored in the repository stores, similar to the Node Browser component in Alfresco Explorer.
 
-http://share-extras.googlecode.com/svn/trunk/Node%20Browser/node-browser.png
+http://share-extras.googlecode.com/svn/trunk/Node%20Browser/screenshots/node-browser-search.png
 
 =Installation=
 
