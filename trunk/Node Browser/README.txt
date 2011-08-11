@@ -10,7 +10,7 @@ Installation
 ------------
 
 The component has been developed to install on top of an existing Alfresco
-3.4 installation.
+3.3 or 3.4 installation.
 
 An Ant build script is provided to build a JAR file containing the 
 custom files, which can then be installed into the 'tomcat/shared/lib' folder 
@@ -24,11 +24,11 @@ directory.
 The command should build a JAR file named node-browser.jar
 in the 'dist' directory within your project.
 
-To deploy the dashlet files into a local Tomcat instance for testing, you can 
-use the hotcopy-tomcat-jar task. You will need to set the tomcat.home
-property in Ant.
+To install the component, drop the node-browser.jar file into the following two 
+directories within your Alfresco installation, and restart the application server.
 
-    ant -Dtomcat.home=C:/Alfresco/tomcat clean hotcopy-tomcat-jar
+    tomcat/webapps/alfresco/WEB-INF/lib
+    tomcat/webapps/share/WEB-INF/lib 
     
 Once you have run this you will need to restart Tomcat so that the classpath 
 resources in the JAR file are picked up.
