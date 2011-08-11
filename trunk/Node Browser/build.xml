@@ -177,8 +177,9 @@
                 <exclude name="${config.excludes}" />
             </fileset>
         </copy>
+        <!-- Copy Java class files -->
         <copy todir="${build.jar.dir}" includeEmptyDirs="false">
-            <fileset dir="${build.classes.dir}" includes="**/*.class">
+            <fileset dir="${build.compile.dir}" includes="**/*.class">
             </fileset>
          </copy>
         <!-- Copy web-tier resources into the JAR. These can then be loaded by browsers via Share's resources 
@@ -201,7 +202,7 @@
     </target>
    
    <!-- Build the JAR file -->
-    <target name="dist-jar" depends="clean, prepare, build-jar" 
+    <target name="dist-jar" depends="clean, prepare, compile, build-jar" 
       description="Build a JAR file containing configuration and resource files">
       <jar destfile="${dist.dir}/${jar.name}">
          <fileset dir="${build.jar.dir}" />
@@ -294,13 +295,20 @@
         <copy todir="${build.amp.dir}/config">
             <fileset dir="${config.dir}" includes="${config.includes}" excludes="${config.excludes}" />
         </copy>
-      
+
       <!-- Copy resource files -->
         <mkdir dir="${build.amp.dir}/web" />
         <copy todir="${build.amp.dir}/web">
             <fileset dir="${res.dir}" includes="${build.res.includes}" excludes="${build.res.excludes}" />
         </copy>
 
+        <!-- Copy Java class files -->
+        <mkdir dir="${build.amp.dir}/web/WEB-INF/classes" />
+        <copy todir="${build.amp.dir}/web/WEB-INF/classes" includeEmptyDirs="false">
+            <fileset dir="${build.compile.dir}" includes="**/*.class">
+            </fileset>
+         </copy>
+        
        <!-- Minify JS -->
        <yuicompress fromdir="${res.dir}" todir="${build.amp.dir}/web" excludes="**/*-min.js" warn="${yuicompress.warn}">
           <include name="**/*.js" />
@@ -308,7 +316,7 @@
     </target>
     
     <!-- Build the AMP file -->
-    <target name="dist-amp" depends="clean, prepare, build-amp" description="Build an AMP file containing all customisations">
+    <target name="dist-amp" depends="clean, prepare, compile, build-amp" description="Build an AMP file containing all customisations">
         <zip destfile="${dist.dir}/${amp.name}">
             <fileset dir="${build.amp.dir}" />
         </zip>
