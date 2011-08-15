@@ -12,7 +12,7 @@
    new Alfresco.widget.DashletResizer("${args.htmlid}", "${instance.object.id}");
 //]]></script>
 
-<div class="dashlet twitter-user-timeline">
+<div class="dashlet twitter-search">
    <div class="title" id="${args.htmlid}-title">${msg("header.search", (searchTerm!'')?url, searchTerm!'')}</div>
    <#if hasConfigPermission>
       <div class="toolbar">

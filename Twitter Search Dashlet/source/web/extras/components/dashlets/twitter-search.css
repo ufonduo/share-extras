@@ -27,11 +27,11 @@
 {
    clear: both;
 }
-.twitter-search .list-tweet .tweet
+.twitter-search .user-tweet .tweet
 {
 	margin-left: 58px;
 }
-.twitter-search .list-tweet .user-icon
+.twitter-search .user-tweet .user-icon
 {
    float: left;
 }
