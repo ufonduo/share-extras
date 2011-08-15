@@ -1,0 +1,17 @@
+<alfresco-config>
+
+	<config evaluator="string-compare" condition="Remote">
+	  <remote>
+	  
+		<!-- Endpoint -->
+	    <endpoint>
+	      <id>twitter-search</id>
+	      <name>Twitter Search API</name>
+	      <connector-id>http</connector-id>
+	      <endpoint-url>http://search.twitter.com</endpoint-url>
+	    </endpoint>
+	    
+	  </remote>
+	</config>
+
+</alfresco-config>

@@ -184,27 +184,21 @@
       load: function TwitterSearch_load()
       {
          // Load the search results
-         Alfresco.util.Ajax.request(
+         this._request(
          {
-            url: Alfresco.constants.URL_SERVICECONTEXT + "extras/components/dashlets/twitter-search/results",
             dataObj:
             {
-               q: this._getSearchTerm(),
-               pageSize: this.options.pageSize
             },
             successCallback:
             {
                fn: this.onLoadSuccess,
-               scope: this,
-               obj: null
+               scope: this
             },
             failureCallback:
             {
                fn: this.onLoadFailure,
                scope: this
-            },
-            scope: this,
-            noReloadOnAuthFailure: true
+            }
          });
       },
       
@@ -286,28 +280,22 @@
          this._refreshDates();
           
          // Load the user timeline
-         Alfresco.util.Ajax.request(
+         this._request(
          {
-            url: Alfresco.constants.URL_SERVICECONTEXT + "extras/components/dashlets/twitter-search/results",
             dataObj:
             {
-               q: this._getSearchTerm(),
                minId: this._getLatestTweetId()
             },
             successCallback:
             {
                fn: this.onNewTweetsLoaded,
-               scope: this,
-               obj: null
+               scope: this
             },
             failureCallback:
             {
                fn: this.onNewTweetsLoadFailure,
-               scope: this,
-               obj: null
-            },
-            scope: this,
-            noReloadOnAuthFailure: true
+               scope: this
+            }
          });
       },
       
@@ -348,29 +336,23 @@
       extend: function TwitterSearch_extend()
       {
          // Load the user timeline
-         Alfresco.util.Ajax.request(
+         this._request(
          {
-            url: Alfresco.constants.URL_SERVICECONTEXT + "extras/components/dashlets/twitter-search/results",
             dataObj:
             {
-               q: this._getSearchTerm(),
                maxId: this._getEarliestTweetId(),
                pageSize: this.options.pageSize + 1
             },
             successCallback:
             {
                fn: this.onExtensionLoaded,
-               scope: this,
-               obj: null
+               scope: this
             },
             failureCallback:
             {
                fn: this.onExtensionLoadFailure,
-               scope: this,
-               obj: null
-            },
-            scope: this,
-            noReloadOnAuthFailure: true
+               scope: this
+            }
          });
       },
       
@@ -619,6 +601,41 @@
             dEl = els[i];
             dEl.innerHTML = this._relativeTime(new Date(Dom.getAttribute(dEl, "title")));
          }
+      },
+
+      /**
+       * Request data from the web service
+       * 
+       * @method _request
+       */
+      _request: function TwitterUserTimeline__request(p_obj)
+      {
+         var url = Alfresco.constants.PROXY_URI.replace("/alfresco/", "/twitter-search/") + "search.json";
+         var params = {
+                q: this._getSearchTerm(),
+                result_type: "recent",
+                rpp: p_obj.dataObj.pageSize || this.options.pageSize
+         };
+
+         if (p_obj.dataObj.maxId != null)
+         {
+             params.max_id = p_obj.dataObj.maxId;
+         }
+         if (p_obj.dataObj.minId != null)
+         {
+             params.since_id = p_obj.dataObj.minId;
+         }
+         
+         // Load the timeline
+         Alfresco.util.Ajax.request(
+         {
+            url: url,
+            dataObj: params,
+            successCallback: p_obj.successCallback,
+            failureCallback: p_obj.failureCallback,
+            scope: this,
+            noReloadOnAuthFailure: true
+         });
       },
 
       /**
