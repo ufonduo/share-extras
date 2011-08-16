@@ -184,3 +184,8 @@
 {
    margin-left: 8em;
 }
+
+.node-browser .node-value-label
+{
+	font-style: italic;
+}
