@@ -1,6 +1,6 @@
 <#macro dateFormat date>${date?string("dd MMM yyyy HH:mm:ss 'GMT'Z '('zzz')'")}</#macro>
 <#escape x as jsonUtils.encodeJSONString(x)>
-<#macro printPropertyValue p><#if p.value?is_date>"<@dateFormat p.value />"</#if><#if p.value?is_boolean>${p.value?string}</#if><#if p.value?is_number>${p.value?c}</#if><#if p.value?is_string>"${p.value}"</#if></#macro>
+<#macro printPropertyValue p><#if p.value??><#if p.value?is_date>"<@dateFormat p.value />"</#if><#if p.value?is_boolean>${p.value?string}</#if><#if p.value?is_number>${p.value?c}</#if><#if p.value?is_string>"${p.value}"</#if><#else>null</#if></#macro>
 {
    <#if node??>
    "nodeRef": "${node.nodeRef}",

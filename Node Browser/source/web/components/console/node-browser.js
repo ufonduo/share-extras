@@ -640,41 +640,49 @@
              {
                 var renderValue = function(val, el)
                 {
-                    if (val.dataType == "{http://www.alfresco.org/model/dictionary/1.0}content")
+                    if (val.isNullValue)
                     {
-                       // Create new link
-                       var html = "<a ";
-                       html += "href=\"" + Alfresco.constants.PROXY_URI + "api/node/" + nodeRef.replace("://", "/") + "/content" + "\">";
-                       html += $html(val.value);
-                       html += "</a>";
-                       // Create new link
-                       var contentLink = document.createElement("a");
-                       contentLink.innerHTML = $html(val.value);
-                       YAHOO.util.Dom.setAttribute(contentLink, "href", Alfresco.constants.PROXY_URI + "api/node/" + nodeRef.replace("://", "/") + "/content;" + oRecord.getData("name").prefixedName);
-                       el.appendChild(contentLink);
-                    }
-                    else if (val.dataType == "{http://www.alfresco.org/model/dictionary/1.0}noderef")
-                    {
-                        renderNodeLink(el, oRecord, oColumn, val.value, { nodeRef: val.value });
+                        Dom.addClass(el, "node-value-label");
+                        el.innerHTML = parent.msg("label.node-value-null");
                     }
                     else
                     {
-                        el.innerHTML = $html(val.value);
+                        if (val.dataType == "{http://www.alfresco.org/model/dictionary/1.0}content")
+                        {
+                           // Create new link
+                           var html = "<a ";
+                           html += "href=\"" + Alfresco.constants.PROXY_URI + "api/node/" + nodeRef.replace("://", "/") + "/content" + "\">";
+                           html += $html(val.value);
+                           html += "</a>";
+                           // Create new link
+                           var contentLink = document.createElement("a");
+                           contentLink.innerHTML = $html(val.value);
+                           YAHOO.util.Dom.setAttribute(contentLink, "href", Alfresco.constants.PROXY_URI + "api/node/" + nodeRef.replace("://", "/") + "/content;" + oRecord.getData("name").prefixedName);
+                           el.appendChild(contentLink);
+                        }
+                        else if (val.dataType == "{http://www.alfresco.org/model/dictionary/1.0}noderef")
+                        {
+                            renderNodeLink(el, oRecord, oColumn, val.value, { nodeRef: val.value });
+                        }
+                        else
+                        {
+                            el.innerHTML = $html(val.value);
+                        }
                     }
                 };
-                
+
                 if (oRecord.getData("multiple") == false)
                 {
-                    renderValue(oData[0], elCell);
+                    renderValue(oData[0], elCell.appendChild(document.createElement("div"), elCell));
                 }
                 else
                 {
-                    var html = "";
+                    var labelEl = elCell.appendChild(document.createElement("div"), elCell);
+                    Dom.addClass(labelEl, "node-value-label");
+                    labelEl.innerHTML = parent.msg("label.node-value-collection");
                     for (var i = 0; i < oData.length; i++)
                     {
-                        renderValue(oData[i], elCell);
-                        if (i < oData.length - 1)
-                            elCell.appendChild(document.createElement("br"), elCell);
+                        renderValue(oData[i], elCell.appendChild(document.createElement("div"), elCell));
                     }
                 }
                 
