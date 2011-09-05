@@ -3,8 +3,8 @@
    {
       "componentId": "${instance.object.id}",
       "twitterUser": "${(args.twitterUser!"")?js_string}",
-      "defaultTwitterUser": "${(defaultTwitterUser!"")?js_string}",
-      "pageSize": ${(pageSize!20)?c},
+      "defaultTwitterUser": "${(config.script["twitter-user-timeline"].defaultUser!"")?js_string}",
+      "pageSize": ${(config.script["twitter-user-timeline"].pageSize!20)?c},
       "checkInterval": ${(config.script["twitter-user-timeline"].checkInterval!0)?number?c}
    }).setMessages(
       ${messages}
