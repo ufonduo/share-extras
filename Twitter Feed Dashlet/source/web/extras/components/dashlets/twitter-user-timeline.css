@@ -23,17 +23,14 @@
 {
    color: #999999;
 }
-.twitter-user-timeline .list-tweet,
 .twitter-user-timeline .user-tweet
 {
    clear: both;
 }
-.twitter-user-timeline .list-tweet .tweet,
 .twitter-user-timeline .user-tweet .tweet
 {
 	margin-left: 58px;
 }
-.twitter-user-timeline .list-tweet .user-icon,
 .twitter-user-timeline .user-tweet .user-icon
 {
    float: left;
