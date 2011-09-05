@@ -1,10 +1,6 @@
 function main()
 {
-   var s = new XML(config.script),
-      defaultUser = s.defaultUser.toString(),
-      pageSize = parseInt(s.pageSize.toString(), 10),
-      u = args.twitterUser ? args.twitterUser : defaultUser,
-      hasConfigPermission = false;
+   var hasConfigPermission = false;
    
    // Work out if the user has permission to configure the dashlet
    
@@ -30,10 +26,7 @@ function main()
       hasConfigPermission = true; // User dashboard
    }
 
-   model.pageSize = pageSize;
-   model.twitterUser = u;
    model.hasConfigPermission = hasConfigPermission;
-   model.defaultTwitterUser = defaultUser;
 }
 
 main();
