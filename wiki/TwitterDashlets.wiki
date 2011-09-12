@@ -21,7 +21,7 @@ You can view messages in the dashlet, and the standard Favorite, Reply and Retwe
 
 [http://share-extras.googlecode.com/svn/trunk/Twitter%20Dashlets/screenshots/twitter-new-tweet.png]
 
-*Note that the Twitter Timeline dashlet requires an Alfresco 4.0 build, or a 3.4 installation with upgraded Spring Surf libraries, and you must also install the Share Extras OAuth extension.*
+*Note that the Twitter Timeline dashlet requires an Alfresco 4.0 build, or a 3.4 installation with upgraded Spring Surf libraries, and you must also install the Share Extras [http://code.google.com/p/share-extras/wiki/ShareOAuth OAuth extension].*
 
 =Installation=
 
@@ -64,8 +64,9 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
 
 = Usage =
 
-  # Log in to Alfresco Share and navigate to your user dashboard.
+  # Log in to Alfresco Share and navigate to your user dashboard (the Twitter Feed and Twitter Search dashlets can also be placed on a site dashboard).
   # Click the _Customize Dashboard_ button to edit the contents of the dashboard and drag the dashlet into one of the columns from the list of dashlets.
-  # Use the _Configure_ button to change the feed displayed. You can specify any Twitter username on its own, or any list belonging to a user as _username/listname_.
+  # For the Twitter Feed and Search dashlets, use the _Configure_ button to change the feed displayed (you can specify any Twitter username on its own, or any list belonging to a user as _username/listname_.) or the search term used.
+ # For the Twitter Timeline dashlet click the Connect button if you have not previously done so. Once you have authorised the application you will be redirected to your user dashboard.
 
 = Known Issues =
