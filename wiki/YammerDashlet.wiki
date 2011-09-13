@@ -6,6 +6,8 @@ This project provides a custom dashlet to display messages from the Yammer socia
 
 [http://share-extras.googlecode.com/svn/trunk/Yammer%20Dashlet/screenshots/yammer-dashlet.png]
 
+*Note that the Yammer dashlet requires an Alfresco 4.0 build, or a 3.4 installation with upgraded Spring Surf libraries, and you must also install the Share Extras [http://code.google.com/p/share-extras/wiki/ShareOAuth OAuth extension].*
+
 =Installation=
 
 The dashlet is packaged as a single JAR file for easy installation into Alfresco Share.
