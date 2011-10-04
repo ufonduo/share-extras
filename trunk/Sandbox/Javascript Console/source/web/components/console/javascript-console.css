@@ -19,7 +19,7 @@
 }
 
 .javascript-console .jsbox {
-	font-family:"Courier New", Courier, monospace;
+	font-family:"Courier New", Courier, monospace !important;
 	width:100%;
 }
 
