@@ -1,6 +1,0 @@
-<webscript>
-   <shortname>SurveyMonkey</shortname>
-   <description>Embeds a SurveyMonkey survey</description>
-   <family>site-dashlet</family>
-   <url>/extras/components/dashlets/surveymonkey</url>
-</webscript>

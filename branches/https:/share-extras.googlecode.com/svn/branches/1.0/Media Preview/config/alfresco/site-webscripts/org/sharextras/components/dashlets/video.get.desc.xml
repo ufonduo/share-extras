@@ -1,6 +1,0 @@
-<webscript>
-   <shortname>Video Preview</shortname>
-   <description>Displays a user-selected video on the dashboard</description>
-   <family>site-dashlet</family>
-   <url>/components/dashlets/video</url>
-</webscript>

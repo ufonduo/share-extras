@@ -1,8 +1,0 @@
-<webscript>
-   <shortname>Post Poll Response</shortname>
-   <description>Post a response to an open poll</description>
-   <format default="json">argument</format>
-   <url>/extras/slingshot/poll/{protocol}/{store}/{id}/response</url>
-   <url>/extras/slingshot/poll/{protocol}/{store}/{id}/response/{response}</url>
-   <authentication>user</authentication>
-</webscript>
