@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>config-poll</shortname>
+  <description>Configuration dialog for poll site dashlet</description>
+  <url>/modules/poll/config/{siteId}</url>
+</webscript>

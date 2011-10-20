@@ -1,0 +1,6 @@
+<webscript>
+  <shortname>config-bbc-weather-locations</shortname>
+  <description>Locations list for BBC Weather dashlet</description>
+  <url>/modules/dashlets/bbc-weather/locations</url>
+  <format default="json">extension</format>
+</webscript>

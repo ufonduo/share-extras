@@ -1,0 +1,6 @@
+<webscript>
+  <shortname>config-googlesitenews-post</shortname>
+  <description>Configuration dialog for Google Site news dashlet</description>
+  <url>/modules/googlesitenews/config/{componentId}</url>
+  <format default="json">argument</format>
+</webscript>

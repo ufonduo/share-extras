@@ -1,0 +1,6 @@
+<tracking>
+    <trackingId></trackingId> <!-- MANDATORY GA tracking ID if global=true, i.e. UA-xxxxxx-x -->
+    <global>false</global> <!-- Set to true to track all page requests, i.e. not only sites explicitly tagged with pt:trackableContainer -->
+    <defaultEventCategory>Document</defaultEventCategory>
+    <trackableEventCategory>Trackable Document</trackableEventCategory>
+</tracking>

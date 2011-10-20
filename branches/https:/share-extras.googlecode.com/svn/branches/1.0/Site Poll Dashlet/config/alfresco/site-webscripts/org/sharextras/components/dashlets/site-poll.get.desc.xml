@@ -1,0 +1,6 @@
+<webscript>
+   <shortname>Site Poll</shortname>
+   <description>Displays a poll on the dashboard</description>
+   <url>/components/dashlets/site-poll</url>
+   <family>site-dashlet</family>
+</webscript>

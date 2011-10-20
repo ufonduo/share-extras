@@ -1,0 +1,6 @@
+<webscript>
+  <shortname>config-bbc-weather</shortname>
+  <description>Configuration dialog for BBC Weather dashlet</description>
+  <url>/modules/dashlets/bbc-weather/config</url>
+  <url>/modules/dashlets/bbc-weather/config/{siteId}</url>
+</webscript>
