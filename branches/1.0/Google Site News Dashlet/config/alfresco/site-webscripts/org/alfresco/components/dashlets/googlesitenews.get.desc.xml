@@ -1,0 +1,6 @@
+<webscript>
+   <shortname>Google Site News</shortname>
+   <description>Performs a google search on site name</description>
+   <family>site-dashlet</family>
+   <url>/components/dashlets/googlesitesearch</url>
+</webscript>

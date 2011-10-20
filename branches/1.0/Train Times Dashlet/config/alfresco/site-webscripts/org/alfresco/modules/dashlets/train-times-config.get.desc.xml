@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>train-times-config</shortname>
+  <description>Configuration dialog for Train Times dashlet</description>
+  <url>/modules/dashlet/uk-train-times/config</url>
+</webscript>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<model name="pm:pollmodel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+
+   <description>Poll Model</description>
+   <author>Will Abson</author>
+   <version>1.0</version>
+
+   <imports>
+       <!-- Import Alfresco Dictionary Definitions -->
+       <import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d" />
+       <!-- Import Alfresco Content Domain Model Definitions -->
+       <import uri="http://www.alfresco.org/model/content/1.0" prefix="cm" />
+       <!-- Import Alfresco Datalist Domain Model Definitions -->
+       <import uri="http://www.alfresco.org/model/datalist/1.0" prefix="dl"/>
+   </imports>
+
+   <!-- Introduction of new namespaces defined by this model -->
+   <namespaces>
+       <namespace uri="http://www.alfresco.org/model/poll/1.0" prefix="pm" />
+   </namespaces>
+   
+   <types>
+      <type name="pm:poll">
+         <title>Poll</title>
+         <parent>dl:dataListItem</parent>
+         <properties>
+            <property name="pm:options">
+               <type>d:text</type>
+               <multiple>true</multiple>
+            </property>
+            <property name="pm:enabled">
+               <type>d:boolean</type>
+               <mandatory>true</mandatory>
+               <default>true</default>
+            </property>
+         </properties>
+         <associations>
+            <child-association name="pm:pollResponse">
+               <source>
+                  <mandatory>false</mandatory>
+                  <many>true</many>
+               </source>
+               <target>
+                  <class>pm:response</class>
+                  <mandatory>false</mandatory>
+                  <many>true</many>
+               </target>
+               <duplicate>false</duplicate>
+               <propagateTimestamps>true</propagateTimestamps>
+            </child-association>
+         </associations>
+         <mandatory-aspects>
+            <aspect>cm:titled</aspect>
+            <aspect>cm:effectivity</aspect>
+         </mandatory-aspects>
+      </type>
+      <type name="pm:response">
+         <title>Poll Response</title>
+         <parent>cm:content</parent>
+         <properties>
+            <property name="pm:response">
+               <type>d:text</type>
+            </property>
+         </properties>
+      </type>
+   </types>
+
+</model>
