@@ -38,11 +38,13 @@ See the file `README.txt` inside your JsDoc Toolkit for full instructions on how
 
 The executable JAR file `jsrun.jar` can be used to execute the document generation, but must be called with some additional parameters when using the custom Alfresco template.
 
-Before you start the process, you must create a directory where the output files will be placed (e.g. `jsdoc-out`), and specify this in your command.
+Before you start the process, you must create a directory where the output HTML files will be placed (e.g. `jsdoc-out`), and specify this in your command.
 
-JsDoc Toolkit can then be run from a command prompt, after you have changed into the base directory where your client-side JavaScript exists.
+Also, after the process has completed you will need to copy the `static` directory and its contents from inside the `templates/alfresco` directory into the output directory. This will add the static CSS to style your pages.
 
-===Using for your own projects===
+JsDoc Toolkit can then be run from a command prompt, after you have changed into the base directory where your client-side JavaScript exists. The method is slightly different, depending on whether you are generating documentation for you own projects or for Alfresco Share.
+
+===Usage in your own projects===
 
 For generating your project-specific documentation, this will be the `source/web` (or equivalent) directory in your project structure
 
@@ -70,7 +72,7 @@ java -jar "%JSDOC_HOME%/jsrun.jar" "%JSDOC_HOME%/app/run.js" -a \
 
 If you do not wish to include all sub-directories within your client-side source directory, you can substitute `*` above for the names of specific directories or script names, separated by spaces, You can also exclude specific files by adding additional `--exclude` options.
 
-===Using with Share client-side docs===
+===Usage with Share client-side docs===
 
 For generating Share client-side documentation, you should first change into the exploded share webapp directory of your Tomcat installation, or manually explode the file `web-server/webapps/share.war` into a specific directory manually.
 
