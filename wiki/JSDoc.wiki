@@ -46,7 +46,7 @@ JsDoc Toolkit can then be run from a command prompt, after you have changed into
 
 ===Usage in your own projects===
 
-For generating your project-specific documentation, this will be the `source/web` (or equivalent) directory in your project structure
+For generating your project-specific documentation, change into the `source/web`, or equivalent, directory in your project structure
 
 You can then use the `jsrun.jar` file directly, substituting the title, version title, base URL and version-specific URL parameters in the following command as appropriate for your app.
 
@@ -63,8 +63,8 @@ java -jar "$JSDOC_HOME/jsrun.jar" "$JSDOC_HOME/app/run.js" -a \
 On Windows, use
 
 {{{
-java -jar "%JSDOC_HOME%/jsrun.jar" "%JSDOC_HOME%/app/run.js" -a \
--t="%JSDOC_HOME%/templates/alfresco" -d="jsdoc-out" * --recurse=5 \
+java -jar "%JSDOC_HOME%\jsrun.jar" "%JSDOC_HOME%\app\run.js" -a \
+-t="%JSDOC_HOME%\templates\alfresco" -d="jsdoc-out" * --recurse=5 \
 --exclude="-min.js" -D="baseTitle:MyApp Client-side API" \
 -D="baseUrl:http://myapp.org/jsdoc" -D="version:myapp-x.x.x" \
 -D="versionName:MyApp x.x.x"
@@ -74,7 +74,7 @@ If you do not wish to include all sub-directories within your client-side source
 
 ===Usage with Share client-side docs===
 
-For generating Share client-side documentation, you should first change into the exploded share webapp directory of your Tomcat installation, or manually explode the file `web-server/webapps/share.war` into a specific directory manually.
+For generating Share client-side documentation, you should first change into the exploded share webapp directory of your Tomcat installation, or manually explode the file `web-server/webapps/share.war` from the ZIP-format installation files into a specific directory manually.
 
 You can then use the `jsrun.jar` file directly.
 
@@ -94,12 +94,12 @@ java -jar "$JSDOC_HOME/jsrun.jar" "$JSDOC_HOME/app/run.js" -a \
 On Windows use
 
 {{{
-java -jar "%JSDOC_HOME%/jsrun.jar" "%JSDOC_HOME%/app/run.js" -a \
--t="%JSDOC_HOME%/templates/alfresco" -d="jsdoc-out" js modules components \
+java -jar "%JSDOC_HOME%\jsrun.jar" "%JSDOC_HOME%\app\run.js" -a \
+-t="%JSDOC_HOME%\templates\alfresco" -d="jsdoc-out" js modules components \
 --recurse=5 --exclude="-min.js" --exclude="yui-common.js" \
 --exclude="bubbling.v2.1.js" --exclude="lightbox.js" \
 --exclude="log4javascript.v1.4.1.js" --exclude="flash" --exclude="tiny_mce" \
---exclude="components/form/date.js" -D="baseTitle:Share Client-side API" \
+--exclude="components\form\date.js" -D="baseTitle:Share Client-side API" \
 -D="baseUrl:http://sharextras.org/jsdoc" -D="version:community-4.0.a" \
 -D="versionName:Community 4.0.a"
 }}}
