@@ -1,0 +1,109 @@
+<project name="Alfresco Welsh Language Pack" default="build-jar" basedir=".">
+    
+    <property file="build.properties" />
+    <property file="${user.home}/build.properties"/>
+    
+    <!-- Autodetect locale language and country -->
+    <property name="locale.language" value="${user.language}" />
+    <property name="locale.country" value="${user.country}" />
+    
+    <!-- Suffix to be added to all properties files e.g. 'en_GB' -->
+    <property name="locale.name" value="${locale.language}_${locale.country}" />
+    
+    <property name="locale.suffix" value="_${locale.name}" />
+    <property name="config.dir" value="config" />
+    <property name="scripts.dir" value="${config.dir}/alfresco/site-webscripts" />
+    <property name="build.dir" value="build" />
+    <property name="ascii.dir" value="${build.dir}/ascii" />
+    <property name="classes.dir" value="${build.dir}/classes" />
+    <property name="dist.dir" value="${build.dir}/dist" />
+    <property name="pkg.base" value="alfresco-langpack" />
+    <property name="zip.name" value="${pkg.base}_${locale.name}.zip" />
+    <property name="jar.name" value="${pkg.base}_${locale.name}.jar" />
+    <property name="zip.file" value="${dist.dir}/${zip.name}" />
+    <property name="jar.file" value="${dist.dir}/${jar.name}" />
+    <property name="copy.verbose" value="false" />
+    <property name="export.file" value="${build.dir}/alfresco-langpack-${locale.name}-combined.csv" />
+    
+    <target name="clean" description="Prepare for build">
+        <delete dir="${build.dir}" />
+    </target>
+    
+    <target name="prepare" description="Prepare for build">
+        <mkdir dir="${build.dir}" />
+        <mkdir dir="${ascii.dir}" />
+        <mkdir dir="${classes.dir}" />
+        <mkdir dir="${dist.dir}" />
+    </target>
+    
+    <target name="build" description="Build property files ready for deployment" depends="clean,prepare">
+        
+        <!-- Create required directories -->
+        <mkdir dir="${classes.dir}/alfresco/messages" />
+        <mkdir dir="${classes.dir}/alfresco/workflow" />
+        
+        <!-- Copy non-properties files directly over to intermediate ascii dir -->
+        <copy todir="${ascii.dir}" verbose="${copy.verbose}" includeEmptyDirs="false">
+            <fileset dir="${config.dir}" excludes="**/*.properties" />
+        </copy>
+        
+        <!-- Copy readme file -->
+        <copy todir="${ascii.dir}" verbose="${copy.verbose}" includeEmptyDirs="false">
+            <fileset dir="." includes="readme.txt" />
+        </copy>
+        
+        <!-- Convert properties files to ASCII and copy to intermediate dir -->    
+        <!-- Map between the source tree and deployment directory structure -->
+        
+        <native2ascii encoding="UTF-8" src="${config.dir}" dest="${ascii.dir}"
+            includes="**/*.properties" ext=".properties"/>
+        
+        <!--
+             Create copies of all message files with locale suffix
+        -->
+        <copy todir="${classes.dir}" verbose="${copy.verbose}" overwrite="true">
+            <fileset dir="${ascii.dir}" includes="**/*.properties" />
+            <mapper type="glob" from="*.properties" to="*${locale.suffix}.properties"/>
+        </copy>
+        <copy todir="${classes.dir}" verbose="${copy.verbose}" overwrite="true">
+            <fileset dir="${ascii.dir}" includes="**/*.txt" />
+            <mapper type="glob" from="*.txt" to="*${locale.suffix}.txt"/>
+        </copy>
+        
+    </target>
+   
+	<!-- Build a ZIP file containing the message bundles -->
+   <target name="build-zip" description="Create ZIP file of the language pack" depends="clean,build">
+      <zip destfile="${zip.file}" basedir="${classes.dir}" />
+   </target>
+   
+   <!-- Build a JAR file containing the message bundles -->
+   <target name="build-jar" description="Create JAR file of the language pack" depends="clean,build">
+      <jar destfile="${jar.file}" basedir="${classes.dir}" />
+   </target>
+    
+    <target name="dist-zip-shared" description="Create ZIP file of the language pack for extraction into Tomcat's shared/classes directory" depends="clean,build">
+      <zip destfile="${dist.file}">
+        <zipfileset dir="${classes.dir}/alfresco/messages" prefix="alfresco/messages"/>
+        <zipfileset dir="${classes.dir}/alfresco/workflow" prefix="alfresco/workflow"/>
+        <zipfileset dir="${classes.dir}/alfresco/site-webscripts" prefix="alfresco/web-extension/site-webscripts"/>
+      </zip>
+    </target>
+    
+    <target name="export-combined-csv" description="Export a single, combined CSV file containing all messages" depends="prepare">
+        <concat destfile="${export.file}" encoding="UTF-8" outputencoding="UTF-8" fixlastline="yes">
+            <fileset dir="${config.dir}" includes="alfresco/**" />
+        	      <filterchain>
+                <tokenfilter>
+                	  <!-- Double up quotes -->
+                    <replaceregex pattern="&quot;" replace="&quot;&quot;" flags="g"/>
+                	  <!-- Enclose values with commas or quotes in quotes -->
+                    <replaceregex pattern="([\w\.]+)\s*=\s*(.*[&quot;,].*)" replace="\1=&quot;\2&quot;" flags="g"/>
+                	  <!-- Replace equals sign delimiter with commas -->
+        	           <replaceregex pattern="([\w\.]+)\s*=\s*" replace="\1," flags=""/>
+        	       </tokenfilter>
+                </filterchain>
+   	  </concat>
+    </target>
+    
+</project>
