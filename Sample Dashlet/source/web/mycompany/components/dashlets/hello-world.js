@@ -1,8 +1,28 @@
 /**
+* MyCompany root namespace.
+* 
+* @namespace MyCompany
+*/
+if (typeof MyCompany == "undefined" || !MyCompany)
+{
+   var MyCompany = {};
+}
+
+/**
+* MyCompany dashlet namespace.
+* 
+* @namespace MyCompany.dashlet
+*/
+if (typeof MyCompany.dashlet == "undefined" || !MyCompany.dashlet)
+{
+   MyCompany.dashlet = {};
+}
+
+/**
  * Sample Hello World dashboard component.
  * 
- * @namespace Alfresco
- * @class Alfresco.dashlet.HelloWorld
+ * @namespace MyCompany.dashlet
+ * @class MyCompany.dashlet.HelloWorld
  * @author 
  */
 (function()
@@ -24,18 +44,18 @@
     * Dashboard HelloWorld constructor.
     * 
     * @param {String} htmlId The HTML id of the parent element
-    * @return {Alfresco.dashlet.HelloWorld} The new component instance
+    * @return {MyCompany.dashlet.HelloWorld} The new component instance
     * @constructor
     */
-   Alfresco.dashlet.HelloWorld = function HelloWorld_constructor(htmlId)
+   MyCompany.dashlet.HelloWorld = function HelloWorld_constructor(htmlId)
    {
-      return Alfresco.dashlet.HelloWorld.superclass.constructor.call(this, "Alfresco.dashlet.HelloWorld", htmlId);
+      return MyCompany.dashlet.HelloWorld.superclass.constructor.call(this, "MyCompany.dashlet.HelloWorld", htmlId);
    };
 
    /**
     * Extend from Alfresco.component.Base and add class implementation
     */
-   YAHOO.extend(Alfresco.dashlet.HelloWorld, Alfresco.component.Base,
+   YAHOO.extend(MyCompany.dashlet.HelloWorld, Alfresco.component.Base,
    {
       /**
        * Object container for initialization options
