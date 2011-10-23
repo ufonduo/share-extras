@@ -125,7 +125,7 @@ customized || customised ||  ||
 customizing || customising ||  || 
 dealed || dealt ||  || 
 defense || defence ||  || 
-delete || Permanently Delete || Y || make this change if a Delete action will bypass the Rubbish Bin (Trash)
+#delete || Permanently Delete || Y || make this change if a Delete action will bypass the Rubbish Bin (Trash)
 dialed || dialled ||  || 
 dialer || dialler ||  || 
 dialing || dialling ||  || 
@@ -146,7 +146,7 @@ donut || doughnut ||  ||
 downspout || drainpipe ||  || 
 downward || downwards || Y || use 'downward' only as an adjective
 Dr. || Dr || Y || Only use a full stop if the final letter of the abbreviation is not the final letter of the word it is abbreviating. So, 'Doctor' = 'Dr' but 'Drive' = 'Dr.'
-draft || draught ||  || 
+#draft || draught ||  || 
 dreamed || dreamt ||  || 
 drugstore || pharmacy ||  || 
 dumpster || skip ||  || 
@@ -154,6 +154,7 @@ eastward || eastwards || Y || use 'eastward' only as an adjective
 eggplant || aubergine ||  || 
 e-mails || e-mail ||  || 
 email || e-mail ||  ||  The ''e'' in ''e-mail'' is pronounced as a distinct letter rather than as part of the following word. If it were the latter, the pronunciation would be merged with the following letter, in this case the letter ''m''. The first syllable is pronounced ''ee'', not ''em''.||
+emailed || e-mailed
 emails || e-mail ||  || 
 encyclopedia || encyclopaedia ||  || 
 endeavor || endeavour ||  || 
@@ -184,6 +185,7 @@ favor || favour ||  ||
 favored || favoured ||  || 
 favoring || favouring ||  || 
 favorite || favourite ||  || 
+favorites || favourites ||  || 
 fetus || foetus ||  || 
 fiber || fibre ||  || 
 filet || fillet ||  || 
@@ -195,7 +197,7 @@ flavored || flavoured ||  ||
 flavoring || flavouring ||  || 
 forever || for ever || Y || In en_GB, 'for ever' means for eternity (or a very long time), as in "I have been waiting for you for ever." 'Forever' means continually, always, as in "They are forever arguing."
 formulas || formulae ||  || 
-forums || fora ||  || 
+#forums || fora ||  || 
 forward || forwards || Y || use 'forward' only as an adjective
 forward slash || slash ||  || redundant: a slash is 'forward' by definition
 fourth || quarter || || fourths are quarters
@@ -456,8 +458,8 @@ spilled || spilt ||  ||
 spiraled || spiralled ||  || 
 spiraling || spiralling ||  || 
 spoiled || spoilt ||  || 
-St || St. || Y || 'St' = ''''S'''ain'''t'''' and 'St.' = ''''St'''reet'
-St. || St || Y || 'St' = ''''S'''ain'''t'''' and 'St.' = ''''St'''reet'
+#St || St. || Y || 'St' = ''''S'''ain'''t'''' and 'St.' = ''''St'''reet'
+#St. || St || Y || 'St' = ''''S'''ain'''t'''' and 'St.' = ''''St'''reet'
 standardize || standardise ||  || 
 stickshift || gear stick ||  || 
 story || storey || Y || Level of a building.
@@ -506,6 +508,7 @@ transportation || transport ||  ||
 trapezium || trapezoid || Y || A quadrilateral with no two sides parallel and no equal sides.
 trapezoid || trapezium || Y || A quadrilateral with two non-adjacent parallel sides.
 trash || rubbish, '''Rubbish Bin''' || Y || When referring to generic waste, use 'rubbish'. When referring to the place where deleted files go, use 'Rubbish Bin'
+trashcan || Rubbish Bin
 truck || lorry || Y || 
 trunk || boot || Y || The luggage compartment of a car.
 turnpike || toll road ||  || 
