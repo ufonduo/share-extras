@@ -24,7 +24,7 @@ Second, a custom _Alfresco_ template is used to ensure the following
 
 The customisations are intended to be installed within a JsDoc Toolkit 2.4.0 installation. At the time of writing, this is the latest available package from the project pages, although a 3.0 version appears to be in development.
 
-The custom files are provided in a single ZIP file available from the [http://code.google.com/p/share-extras/downloads/list Downloads] section of this site. To install the files, extract the ZIP file to a temporary directory on your computer and move the extracted files into the following places in your JsDoc Toolkit installation.
+The custom files are provided in a single ZIP file available from the [http://code.google.com/p/share-extras/downloads/list Downloads] section of this site, named *alfresco-jsdoc-customisations-_version_.zip*. To install the files, extract the ZIP file to a temporary directory on your computer and move the extracted files into the following places in your JsDoc Toolkit installation.
 
   * Folder `alfresco` to `templates`
   * File `alfresco.js` to `app/plugins`
