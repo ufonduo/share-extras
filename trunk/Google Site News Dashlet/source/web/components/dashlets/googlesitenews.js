@@ -109,12 +109,6 @@
        */
       onReady: function RF_onReady()
       {
-         // Add click handler to config feed link that will be visible if user is site manager.
-         var configGoogleSiteNewsLink = Dom.get(this.id + "-configGoogleSiteNews-link");
-         if (configGoogleSiteNewsLink)
-         {
-            Event.addListener(configGoogleSiteNewsLink, "click", this.onConfigGoogleSiteNewsClick, this, true);            
-         }
          //Execute new search
          var lower = parseInt(this.options.julianToday)-parseInt(this.options.limit);
          var search = "daterange:"+lower.toString()+"-"+this.options.julianToday+" "+this.options.searchTerm;
@@ -138,7 +132,7 @@
          {
             this.configDialog = new Alfresco.module.SimpleDialog(this.id + "-configDialog").setOptions(
             {
-               width: "50em",
+               width: "35em",
                templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "modules/googlesitenews/config?componentId=" + encodeURIComponent(this.options.componentId),
                onSuccess:
                {

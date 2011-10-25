@@ -26,24 +26,28 @@
 
 ul.enabledList
 {
-   width: 16em;
+   width: 12em;
    height: 15.5em;
    overflow-y: auto;
    overflow-x: hidden;
    margin-left: auto;
    margin-right: auto;
    border: 1px solid #BFBFBF;
+   list-style: none;
+   padding-left: 2px;
 
 }
 ul.disabledList
 {
-   width: 16em;
+   width: 12em;
    height: 15.5em;
    overflow-y: auto;
    overflow-x: hidden;
    margin-left: auto;
    margin-right: auto;
    border: 1px solid #BFBFBF;
+   list-style: none;
+   padding-left: 2px;
 
 }
 
@@ -51,38 +55,33 @@ ul.disabledList
 .enabledSearchers,
 .disabledSearchers
 {
-   width: 17em;
+   width: 12em;
    float: left;
    height: 2.5em;
    text-align: left;
    border-style: none;
    border-width: 0;
+   background-color: #E7E7E7;
 }
 
 /* search items */
 
 .searcheritem
 {
-   width: 17em;
+   width: 11.3em;
    float: left;
    height: 2.5em;
    text-align: left;
-   border-style: none;
-   border-width: 0;
-}
-
-
-.searcheritem
-{
    margin: 0.2em;   
    background-color: #F2F8F0;
+   border: 1px dashed #C3C3C3;
 }
 
 
 /* Show dashlets a bit darker when they are focused. */
 .searcheritem.dnd-focused
 {
-   background-color: #E2E8E0;
+   background-color: #E7E7E7;
 }
 
 /*
@@ -105,7 +104,8 @@ ul.disabledList
    height:3em;
    position:relative;
    top:-4.5em;
-   width:17em;
+   width:12em;
+   padding: 0;
 }
 
 .searcheritem span
