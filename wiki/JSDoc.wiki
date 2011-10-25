@@ -56,7 +56,7 @@ On Linux/UNIX, use
 java -jar "$JSDOC_HOME/jsrun.jar" "$JSDOC_HOME/app/run.js" -a \
 -t="$JSDOC_HOME/templates/alfresco" -d="jsdoc-out" * --recurse=5 \
 --exclude="-min.js" -D="baseTitle:MyApp Client-side API" \
--D="baseUrl:http://myapp.org/jsdoc" -D="version:myapp-x.x.x" \
+-D="baseUrl:http://myapp.org/jsdoc/" -D="version:x.x.x" \
 -D="versionName:MyApp x.x.x"
 }}}
 
@@ -66,7 +66,7 @@ On Windows, use
 java -jar "%JSDOC_HOME%\jsrun.jar" "%JSDOC_HOME%\app\run.js" -a ^
  -t="%JSDOC_HOME%\templates\alfresco" -d="jsdoc-out" * ^
  --recurse=5 --exclude="-min.js" -D="baseTitle:MyApp Client-side API" ^
- -D="baseUrl:http://myapp.org/jsdoc" -D="version:myapp-x.x.x" ^
+ -D="baseUrl:http://myapp.org/jsdoc/" -D="version:x.x.x" ^
  -D="versionName:MyApp x.x.x"
 }}}
 
@@ -87,7 +87,7 @@ java -jar "$JSDOC_HOME/jsrun.jar" "$JSDOC_HOME/app/run.js" -a \
 --exclude="bubbling.v2.1.js" --exclude="lightbox.js" \
 --exclude="log4javascript.v1.4.1.js" --exclude="flash" --exclude="tiny_mce" \
 --exclude="components/form/date.js" -D="baseTitle:Share Client-side API" \
--D="baseUrl:http://sharextras.org/jsdoc" -D="version:community-4.0.a" \
+-D="baseUrl:http://myco.org/jsdoc/" -D="version:community-4.0.a" \
 -D="versionName:Community 4.0.a"
 }}}
 
@@ -100,7 +100,7 @@ java -jar "%JSDOC_HOME%\jsrun.jar" "%JSDOC_HOME%\app\run.js" -a ^
  --exclude="bubbling.v2.1.js" --exclude="lightbox.js" ^
  --exclude="log4javascript.v1.4.1.js" --exclude="flash" --exclude="tiny_mce" ^
  --exclude="components\form\date.js" -D="baseTitle:Share Client-side API" ^
- -D="baseUrl:http://sharextras.org/jsdoc" -D="version:community-4.0.a" ^
+ -D="baseUrl:http://myco.org/jsdoc/" -D="version:community-4.0.a" ^
  -D="versionName:Community 4.0.a"
 }}}
 
