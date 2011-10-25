@@ -10,7 +10,11 @@ Since Yammer requires all communications to be authenticated, the dashlet provid
 
 [http://share-extras.googlecode.com/svn/trunk/Yammer%20Dashlet/screenshots/yammer-authorize.png]
 
-*Note that the Yammer dashlet requires an Alfresco 4.0 build, or a 3.4 installation with upgraded Spring Surf libraries, and you must also install the Share Extras [http://code.google.com/p/share-extras/wiki/ShareOAuth OAuth extension].*
+In addition a custom Document Library action can be used to post a link to the document directly to Yammer, if you have already connected using the dashlet.
+
+[http://share-extras.googlecode.com/svn/trunk/Yammer%20Dashlet/screenshots/yammer-doclib-action.png]
+
+*Note that the Yammer dashlet requires an Alfresco 4.0 build, or a 3.4 installation with v1.0 Final Spring Surf libraries, and you must also install the Share Extras [http://code.google.com/p/share-extras/wiki/ShareOAuth OAuth extension]. The custom action will work with Alfreso 4.0 only*
 
 =Installation=
 
