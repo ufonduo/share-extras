@@ -63,11 +63,11 @@ java -jar "$JSDOC_HOME/jsrun.jar" "$JSDOC_HOME/app/run.js" -a \
 On Windows, use
 
 {{{
-java -jar "%JSDOC_HOME%\jsrun.jar" "%JSDOC_HOME%\app\run.js" -a \
--t="%JSDOC_HOME%\templates\alfresco" -d="jsdoc-out" * --recurse=5 \
---exclude="-min.js" -D="baseTitle:MyApp Client-side API" \
--D="baseUrl:http://myapp.org/jsdoc" -D="version:myapp-x.x.x" \
--D="versionName:MyApp x.x.x"
+java -jar "%JSDOC_HOME%\jsrun.jar" "%JSDOC_HOME%\app\run.js" -a ^
+ -t="%JSDOC_HOME%\templates\alfresco" -d="jsdoc-out" * ^
+ --recurse=5 --exclude="-min.js" -D="baseTitle:MyApp Client-side API" ^
+ -D="baseUrl:http://myapp.org/jsdoc" -D="version:myapp-x.x.x" ^
+ -D="versionName:MyApp x.x.x"
 }}}
 
 If you do not wish to include all sub-directories within your client-side source directory, you can substitute `*` above for the names of specific directories or script names, separated by spaces, You can also exclude specific files by adding additional `--exclude` options.
