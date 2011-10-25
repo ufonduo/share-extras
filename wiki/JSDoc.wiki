@@ -94,14 +94,14 @@ java -jar "$JSDOC_HOME/jsrun.jar" "$JSDOC_HOME/app/run.js" -a \
 On Windows use
 
 {{{
-java -jar "%JSDOC_HOME%\jsrun.jar" "%JSDOC_HOME%\app\run.js" -a \
--t="%JSDOC_HOME%\templates\alfresco" -d="jsdoc-out" js modules components \
---recurse=5 --exclude="-min.js" --exclude="yui-common.js" \
---exclude="bubbling.v2.1.js" --exclude="lightbox.js" \
---exclude="log4javascript.v1.4.1.js" --exclude="flash" --exclude="tiny_mce" \
---exclude="components\form\date.js" -D="baseTitle:Share Client-side API" \
--D="baseUrl:http://sharextras.org/jsdoc" -D="version:community-4.0.a" \
--D="versionName:Community 4.0.a"
+java -jar "%JSDOC_HOME%\jsrun.jar" "%JSDOC_HOME%\app\run.js" -a ^
+ -t="%JSDOC_HOME%\templates\alfresco" -d="jsdoc-out" js modules components ^
+ --recurse=5 --exclude="-min.js" --exclude="yui-common.js" ^
+ --exclude="bubbling.v2.1.js" --exclude="lightbox.js" ^
+ --exclude="log4javascript.v1.4.1.js" --exclude="flash" --exclude="tiny_mce" ^
+ --exclude="components\form\date.js" -D="baseTitle:Share Client-side API" ^
+ -D="baseUrl:http://sharextras.org/jsdoc" -D="version:community-4.0.a" ^
+ -D="versionName:Community 4.0.a"
 }}}
 
 On Linux, the shell script `jsdoc-share.sh` can used directly, although it must be in the parent directory of your JsDoc Toolkit installation, and the installation directory must be named `jsdoc-toolkit-2.4.0`, with the program files directly in there (not in any sub-directories).
