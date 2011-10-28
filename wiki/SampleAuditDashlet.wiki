@@ -1,5 +1,5 @@
 #summary Describes the Sample Audit Dashlet add-on for Alfresco Share
-#labels Dashlet
+#labels Featured,Dashlet
 
 =Introduction=
 
