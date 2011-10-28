@@ -85,7 +85,7 @@ the dashlet into one of the columns from the list of dashlets.
     - to search for a colon (:), use the field prefix, eg; field:.+:.+ or values:[^:]+: etc... otherwise the colon will be interpreted
       as a field identifier
     
-    - noderefs in the values will be detected, and "enhanced" with a link to the docdetails page of that noderef
+    - noderefs in the audit values will be detected, and "enhanced" with a link to the docdetails page of that noderef
 
     - multi field search is currently not supported, e.g +id:95 -name:romain. Would have to support ( ) , and/or grouping ,etc ...
 
@@ -93,6 +93,11 @@ the dashlet into one of the columns from the list of dashlets.
 
 Changelog
 ---------
+0.31:
+    - build.properties more consistent with other projects
+    - distributed jar had a wrong french bundle filename
+    - added small precision in the README
+
 0.3:
     - some formatting, commenting, refactored to separate search box UI background coloring from the actual filtering
     - highlighting can now be expressed with CSS, rather than hardcoded html bold
