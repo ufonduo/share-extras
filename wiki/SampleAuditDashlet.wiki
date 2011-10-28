@@ -116,6 +116,10 @@ http://share-extras.googlecode.com/svn/trunk/Sandbox/Audit%20Dashlet/screenshots
 This search is done by filtering out undesired entries coming from the datasource prior to browser display.
 
 = Changelog = 
+  * 0.31:
+    * build.properties more consistent with other projects
+    * distributed jar had a wrong french bundle filename
+    * added small precision in the README
 
   * 0.3:
     * some formatting, commenting, refactored to separate search box UI background coloring from the actual filtering
