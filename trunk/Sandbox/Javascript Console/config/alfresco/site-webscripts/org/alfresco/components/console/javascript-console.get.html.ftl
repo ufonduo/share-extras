@@ -38,6 +38,7 @@
 		</div>
 	    <div>
 			<div class="header-bar">${msg("label.output")}</div>
+  	        <div id="${el}-datatable" style="display:none;"></div>
 		    <textarea id="${el}-jsoutput" cols="80" rows="18" class="jsbox"></textarea>
 	    </div>
 	</div>

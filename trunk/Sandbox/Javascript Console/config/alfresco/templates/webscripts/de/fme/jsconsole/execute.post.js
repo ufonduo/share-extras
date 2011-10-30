@@ -145,5 +145,5 @@ model.input = jscode;
 
 var result = eval("((function() {" + jscode + "}).call(this))");
 
-model.result = fmeToString(result,0); 
+model.result = jsonUtils.toJSONString(result); 
 model.output = printoutput;
