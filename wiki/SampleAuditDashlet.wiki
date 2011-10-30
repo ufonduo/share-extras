@@ -8,7 +8,7 @@ This project defines a custom dashlet to display events for a given audit applic
 The dashlet will need to have auditing application(s) already configured, and, to be useful, some events captured. 
 See [http://wiki.alfresco.com/wiki/Auditing_(from_V3.4) Auditing (from V3.4)] on how to define audit applications and some samples. 
 
-From 3.4.4, also see [http://wiki.alfresco.com/wiki/Content_Auditing Content Auditing and [http://wiki.alfresco.com/wiki/Audit_Filter Audit Filter].
+From 3.4.4, also see [http://wiki.alfresco.com/wiki/Content_Auditing Content_Auditing] and [http://wiki.alfresco.com/wiki/Audit_Filter  Audit_Filter].
 
 http://share-extras.googlecode.com/svn/trunk/Sandbox/Audit%20Dashlet/screenshots/en/audit-dashlet-default.png
 
@@ -79,9 +79,9 @@ The number of data rows (audit events) per page is configurable by the 'Entries 
 
 If you want you can also select an additional value filter to limit the results.
 This server-side filter correspond to the "value" parameter optionally passed to the audit query. 
-(See http://wiki.alfresco.com/wiki/Auditing_(from_V3.4)#Advanced_Query). This filtering is done server-side
 
 Additional server side filters are configurable :
+
 || *UI Name* || *Description* || *Audit API corresponding parameter* ||
  
 ||value filter || filter on the audit value (exact match,optional) || 'value' ||
@@ -89,6 +89,7 @@ Additional server side filters are configurable :
 || _various_ additional query params || other possible query parameters (optional) || from/to time, from/to id, user, ... ||
 
     (See [http://wiki.alfresco.com/wiki/Auditing_(from_V3.4)#Advanced_Query) Advanced_Query]). 
+
 This filtering is done server-side.
 The columns to display are also configurable (show/hide).
 
