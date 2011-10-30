@@ -1,8 +1,8 @@
 /**
-* Fme root namespace.
-* 
-* @namespace Fme
-*/
+ * Fme root namespace.
+ * 
+ * @namespace Fme
+ */
 // Ensure Fme root object exists
 if (typeof Fme == "undefined" || !Fme)
 {
@@ -73,7 +73,7 @@ if (typeof Fme == "undefined" || !Fme)
         	 parent.widgets.scriptInput = Dom.get(parent.id + "-jsinput");
         	 parent.widgets.scriptOutput = Dom.get(parent.id + "-jsoutput");
     		 
-             // Buttons 
+             // Buttons
         	 parent.widgets.selectDestinationButton = Alfresco.util.createYUIButton(parent, "selectDestination-button", parent.onSelectDestinationClick);
              parent.widgets.executeButton = Alfresco.util.createYUIButton(parent, "execute-button", parent.onExecuteClick);
          }
@@ -194,13 +194,30 @@ if (typeof Fme == "undefined" || !Fme)
          // Attach the CodeMirror highlighting
          this.widgets.codeMirror = CodeMirror.fromTextArea(this.widgets.scriptInput, {
         	 lineNumbers: true,
+        	 matchBrackets: true,
         	 onKeyEvent: function(i, e) {
         		 // Hook into ctrl-enter
 	             if (e.type=="keyup" && e.keyCode == 13 && (e.ctrlKey || e.metaKey) && !e.altKey) {
 		               e.stop();
 		               i.owner.onExecuteClick(i.owner, e);
-		             }
-	         	}
+		         }
+                // Hook into ctrl-space
+                if (e.keyCode == 32 && (e.ctrlKey || e.metaKey) && !e.altKey) {
+                   e.stop();
+                   i.owner.onAutoComplete(i.owner, e);
+                }
+                // Hook into ctrl-z for Undo
+                if (e.keyCode == 122 && (e.ctrlKey || e.metaKey) && !e.altKey) {
+                   e.stop();
+                   i.owner.widgets.codeMirror.undo(i.owner, e);
+                }
+                // Hook into ctrl-y for Redo
+                if (e.keyCode == 123 && (e.ctrlKey || e.metaKey) && !e.altKey) {
+                   e.stop();
+                   i.owner.widgets.codeMirror.redo(i.owner, e);
+                }
+                
+        	 }
          });
          
          // Store this for use in event
@@ -236,14 +253,236 @@ if (typeof Fme == "undefined" || !Fme)
             	},
             	scope: this
             }
-         });       
+         });
 
+         // Read Javascript API Commands for code completion
+         Alfresco.util.Ajax.request(
+         {
+            url: Alfresco.constants.PROXY_URI + "de/fme/jsconsole/apicommands.json",
+            method: Alfresco.util.Ajax.GET,
+            requestContentType: Alfresco.util.Ajax.JSON,
+            successCallback: {
+            	fn: function(res) {
+            		this.javascriptCommands = res.json;
+            	},
+            	scope: this
+            }
+         });            
+
+         // Read the Alfresco Data Dictionary for code completion (types and aspects)
+         Alfresco.util.Ajax.request(
+         {
+            url: Alfresco.constants.PROXY_URI + "api/dictionary",
+            method: Alfresco.util.Ajax.GET,
+            requestContentType: Alfresco.util.Ajax.JSON,
+            successCallback: {
+            	fn: function(res) {
+            		this.dictionary = res.json;
+            	},
+            	scope: this
+            }
+         });            
+         
+         
       },
 
       /**
+		 * Returns the possible auto completions for a given context and a token.
+		 * 
+		 * @method getAutoCompletions
+		 */      
+      getAutoCompletions: function ACJC_getAutoCompletions(token, context)
+      {
+    	  var keywords = ("break case catch continue debugger default delete do else false finally for function " +
+          "if in instanceof new null return switch throw true try typeof var void while with").split(" ");
+    	  
+    	  var found = [], start = token.string;
+    	  
+    	  var maybeAdd = function(str, info) {
+    	      if (str.indexOf(start) == 0) {
+    	    	var obj = { value : str };
+    	    	if (info) obj.info = info;
+    	    	found.push(obj);
+    	      }
+    	  }
+    	  
+    	  var forEach = function(arr, f) {
+    	    for (var i = 0, e = arr.length; i < e; ++i) f(arr[i]);
+    	  }
+
+    	  if (context) {
+    		  var variableName = context[0].string;
+    		  var commands = this.javascriptCommands["methods"][variableName];
+    		  if (commands) {
+          	      forEach(commands, maybeAdd);
+    		  }
+    		  else if (variableName.substr(-4).toLowerCase() === "node") {
+    			  forEach(this.javascriptCommands["node"], maybeAdd);
+    		  } 
+    	    }
+    	    else {
+    	      if (token.className == "stringliteral") {
+    	    	 for(var t in this.dictionary) {
+    	    		 var typeInfo = "Type";
+    	    		 if (this.dictionary[t].isAspect) {
+    	    			 typeInfo = "Aspect";
+    	    		 }
+    	    		 maybeAdd(this.dictionary[t].name, typeInfo);
+
+    	    		 for(var p in this.dictionary[t].properties) {
+        	    		 maybeAdd(this.dictionary[t].properties[p].name, "Property");
+    	    		 }
+    	    		 
+    	    	 }	
+    	      }
+    	      else {
+        	      forEach(this.javascriptCommands.global, maybeAdd);
+          	      forEach(keywords, maybeAdd);
+    	      }
+    	    }
+    	    return found;    	  
+      },
+      
+      /**
+		 * Fired when the user clicks Ctrl+Space to trigger auto complete in the text editor.
+		 * 
+		 * @method onAutoComplete
+		 */      
+      onAutoComplete: function ACJC_onAutoComplete(e, p_obj)
+      {
+  	    	var editor = this.widgets.codeMirror;
+
+  	    	var removeQuotes = function(text) {
+  	    		while (text[0]=='"') text = text.substr(1);
+  	    		while (text[text.length-1]=='"') text = text.substr(0,text.length-1);
+  	    		return text;
+  	    	}
+  	    	
+  	    	// We want a single cursor position.
+    	    if (editor.somethingSelected()) return;
+    	    
+    	    // Find the token at the cursor
+    	    var cur = editor.getCursor(false), token = editor.getTokenAt(cur), tprop = token;
+    	    
+    	    // If it's not a 'word-style' token, ignore the token.
+    	    if (!/^[\w$_]*$/.test(token.string)) {
+    	    	if (token.string[0] == '"') {
+        	    	
+  	    	      token = tprop = {
+  	    	    		  start: cur.ch - removeQuotes(token.string).length, 
+  	    	    		  end: cur.ch, 
+  	    	    		  string: removeQuotes(token.string), 
+  	    	    		  state: token.state,
+  	                      className: "stringliteral"
+  	              };
+    	    	}
+    	    	else {
+    	    	      token = tprop = {start: cur.ch, end: cur.ch, string: "", state: token.state,
+   	                       className: token.string == "." ? "property" : null};
+    	    	}
+    	    }
+    	    
+    	    // If it is a property, find out what it is a property of.
+    	    while (tprop.className == "property") {
+    	      tprop = editor.getTokenAt({line: cur.line, ch: tprop.start});
+    	      if (tprop.string != ".") return;
+    	      tprop = editor.getTokenAt({line: cur.line, ch: tprop.start});
+    	      if (!context) var context = [];
+    	      context.push(tprop);
+    	    }
+    	    
+    	    var completions = this.getAutoCompletions(token, context);
+    	    if (!completions.length) return;
+    	    
+    	    function insert(str) {
+    	      editor.replaceRange(str, {line: cur.line, ch: token.start}, {line: cur.line, ch: token.end});
+    	    }
+    	    
+    	    // When there is only one completion, use it directly.
+    	    if (completions.length == 1) {
+    	    	insert(completions[0].value); 
+    	    	return true;
+    	    }
+
+    	    // Build the select widget
+    	    var complete = document.createElement("div");
+    	    complete.className = "javascript-console-completions";
+    	    var sel = complete.appendChild(document.createElement("select"));
+    	    // Opera doesn't move the selection when pressing up/down in a
+    	    // multi-select, but it does properly support the size property on
+    	    // single-selects, so no multi-select is necessary.
+    	    if (!window.opera) sel.multiple = true;
+    	    for (var i = 0; i < completions.length; ++i) {
+    	      var opt = sel.appendChild(document.createElement("option"));
+    	      opt.value = completions[i].value;
+    	      
+    	      var optText = completions[i].value;
+    	      if (completions[i].info) {
+    	    	  optText += " (" + completions[i].info + ")";
+    	      }
+    	      opt.appendChild(document.createTextNode(optText));
+    	    }
+    	    sel.firstChild.selected = true;
+    	    sel.size = Math.min(10, completions.length);
+    	    var pos = editor.cursorCoords();
+    	    complete.style.left = pos.x + "px";
+    	    complete.style.top = pos.yBot + "px";
+    	    document.body.appendChild(complete);
+    	    // Hack to hide the scrollbar.
+    	    if (completions.length <= 10)
+    	      complete.style.width = (sel.clientWidth - 1) + "px";
+
+    	    var done = false;
+    	    
+    	    var fnClose = function() {
+    	      if (done) return;
+    	      done = true;
+    	      complete.parentNode.removeChild(complete);
+    	    }
+    	    
+    	    var fnPick = function() {
+    	      insert(sel.options[sel.selectedIndex].value);
+    	      fnClose();
+    	      setTimeout(function(){editor.focus();}, 50);
+    	    }
+    	    
+    	    Event.addListener(sel, "blur", fnClose, this, true);
+    	    Event.addListener(sel, "keydown", function(event) {
+    	      var code = event.keyCode;
+    	      // Enter and space
+    	      if (code == 13 || code == 32) {
+    	    	  Event.stopEvent(event); 
+    	    	  fnPick();
+    	      }
+    	      // Escape
+    	      else if (code == 27 || code == 8) {
+    	    	  Event.stopEvent(event); 
+    	    	  fnClose(); 
+    	    	  editor.focus();
+    	      }
+    	      //else if (code != 38 && code != 40) {
+    	    	//  fnClose();
+    	    	 // editor.focus(); 
+    	    	  // FM: WHY?? setTimeout(this.onAutoComplete, 50);
+    	      //}
+    	    }, this, true);
+    	    Event.addListener(sel, "dblclick", fnPick, this, true);
+
+    	    sel.focus();
+    	    // Opera sometimes ignores focusing a freshly created node
+    	    if (window.opera) {
+    	    	setTimeout(function(){
+	    			if (!done) sel.focus();
+	    		}, 100);
+    	    }
+    	    return true;    	  
+    	  
+      },
+      
+      /**
 		 * Fired when the user clicks on the execute button. Reads the script
-		 * from the input textarea and calls the execute webscript in the repository
-		 * to run the script.
+		 * from the input textarea and calls the execute webscript in the
+		 * repository to run the script.
 		 * 
 		 * @method onExecuteClick
 		 */      
@@ -315,8 +554,8 @@ if (typeof Fme == "undefined" || !Fme)
 	  },
 	  
       /**
-		 * Fired when the user selects a script from the load scripts drop down menu.
-		 * Calls a repository webscript to retrieve the script contents.
+		 * Fired when the user selects a script from the load scripts drop down
+		 * menu. Calls a repository webscript to retrieve the script contents.
 		 * 
 		 * @method onLoadScriptClick
 		 */ 	  
@@ -367,8 +606,8 @@ if (typeof Fme == "undefined" || !Fme)
        },
        
        /**
-		 * Fired when the user selects a script from the save scripts drop down menu.
-		 * Calls a repository webscript to store the script contents.
+		 * Fired when the user selects a script from the save scripts drop down
+		 * menu. Calls a repository webscript to store the script contents.
 		 * 
 		 * @method onLoadScriptClick
 		 */ 	  
@@ -436,8 +675,8 @@ if (typeof Fme == "undefined" || !Fme)
             var allowedViewModes =
             [
                Alfresco.module.DoclibGlobalFolder.VIEW_MODE_REPOSITORY
-               //Alfresco.module.DoclibGlobalFolder.VIEW_MODE_SITE,
-               //Alfresco.module.DoclibGlobalFolder.VIEW_MODE_USERHOME
+               // Alfresco.module.DoclibGlobalFolder.VIEW_MODE_SITE,
+               // Alfresco.module.DoclibGlobalFolder.VIEW_MODE_USERHOME
             ];
 
             this.widgets.destinationDialog.setOptions(
