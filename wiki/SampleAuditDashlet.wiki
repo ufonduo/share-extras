@@ -88,10 +88,13 @@ Additional server side filters are configurable :
 || limit || maximum number of audit entries retrieved (optional) || 'limit' ||
 || _various_ additional query params || other possible query parameters (optional) || from/to time, from/to id, user, ... ||
 
-    (See [http://wiki.alfresco.com/wiki/Auditing_(from_V3.4)#Advanced_Query)Advanced Query]. This filtering is done server-side.
-
+    (See [http://wiki.alfresco.com/wiki/Auditing_(from_V3.4)#Advanced_Query) Advanced_Query]). 
+This filtering is done server-side.
 The columns to display are also configurable (show/hide).
 
+Below is a screenshot of the current configuration dialog : 
+
+http://share-extras.googlecode.com/svn/trunk/Sandbox/Audit%20Dashlet/screenshots/en/audit-dashlet-configuration-dialog.png
 
 
 == Search box == 
