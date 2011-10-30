@@ -479,6 +479,49 @@ if (typeof Fme == "undefined" || !Fme)
     	  
       },
       
+      
+      /**
+		 * Fired when the user clicks on the execute button. Reads the script
+		 * from the input textarea and calls the execute webscript in the
+		 * repository to run the script.
+		 * 
+		 * @method onExecuteClick
+		 */      
+      showResultTable: function ACJC_showResultTable(resultData)
+      {
+    	  var allFields = {};
+    	  
+    	  for (var row in resultData) {
+    		  for (var fieldname in resultData[row]) {
+    			  allFields[fieldname] = 1;
+    		  }
+    	  }
+
+    	  var myColumnDefs = [];
+    	  var responseSchemaFields = [];
+    	  
+    	  for (var fieldname in allFields) {
+			  responseSchemaFields.push(fieldname);
+			  myColumnDefs.push({key:fieldname, sortable:true, resizeable:true});
+		  }
+    	  
+    	  if (myColumnDefs.length > 0) {
+	    	  
+		      var myDataSource = new YAHOO.util.DataSource(resultData); 
+		      myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSARRAY; 
+		      myDataSource.responseSchema = { 
+		          fields: responseSchemaFields
+		      }; 
+		 
+    		  Dom.setStyle(this.id + "-datatable", "display", "block");
+		      var myDataTable = new YAHOO.widget.DataTable(this.id + "-datatable", 
+		              myColumnDefs, myDataSource, {draggableColumns:true});
+    	  }
+    	  else {
+    		  Dom.setStyle(this.id + "-datatable", "display", "none");
+    	  }
+      },
+      
       /**
 		 * Fired when the user clicks on the execute button. Reads the script
 		 * from the input textarea and calls the execute webscript in the
@@ -509,6 +552,7 @@ if (typeof Fme == "undefined" || !Fme)
 
    	  	// Disable the result textarea
    	  	this.widgets.scriptOutput.disabled = true;
+   	    this.widgets.executeButton.disabled = true;
 
    	  	Alfresco.util.Ajax.request(
          {
@@ -522,6 +566,8 @@ if (typeof Fme == "undefined" || !Fme)
             	 this.clearOutput();
             	 this.appendLineArrayToOutput(res.json.output);
                  this.widgets.scriptOutput.disabled = false;
+           	     this.widgets.executeButton.disabled = false;
+                 this.showResultTable(res.json.result);
                	 YAHOO.util.Dom.removeClass(this.widgets.scriptOutput, 'jserror'); 
                },
                scope: this
@@ -537,6 +583,7 @@ if (typeof Fme == "undefined" || !Fme)
                  this.appendStringToOutput(result.message+"\n");
 
                  this.widgets.scriptOutput.disabled = false;
+           	     this.widgets.executeButton.disabled = false;
                	 Dom.addClass(this.widgets.scriptOutput, 'jserror'); 
                },
                scope: this
