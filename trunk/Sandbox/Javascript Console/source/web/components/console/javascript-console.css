@@ -59,6 +59,7 @@
 }
 
 .javascript-console-completions {
+	font-size:10pt;
 	position: absolute;
 	z-index: 10;
 	overflow: hidden;
@@ -69,6 +70,7 @@
 
 .javascript-console-completions select {
 	background: #fafafa;
+	font-size:10pt;
 	outline: none;
 	border: none;
 	padding: 0;

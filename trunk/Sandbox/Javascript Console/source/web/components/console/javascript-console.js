@@ -272,7 +272,7 @@ if (typeof Fme == "undefined" || !Fme)
          // Read the Alfresco Data Dictionary for code completion (types and aspects)
          Alfresco.util.Ajax.request(
          {
-            url: Alfresco.constants.PROXY_URI + "api/dictionary",
+            url: Alfresco.constants.PROXY_URI + "api/classes",
             method: Alfresco.util.Ajax.GET,
             requestContentType: Alfresco.util.Ajax.JSON,
             successCallback: {
@@ -309,7 +309,7 @@ if (typeof Fme == "undefined" || !Fme)
     	  var forEach = function(arr, f) {
     	    for (var i = 0, e = arr.length; i < e; ++i) f(arr[i]);
     	  }
-
+    	  
     	  if (context) {
     		  var variableName = context[0].string;
     		  var commands = this.javascriptCommands["methods"][variableName];
@@ -332,7 +332,6 @@ if (typeof Fme == "undefined" || !Fme)
     	    		 for(var p in this.dictionary[t].properties) {
         	    		 maybeAdd(this.dictionary[t].properties[p].name, "Property");
     	    		 }
-    	    		 
     	    	 }	
     	      }
     	      else {
