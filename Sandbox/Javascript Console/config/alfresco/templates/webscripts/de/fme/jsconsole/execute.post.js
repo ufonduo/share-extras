@@ -28,6 +28,18 @@ logger = {
 }
 
 
+/**
+ * Sets the log level of a class or package using log4j
+ * @param classname a Java class or package name
+ * @param level log level TRACE,DEBUG,INFO,ERROR as String
+ */
+function setLogLevel(classname, level) {
+  var log4j = Packages.org.apache.log4j.Logger.getLogger(classname);
+  var logLevel = Packages.org.apache.log4j.Level.toLevel(level);
+  log4j.setLevel(logLevel);
+}
+
+
 /*
  * Generic function to easily process nodes recursively in javascripts.
  */
@@ -130,7 +142,7 @@ function print(object) {
 }
 
 /**
- * Main / Script exeution 
+ * Main / Script execution 
  */
 var jsonData = jsonUtils.toObject(requestbody.content); 
 var jscode = jsonData.input;
@@ -145,5 +157,6 @@ model.input = jscode;
 
 var result = eval("((function() {" + jscode + "}).call(this))");
 
+if (!result) result = [];
 model.result = jsonUtils.toJSONString(result); 
 model.output = printoutput;
