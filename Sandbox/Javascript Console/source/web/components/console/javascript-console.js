@@ -322,17 +322,26 @@ if (typeof Fme == "undefined" || !Fme)
     	    }
     	    else {
     	      if (token.className == "stringliteral") {
+    	    	 var suggestions = {};
     	    	 for(var t in this.dictionary) {
-    	    		 var typeInfo = "Type";
-    	    		 if (this.dictionary[t].isAspect) {
-    	    			 typeInfo = "Aspect";
-    	    		 }
-    	    		 maybeAdd(this.dictionary[t].name, typeInfo);
+    	    		 
+    	    		 var info = { 
+    	    				 type: (this.dictionary[t].isAspect ? "Aspect" : "Type"), 
+    	    				 name : this.dictionary[t].name
+    	    		 };
+    	    		 suggestions[info.type + info.name] = info;
 
     	    		 for(var p in this.dictionary[t].properties) {
-        	    		 maybeAdd(this.dictionary[t].properties[p].name, "Property");
+    	    			 info = { 
+    	    				 type : "Property", 
+    	    				 name : this.dictionary[t].properties[p].name 
+    	    			 };
+        	    		 suggestions[info.type + info.name] = info;
     	    		 }
-    	    	 }	
+    	    	 };
+    	    	 for (var sg in suggestions) {
+    	    		 maybeAdd(suggestions[sg].name, suggestions[sg].type);
+    	    	 }
     	      }
     	      else {
         	      forEach(this.javascriptCommands.global, maybeAdd);
