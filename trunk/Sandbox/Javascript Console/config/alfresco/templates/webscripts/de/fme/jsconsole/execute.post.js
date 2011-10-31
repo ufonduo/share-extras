@@ -23,22 +23,20 @@ logger = {
   isWarnLoggingEnabled : function() {
     return _$orglogger.isWarnLoggingEnabled();
   },
+
+  system : _$orglogger.system,
   
-  system : _$orglogger.system
+  /**
+   * Sets the log level of a class or package using log4j
+   * @param classname a Java class or package name
+   * @param level log level TRACE,DEBUG,INFO,ERROR as String
+   */
+  setLevel : function(classname, level) {
+	  var log4j = Packages.org.apache.log4j.Logger.getLogger(classname);
+	  var logLevel = Packages.org.apache.log4j.Level.toLevel(level);
+	  log4j.setLevel(logLevel);	  
+  }
 }
-
-
-/**
- * Sets the log level of a class or package using log4j
- * @param classname a Java class or package name
- * @param level log level TRACE,DEBUG,INFO,ERROR as String
- */
-function setLogLevel(classname, level) {
-  var log4j = Packages.org.apache.log4j.Logger.getLogger(classname);
-  var logLevel = Packages.org.apache.log4j.Level.toLevel(level);
-  log4j.setLevel(logLevel);
-}
-
 
 /*
  * Generic function to easily process nodes recursively in javascripts.
@@ -160,3 +158,4 @@ var result = eval("((function() {" + jscode + "}).call(this))");
 if (!result) result = [];
 model.result = jsonUtils.toJSONString(result); 
 model.output = printoutput;
+

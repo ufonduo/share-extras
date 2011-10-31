@@ -4,7 +4,8 @@
 	  var hiddenMethods = 
 		    " setServiceRegistry getServiceRegistry serviceRegistry exec setPreferenceService setAuthenticationService" + 
 		    " setTenantService setAuthorityService setPersonService setNodeDAO equals hashCode class"+
-		    " getClass getExtensionName setExtensionName extensionName notify update wait setScope getScope scope ";
+		    " getClass getExtensionName setExtensionName extensionName notify update wait setScope getScope scope "+
+		    " setProcessor ";
 
 	var isValidMethodName = function(name) {
 	  return name != undefined && (name) && hiddenMethods.indexOf(name) == -1;
@@ -44,13 +45,19 @@
 	}
 	
 	
-	result["global"].push("print");
+	// add global scriptNodes document and space modelled by the companyhome
 	result["global"].push("document"); 
 	result["global"].push("space"); 
-	
-	result["node"] = result["methods"]["companyhome"];
 	result["methods"]["document"] = result["methods"]["companyhome"];
 	result["methods"]["space"] = result["methods"]["companyhome"];
+	
+	// copy commands for all scriptnodes to a specific "node" property
+	result["node"] = result["methods"]["companyhome"];
+
+	// Javascript Console specific commands
+	result["global"].push("print");
+	result["global"].push("recurse");
+	result["methods"]["logger"].push("setLevel");
 	
 	model.json = jsonUtils.toJSONString(result);
 
