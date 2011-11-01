@@ -1,4 +1,4 @@
-#summary Describes the Javascript Console add-on for Alfresco Share
+#summary Javascript Console add-on for Alfresco Share: Overview and Installation
 
 =Introduction=
 
@@ -51,5 +51,7 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
   # In the left-hand-side navigation, click *Javascript Console*
   # Enter Alfresco repository javascript code in the textarea at the top. Press the execute button to run the script.
   # You can use the special print(..) javascript command to output messages to the output window.
+  # use Ctrl+Space for code completion. Note that only global objects and specific variables (document, space, *Node) are completed.
+
 
 =Known Issues=
