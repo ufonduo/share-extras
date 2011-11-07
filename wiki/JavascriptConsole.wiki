@@ -53,5 +53,10 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
   # You can use the special print(..) javascript command to output messages to the output window.
   # use Ctrl+Space for code completion. Note that only global objects and specific variables (document, space, variables ending in ...node) are completed.
 
+For more info on using the Javascript Console have a look at Florian's blog series which explains certain usecases:
+
+  # [http://www.techbits.de/2011/10/18/using-the-javascript-console-creating-and-populating-datalists/ Using the Javascript Console: Creating and populating datalists]
+  # [http://www.techbits.de/2011/11/06/using-the-javascript-console-permission-reporting/ Using the Javascript Console: Permission reporting]
+
 
 =Known Issues=
