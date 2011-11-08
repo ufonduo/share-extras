@@ -27,7 +27,7 @@ Change into the new directory
 cd "Share OAuth"
 }}}
 
-An Ant build script is provided to build a JAR file containing the custom files, which can then be installed into the `tomcat/shared/lib` folder of your Alfresco installation.
+An Ant build script is provided to build a JAR file containing the custom files, which can then be installed into your Alfresco installation.
 
 To build the JAR file, run the following command from the base project directory.
 
@@ -35,4 +35,4 @@ To build the JAR file, run the following command from the base project directory
 ant clean dist-jar
 }}}
 
-The command should build a JAR file named `share-oauth.jar` in the `dist` directory within your project, which you can then copy into the `WEB-INF/lib` folder of the `alfresco` and `share` webapps.
+The command should build a JAR file named `share-oauth.jar` in the `dist` directory within your project, which you install by copying it into the `WEB-INF/lib` folder of the `alfresco` and `share` webapps.
