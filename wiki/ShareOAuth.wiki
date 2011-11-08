@@ -36,12 +36,3 @@ ant clean dist-jar
 }}}
 
 The command should build a JAR file named `share-oauth.jar` in the `dist` directory within your project, which you can then copy into the `tomcat/shared/lib` folder of your Alfresco installation.
-
-Alternatively, you can use the build script to _hot deploy_ the JAR file directly into a local Tomcat instance for testing. You will need to use the `hotcopy-tomcat-jar task` and set the `tomcat.home`
-property in Ant.
-
-{{{
-ant -Dtomcat.home=C:/Alfresco/tomcat clean dist-jar hotcopy-tomcat-jar
-}}}
-
-After you have deployed the JAR file you will need to restart Tomcat to ensure it picks up the changes.
