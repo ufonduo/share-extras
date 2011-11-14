@@ -12,7 +12,8 @@ From 3.4.4, also see [http://wiki.alfresco.com/wiki/Content_Auditing Content_Aud
 
 http://share-extras.googlecode.com/svn/trunk/Sandbox/Audit%20Dashlet/screenshots/en/audit-dashlet-default.png
 
-Note : the output in the "audited values" field will depend on the configuration of the current audit application (ie what data extractors have been configured, if using the access auditor or not, etc ...).
+Note : the output in the "audited values" field will depend on the configuration of the current audit application (ie what data extractors have been configured, if using the access auditor or not, etc ...). The default applications output will generally be more verbose. 
+Here, the screenshots are made using simple data extractors, for clarity of the captured output.
 
 =Installation=
 
