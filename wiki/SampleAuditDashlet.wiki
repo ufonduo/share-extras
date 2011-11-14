@@ -12,6 +12,8 @@ From 3.4.4, also see [http://wiki.alfresco.com/wiki/Content_Auditing Content_Aud
 
 http://share-extras.googlecode.com/svn/trunk/Sandbox/Audit%20Dashlet/screenshots/en/audit-dashlet-default.png
 
+Note : the output in the "audited values" field will depend on the configuration of the current audit application (ie what data extractors have been configured, if using the access auditor or not, etc ...).
+
 =Installation=
 
 The dashlet is packaged as a single JAR file for easy installation into Alfresco Share.
