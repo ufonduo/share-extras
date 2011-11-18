@@ -2,7 +2,7 @@
 
 =Introduction=
 
-This add-on provides a custom Spring Surf connector and client-side helper class, allowing easy OAuth-based access to external resources. It is a prerequisite for the Twitter and Yammer dashlets provided by Share Extras.
+This add-on provides a custom Spring Surf connector and client-side helper class, allowing easy OAuth-based access to external resources. It is a prerequisite for the Twitter, Yammer and LinkedIn dashlets provided by Share Extras.
 
 =Installation=
 
