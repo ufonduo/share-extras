@@ -49,3 +49,15 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
 
   # Log in to Alfresco Share and navigate to the Data Lists page of a site in which you have Site Contributor permission or greater.
   # Click the *New List* button on the left hand side. Select the Book List definition in the list and click *Submit* to create a new list.
+
+= Known Issues =
+
+If deployed into a Tomcat instance with the Web Quick Start web application (`wcmqs.war`) running, the data list works fine, but an error is displayed at Tomcat startup.
+
+{{{
+ERROR: org.springframework.web.servlet.DispatcherServlet - Context initialization failed
+org.springframework.extensions.config.ConfigException: 10040000 Unable to locate evaluator implementation for 'model-type' for org.springframework.extensions.config.ConfigSectionImpl@1898bff (evaluator=model-type condition=dlexample:book replace=false)
+        at org.springframework.extensions.config.BaseConfigService.processSection(BaseConfigService.java:457)
+}}}
+
+In this case you should find that moving the JAR file from `shared/lib` into your `webapps/share/WEB-INF/lib` folder fixes the issue.
