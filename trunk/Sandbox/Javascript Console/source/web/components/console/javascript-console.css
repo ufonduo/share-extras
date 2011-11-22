@@ -53,6 +53,12 @@
    font-size: 116%;
 }
 
+.javascript-console .exportButton {
+	margin-top:0.5em;
+	margin-bottom:0.5em;
+}
+    
+
 .javascript-console .CodeMirror 
 {
 	font-size:10pt;
@@ -78,5 +84,4 @@
 	font-family: monospace;
 }      
 
-    
 

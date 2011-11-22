@@ -90,53 +90,110 @@ function recurse(scriptNode, processorOrOptions) {
 	return result;
 }
 
-/*
- * Converts diffenrent types of Java and Javascript objects
- * to Strings.
- */
-function fmeToString(object, level) {
 
-	if (object == undefined) {
-		return "undefined";
+
+JSCONSOLE = {
+  convertScriptNode : function(node) {
+    return { 
+      name : node.name, 
+      nodeRef : node.nodeRef, 
+      typeShort : node.typeShort,
+      displayPath : node.displayPath
+    };
+  },
+  
+  isScalarType : function(value) {
+	  return typeof value == "string" || typeof value == "boolean" || typeof value == "number";  
+  },
+  
+  /**
+   * Converts all ScriptNode objects within an result array.
+   * The Parameter x can be any object but only arrays containing ScriptNode
+   * objects will be converted. The function changes the given array!
+   */
+  convertReturnValues : function(x) {
+    
+	// a simple javascript object (no array) or a scalar value: wrap it in an array
+	if ((typeof x == "object" && x.length == null) || JSCONSOLE.isScalarType(x)) {
+		x = [x];		
 	}
-	
-	if ((typeof object["getClass"]) == "function") {  // this is a Java Object
-		if ((""+object.getClass().getName()) == "org.alfresco.repo.jscript.ScriptNode") {
-			return object.name + " ("+ object.typeShort + ", " + object.nodeRef.toString()+")";
-		}
-		else return object; // use Object.toString()
-	}
-	
-	
-	if (level > 10) {
-		return "overflow";
-	}
-	switch (typeof object) {
-		case "string" : 
-			return object;
-		case "boolean" : 
-			return ""+object;
-		case "number" :
-			return ""+object;
-		case "undefined" :
-			return "undefined";
-		case "function" :
-			return "function()";
-		case "object" :
-			var lines = "";
-			for (prop in object) {
-				lines = lines + (lines.length>0 ? "\n" : "") + prop + " : " + fmeToString(object[prop], level+1);
-			}
-			return lines;
-		default: return "type conversion undefined";
-	}
-}
+	  
+    // if x is an array start converting it's values
+    if (typeof x == "object" && x.length != null) {
+      
+      // iterate through all elements
+      for (var i = 0; i < x.length; i++) {
+    	  
+    	// got a Java Class to Convert
+        if (x[i].getClass !== undefined) {
+          var javaClass = x[i].getClass().getName();
+        
+          // convert values based on the Java type
+          if (javaClass == "org.alfresco.repo.jscript.ScriptNode") {
+            x[i] = JSCONSOLE.convertScriptNode(x[i]);
+          }
+        }
+        else if (JSCONSOLE.isScalarType(x[i])) {
+        	// wrap a scalar value in a single value object
+        	x[i] = { "value" : x[i] };
+        }
+      }
+    }
+    
+    // finally return the array again
+    return x;
+  },
+  
+  /*
+   * Converts different types of Java and Javascript objects
+   * to Strings.
+   */
+  fmeToString : function(object, level) {
+
+  	if (object == undefined) {
+  		return "undefined";
+  	}
+  	
+  	if ((typeof object["getClass"]) == "function") {  // this is a Java Object
+  		if ((""+object.getClass().getName()) == "org.alfresco.repo.jscript.ScriptNode") {
+  			return object.name + " ("+ object.typeShort + ", " + object.nodeRef.toString()+")";
+  		}
+  		else return object; // use Object.toString()
+  	}
+  	
+  	
+  	if (level > 10) {
+  		return "overflow";
+  	}
+  	switch (typeof object) {
+  		case "string" : 
+  			return object;
+  		case "boolean" : 
+  			return ""+object;
+  		case "number" :
+  			return ""+object;
+  		case "undefined" :
+  			return "undefined";
+  		case "function" :
+  			return "function()";
+  		case "object" :
+  			var lines = "";
+  			for (prop in object) {
+  				lines = lines + (lines.length>0 ? "\n" : "") + prop + " : " + JSCONSOLE.fmeToString(object[prop], level+1);
+  			}
+  			return lines;
+  		default: return "type conversion undefined";
+  	}
+  }
+  
+};
+
 
 /* Defines the print function is used by the script to print
  * data to the output stream.
  */
 function print(object) {
-	printoutput.push(fmeToString(object, 0));
+	printoutput.push(JSCONSOLE.fmeToString(object, 0));
 }
 
 /**
@@ -149,13 +206,18 @@ if (jsonData.space) {
   var space = search.findNode(jsonData.space);
 }
 
+// array of strings that are the lines of output filled by the print function
 var printoutput = []
 
+// return the script that was executed back to the caller
 model.input = jscode;
 
+// execute the script and capture the return value
 var result = eval("((function() {" + jscode + "}).call(this))");
 
+// return an empty array if no result is defined
 if (!result) result = [];
-model.result = jsonUtils.toJSONString(result); 
+
+model.result = jsonUtils.toJSONString(JSCONSOLE.convertReturnValues(result)); 
 model.output = printoutput;
 
