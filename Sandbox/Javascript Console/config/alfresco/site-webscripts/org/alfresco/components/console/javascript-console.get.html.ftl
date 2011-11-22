@@ -39,6 +39,9 @@
 	    <div>
 			<div class="header-bar">${msg("label.output")}</div>
   	        <div id="${el}-datatable" style="display:none;"></div>
+  	        <div class="exportButton">
+  	        	<button id="${el}-exportResults-button" tabindex="0">${msg("button.export.results")}</button>
+  	        </div>
 		    <textarea id="${el}-jsoutput" cols="80" rows="18" class="jsbox"></textarea>
 	    </div>
 	</div>

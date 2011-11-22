@@ -176,6 +176,11 @@ if (typeof Fme == "undefined" || !Fme)
           oDocsMenuButton.getMenu().setItemGroupTitle("Javascript", 0);
           oDocsMenuButton.getMenu().setItemGroupTitle("Lucene", 1);
           oDocsMenuButton.getMenu().setItemGroupTitle("Webscripts", 2);		  
+          
+          this.widgets.exportResultsButton = Alfresco.util.createYUIButton(this, 
+        		  "exportResults-button", this.exportResultTableAsCSV);
+		  Dom.setStyle(this.widgets.exportResultsButton, "display", "none");
+          
 	  },
 	   
       /**
@@ -512,7 +517,7 @@ if (typeof Fme == "undefined" || !Fme)
 			  responseSchemaFields.push(fieldname);
 			  myColumnDefs.push({key:fieldname, sortable:true, resizeable:true});
 		  }
-    	  
+
     	  if (myColumnDefs.length > 0) {
 	    	  
 		      var myDataSource = new YAHOO.util.DataSource(resultData); 
@@ -522,13 +527,50 @@ if (typeof Fme == "undefined" || !Fme)
 		      }; 
 		 
     		  Dom.setStyle(this.id + "-datatable", "display", "block");
-		      var myDataTable = new YAHOO.widget.DataTable(this.id + "-datatable", 
+    		  this.widgets.resultTable = new YAHOO.widget.DataTable(this.id + "-datatable", 
 		              myColumnDefs, myDataSource, {draggableColumns:true});
-    	  }
+    		  Dom.setStyle(this.widgets.exportResultsButton, "display", "inline-block");
+   	  }
     	  else {
     		  Dom.setStyle(this.id + "-datatable", "display", "none");
+    		  this.widgets.resultTable = null;
+    		  Dom.setStyle(this.widgets.exportResultsButton, "display", "none");
     	  }
       },
+      
+      /**
+       * Exports the datatable as CSV in a separate browser window
+       * taken from http://stackoverflow.com/questions/2472424/exporting-data-from-a-yui-datatable
+       */
+      exportResultTableAsCSV : function() {
+    	    var myDataTable = this.widgets.resultTable;
+    	  
+    	    if (myDataTable) {
+	    	    var i, j, oData, newWin = window.open(),
+	    	        aRecs = myDataTable.getRecordSet().getRecords(),
+	    	        aCols = myDataTable.getColumnSet().keys;
+	
+	    	    newWin.document.write("<pre>");
+
+    	        for (j=0; j<aCols.length; j++) {
+    	            newWin.document.write( aCols[j].key + "\t");
+    	        }
+    	        newWin.document.write("\n");
+	    	    
+	    	    for (i=0; i<aRecs.length; i++) {
+	    	        oData = aRecs[i].getData();
+	
+	    	        for (j=0; j<aCols.length; j++) {
+	    	            newWin.document.write( oData[aCols[j].key] + "\t");
+	    	        }
+	    	        newWin.document.write("\n");
+	
+	    	    }
+	
+	    	    newWin.document.write("</pre>\n");
+	    	    newWin.document.close();
+    	    }
+       },      
       
       /**
 		 * Fired when the user clicks on the execute button. Reads the script
