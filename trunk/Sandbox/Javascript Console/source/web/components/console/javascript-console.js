@@ -375,7 +375,7 @@ if (typeof Fme == "undefined" || !Fme)
     	    // If it's not a 'word-style' token, ignore the token.
     	    if (!/^[\w$_]*$/.test(token.string)) {
     	    	if (token.string[0] == '"') {
-        	    	
+    	    	  token.string = token.string.replace(/\s+$/, '');  // trim right
   	    	      token = tprop = {
   	    	    		  start: cur.ch - removeQuotes(token.string).length, 
   	    	    		  end: cur.ch, 
