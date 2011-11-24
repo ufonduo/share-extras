@@ -37,6 +37,7 @@
 		<div class="execute-buttonbar">
 			<button type="submit" name="${el}-execute-button" id="${el}-execute-button">${msg("button.execute")}</button>
 			 ${msg("label.execute.key")}
+			 <img id="${el}-spinner" src="${page.url.context}/res/components/images/ajax_anim.gif" class="spinner" width="16" height="16"></img> 
 		</div>
 	    <div>
 			<div class="header-bar">${msg("label.output")}</div>
@@ -45,6 +46,7 @@
   	        	<button id="${el}-exportResults-button" tabindex="0">${msg("button.export.results")}</button>
   	        </div>
 		    <div id="${el}-jsoutput" class="jsbox"></div>
+		    <div id="${el}-executionStats" class="executionStats"></div>
 	    </div>
 	</div>
 </div>
