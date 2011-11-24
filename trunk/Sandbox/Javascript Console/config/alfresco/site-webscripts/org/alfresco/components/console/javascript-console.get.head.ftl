@@ -9,3 +9,4 @@
 <@script type="text/javascript" src="${page.url.context}/res/components/console/codemirror/javascript.js"></@script>
 <@link rel="stylesheet" type="text/css" href="${page.url.context}/res/components/console/codemirror/codemirror.css" />
 <@link rel="stylesheet" type="text/css" href="${page.url.context}/res/components/console/codemirror/default.css" />
+<@script type="text/javascript" src="${page.url.context}/res/yui/resize/resize.js"></@script>

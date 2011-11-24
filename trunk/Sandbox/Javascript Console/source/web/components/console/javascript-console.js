@@ -86,7 +86,7 @@ if (typeof Fme == "undefined" || !Fme)
    YAHOO.extend(Fme.JavascriptConsole, Alfresco.ConsoleTool,
    {
 	   clearOutput : function ACJC_clearOutput() {
-	       this.widgets.scriptOutput.value="";
+	       this.widgets.scriptOutput.innerText="";
 	   },
 
 	   appendLineArrayToOutput: function ACJC_appendLineArrayToOutput(lineArray) {
@@ -99,7 +99,7 @@ if (typeof Fme == "undefined" || !Fme)
 	
 	   appendStringToOutput: function ACJC_appendStringToOutput(text) {
 	       	 var outputfield = this.widgets.scriptOutput;
-	         outputfield.value = outputfield.value + text;
+	         outputfield.innerText = outputfield.innerText + text;
 	   },
   
 	   browserSupportsHtml5Storage: function ACJC_browserSupportsHtml5Storage() {
@@ -227,7 +227,9 @@ if (typeof Fme == "undefined" || !Fme)
          
          // Store this for use in event
          this.widgets.codeMirror.owner = this;
-         
+
+         this.setupResizableEditor();
+
          YAHOO.Bubbling.on("folderSelected", this.onDestinationSelected, this);
          
          // Store and Restore script content to and from local storage
@@ -288,7 +290,24 @@ if (typeof Fme == "undefined" || !Fme)
             }
          });            
          
+      },
+
+      setupResizableEditor: function() {
+         var codeMirror = this.widgets.codeMirror;
          
+ 	     var resize = new YAHOO.util.Resize(this.id + "-editorResize", { handles : ["b"] });
+ 	     resize.on('resize', function(ev) {
+ 	    	 var h = ev.height; 
+ 	         Dom.setStyle(codeMirror.getScrollerElement(), "height", ""+ h + "px");
+ 	         codeMirror.refresh();
+ 	     }); 
+ 	     
+ 	     // Recalculate the horizontal size on a browser window resize event
+          YAHOO.util.Event.on(window, "resize", function(e)
+          {
+ 	         // YAHOO.util.Resize sets an absolute width, reset to auto width
+ 	         Dom.setStyle(this.id + "-editorResize", "width", "auto"); 
+          }, this, true); 
       },
 
       /**
