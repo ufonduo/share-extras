@@ -23,6 +23,7 @@
 	color:black;
 	border: 1px solid #c0c0c0;
 	padding: 0.5em;
+	white-space: pre-wrap;
 }
 
 .javascript-console .buttonbar {
@@ -53,6 +54,14 @@
    border-bottom: 2px solid #f0f3f4;
    font-weight: bold;
    font-size: 116%;
+}
+
+.javascript-console .executionStats {
+	margin-top:0.5em;
+}
+
+.javascript-console .spinner {
+	display:none;	
 }
 
 .javascript-console .exportButton {

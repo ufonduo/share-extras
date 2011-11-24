@@ -86,7 +86,7 @@ if (typeof Fme == "undefined" || !Fme)
    YAHOO.extend(Fme.JavascriptConsole, Alfresco.ConsoleTool,
    {
 	   clearOutput : function ACJC_clearOutput() {
-	       this.widgets.scriptOutput.innerText="";
+	       this.widgets.scriptOutput.innerHTML="";
 	   },
 
 	   appendLineArrayToOutput: function ACJC_appendLineArrayToOutput(lineArray) {
@@ -94,12 +94,13 @@ if (typeof Fme == "undefined" || !Fme)
 	         for (line in lineArray) {
 	         	newLines = newLines + lineArray[line] + "\n";
 	         }
-	         this.appendStringToOutput(newLines);
+	         this.setOutputText(newLines);
 	   },
-	
-	   appendStringToOutput: function ACJC_appendStringToOutput(text) {
-	       	 var outputfield = this.widgets.scriptOutput;
-	         outputfield.innerText = outputfield.innerText + text;
+
+	   setOutputText : function(text) {
+	       var outputfield = this.widgets.scriptOutput;
+	       outputfield.innerHTML = "";
+	       outputfield.appendChild(document.createTextNode(text));
 	   },
   
 	   browserSupportsHtml5Storage: function ACJC_browserSupportsHtml5Storage() {
@@ -623,6 +624,9 @@ if (typeof Fme == "undefined" || !Fme)
    	  	this.widgets.scriptOutput.disabled = true;
    	    this.widgets.executeButton.disabled = true;
 
+   	    this.executeStartTime = new Date();
+   	    this.showLoadingAjaxSpinner(true);
+   	    
    	  	Alfresco.util.Ajax.request(
          {
             url: Alfresco.constants.PROXY_URI + "de/fme/jsconsole/execute.json",
@@ -632,6 +636,8 @@ if (typeof Fme == "undefined" || !Fme)
             successCallback:
             {
                fn: function(res) {
+            	 this.showLoadingAjaxSpinner(false);
+            	 this.printExecutionStats();
             	 this.clearOutput();
             	 this.appendLineArrayToOutput(res.json.output);
                  this.widgets.scriptOutput.disabled = false;
@@ -644,12 +650,14 @@ if (typeof Fme == "undefined" || !Fme)
             failureCallback:
             {
                fn: function(res) {
+            	 this.showLoadingAjaxSpinner(false);  
+            	 this.printExecutionStats();
                  var result = YAHOO.lang.JSON.parse(res.serverResponse.responseText);
-                 
+                		 
                  this.clearOutput();
-                 this.appendStringToOutput(result.status.code + " " + result.status.name+"\n");
-                 this.appendStringToOutput(result.status.description+"\n");
-                 this.appendStringToOutput(result.message+"\n");
+                 this.setOutputText(result.status.code + " " + 
+                		 result.status.name + "\n" +
+                		 result.status.description + "\n" + result.message + "\n");
 
                  this.widgets.scriptOutput.disabled = false;
            	     this.widgets.executeButton.disabled = false;
@@ -660,6 +668,19 @@ if (typeof Fme == "undefined" || !Fme)
          });
 	  },
 
+	  showLoadingAjaxSpinner : function(showSpinner) {
+		  var spinner = Dom.get(this.id + "-spinner");
+		  Dom.setStyle(spinner, "display", showSpinner ? "inline" : "none");
+	  },
+	  
+	  printExecutionStats : function() {
+		  this.executeEndTime = new Date();
+		  var stats = Dom.get(this.id + "-executionStats");
+		  var text = this.msg("label.stats.executed.in") +" "+ (this.executeEndTime - this.executeStartTime) + "ms";
+          stats.innerHTML = '';
+		  stats.appendChild(document.createTextNode(text));
+	  },
+	  
 	  loadDemoScript: function ACJC_loadDemoScript() {
 		  this.widgets.codeMirror.setValue(
 			'var nodes = search.luceneSearch("@name:alfresco");\n'+
