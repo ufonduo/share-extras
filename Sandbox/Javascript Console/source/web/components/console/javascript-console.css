@@ -20,7 +20,9 @@
 
 .javascript-console .jsbox {
 	font-family:"Courier New", Courier, monospace !important;
-	width:100%;
+	color:black;
+	border: 1px solid #c0c0c0;
+	padding: 0.5em;
 }
 
 .javascript-console .buttonbar {

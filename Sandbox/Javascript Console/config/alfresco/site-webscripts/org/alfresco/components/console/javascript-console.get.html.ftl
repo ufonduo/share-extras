@@ -30,7 +30,9 @@
 		</div>
 		<div>
 			<div class="header-bar">${msg("label.input")}</div>
-			<textarea id="${el}-jsinput" name="jsinput" cols="80" rows="22" class="jsbox"></textarea>
+			<div id="${el}-editorResize">
+				<textarea id="${el}-jsinput" name="jsinput" cols="80" rows="22" class="jsbox"></textarea>
+			</div>
 		</div>
 		<div class="execute-buttonbar">
 			<button type="submit" name="${el}-execute-button" id="${el}-execute-button">${msg("button.execute")}</button>
@@ -42,7 +44,7 @@
   	        <div class="exportButton">
   	        	<button id="${el}-exportResults-button" tabindex="0">${msg("button.export.results")}</button>
   	        </div>
-		    <textarea id="${el}-jsoutput" cols="80" rows="18" class="jsbox"></textarea>
+		    <div id="${el}-jsoutput" class="jsbox"></div>
 	    </div>
 	</div>
 </div>
