@@ -154,6 +154,7 @@ The dashlet search box allows more search capabilities than the server side filt
     * some css cleanup
     * some UI label changes
     * updated YUI compressor to 2.4.7
+    * leading/trailing whitespaces cleanup
 
   * 0.4:
     * datatable columns can now be configured to be shown or hidden
