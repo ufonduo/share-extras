@@ -5,7 +5,7 @@
                             ***********************************
     
     Author: Will Abson
-    Version: 1.5.1
+    Version: 1.5.2
     
     Provides a set of targets for building extensions to Alfresco Share in ZIP, AMP and JAR archive 
     formats. Since Alfresco 3.3, JAR is the recommended package structure for all simple extensions.
@@ -34,6 +34,7 @@
     <property name="jar.name" value="share-extension.jar" />
     <property name="zip.name" value="share-extension.zip" />
     <property name="amp.name" value="share-extension.amp" />
+    <property name="src.zip.name" value="share-extension-src.zip" />
     <property name="config.includes" value="**/*.*" />
     <property name="config.excludes" value="" />
     <property name="build.res.includes" value="**/*.*" />
@@ -125,6 +126,15 @@
        <mkdir dir="${build.dir}" />
       <mkdir dir="${dist.dir}" />
    </target>
+    
+    <!-- Build a source ZIP file -->
+    <target name="dist-src" depends="" description="Build a ZIP file containing the project source code">
+        <zip destfile="${dist.dir}/${src.zip.name}">
+            <fileset dir="${basedir}">
+                <exclude name="build/**" />
+            </fileset>
+        </zip>
+    </target>
    
     <!--
         Assemble the configuration and resource files in a JAR file structure. This mechanism 
