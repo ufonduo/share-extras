@@ -45,7 +45,7 @@
   	        <div class="exportButton">
   	        	<button id="${el}-exportResults-button" tabindex="0">${msg("button.export.results")}</button>
   	        </div>
-		    <div id="${el}-jsoutput" class="jsbox"></div>
+		    <p id="${el}-jsoutput" class="jsbox"></p>
 		    <div id="${el}-executionStats" class="executionStats"></div>
 	    </div>
 	</div>
