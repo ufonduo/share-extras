@@ -685,8 +685,8 @@ if (typeof Fme == "undefined" || !Fme)
 		  this.widgets.codeMirror.setValue(
 			'var nodes = search.luceneSearch("@name:alfresco");\n'+
 			'\n'+
-			'for each(n in nodes) {\n'+
-	        '  print(n.name + " (" + n.typeShort + ") " + n.nodeRef);\n'+
+			'for each(var node in nodes) {\n'+
+	        '    logger.log(node.name + " (" + node.typeShort + "): " + node.nodeRef);\n'+
 	        '}\n');
 	  },
 	  
