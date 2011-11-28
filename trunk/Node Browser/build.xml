@@ -109,7 +109,7 @@
     </path>
 
     <path id="compile.classpath">
-        <fileset dir="${alfereco.sdk.dir}">
+        <fileset dir="${alfresco.sdk.dir}">
             <include name="lib/server/dependencies/**/*.jar" />
             <include name="lib/server/*.jar" />
         </fileset>
