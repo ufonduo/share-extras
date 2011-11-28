@@ -60,3 +60,32 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
   # Log in to Alfresco Share and navigate to your user dashboard.
   # Click the _Customize Dashboard_ button to edit the contents of the dashboard and drag the dashlet into one of the columns from the list of dashlets.
   # If you have not previously connected the dashlet to your Yammer account then hit the _Connect to Yammer_ button to do this.
+
+= Known Issues =
+
+==The application Share Extras can not be authorized in your network. Please contact your network administrator. Application Share Extras==
+
+As of Nov 11 it has not been possible to register Share Extras with Yammer as a global application, and it is currently limited to the Yammer Developers and Alfresco networks.
+
+The workaround is to [https://www.yammer.com/client_applications register your own Yammer application], which will give you a client token and secret that you can then use with your own network.
+
+To configure these parameters, add the following to your share-config-custom.xml
+
+{{{
+ 	<config evaluator="string-compare" condition="Remote">
+	  <remote>
+		<!-- Connector instance -->
+		<connector>
+			<id>yammer-oauth</id>
+			<name>Yammer OAuth Connector</name>
+			<description>HTTP Connector with support for OAuth authentication</description>
+<class>org.sharextras.webscripts.connector.HttpOAuthConnector</class>
+			<consumer-key>mykey</consumer-key>
+			<consumer-secret>mysecret</consumer-secret>
+			<signature-method>PLAINTEXT</signature-method>
+		</connector>
+	  </remote>
+	</config>
+}}}
+
+where `mykey` is the client token and `mysecret` is the client secret for the application you registered.
