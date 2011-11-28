@@ -1,0 +1,6 @@
+<component>
+    <region-id>additional-content</region-id>
+    <source-id>global</source-id>
+    <scope>global</scope>
+    <uri>/mycompany/demo/new-content</uri>
+</component>

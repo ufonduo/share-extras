@@ -1,0 +1,55 @@
+<!-- 
+This project is intended to demonstrate the new extensibility features of 
+Alfresco Share 4.0 and to make it easy to define your own modules.
+
+All the examples used in this project are taken directly from Dave Draper's
+excellent tutorials on http://blogs.alfresco.com/wp/ddraper/, with some
+small modifications to the folder structures.
+-->
+<extension>
+    <modules>
+    
+        <!--
+            Example showing using a customization to override the default i18n properties
+            See http://blogs.alfresco.com/wp/ddraper/2011/08/03/customizing-alfresco-share-i18n-properties/
+        -->
+        <module>
+            <id>Customization Module (i18n property change)</id>
+            <customizations>
+                <customization>
+                    <targetPackageRoot>org.alfresco.components.title</targetPackageRoot>
+                    <sourcePackageRoot>org.mycompany.demo.customization.title</sourcePackageRoot>
+                </customization>
+            </customizations>
+        </module>
+        
+        <!--
+            Example showing using a customization to change the behaviour of a Web Script by augmenting its JavaScript controller
+            See http://blogs.alfresco.com/wp/ddraper/2011/08/05/customizing-alfresco-share-javascript-controllers/
+        -->
+        <module>
+            <id>Customization Module (Web View JavaScript controller change)</id>
+            <customizations>
+                <customization>
+                    <targetPackageRoot>org.alfresco.components.dashlets</targetPackageRoot>
+                    <sourcePackageRoot>org.mycompany.demo.customization.dashlets</sourcePackageRoot>
+                </customization>
+            </customizations>
+        </module>
+        
+        <!--
+            Example showing using a customization to customize a FreeMarker template
+            See http://blogs.alfresco.com/wp/ddraper/2011/08/12/customizing-alfresco-share-freemarker-templates/
+        -->
+        <module>
+            <id>Customization Module (Add Region)</id>
+            <customizations>
+                <customization>
+                    <targetPackageRoot>org.alfresco</targetPackageRoot>
+                    <sourcePackageRoot>org.mycompany.demo.customization</sourcePackageRoot>
+                </customization>
+            </customizations>
+        </module>
+        
+    </modules>
+</extension>

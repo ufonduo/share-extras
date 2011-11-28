@@ -1,0 +1,61 @@
+<!-- 
+This project is intended to demonstrate the new extensibility features of 
+Alfresco Share 4.0 and to make it easy to define your own modules.
+
+All the examples used in this project are taken directly from Dave Draper's
+excellent tutorials on http://blogs.alfresco.com/wp/ddraper/, with some
+small modifications to the folder structures.
+-->
+<extension>
+    <modules>
+    
+        <!--
+            Example showing using a new sub-component to add content to a page
+            See http://blogs.alfresco.com/wp/ddraper/2011/07/22/how-to-add-content-to-an-alfresco-share-page/
+        -->
+        <module>
+            <id>Subcomponent Module (Add Content)</id>
+            <components>
+                <component>
+                    <region-id>title</region-id>
+                    <!-- It's possible to specify a specific user here, but this will target all user dashboards -->
+                    <source-id>user/{userid}/dashboard</source-id> 
+                    <scope>page</scope>
+                    <sub-components>
+                        <!-- The 'default' sub-component will have an index of 50 -->
+                        <sub-component id="New_Content" index="25">
+                            <url>/mycompany/demo/new-content</url>
+                        </sub-component>
+                    </sub-components>
+                </component>
+            </components>
+        </module>
+        
+        <!--
+            Example showing modifying an existing sub-component to remove content from a page
+            See http://blogs.alfresco.com/wp/ddraper/2011/07/27/how-to-hide-content-on-an-existing-alfresco-share-page/
+        -->
+        <module>
+            <id>Subcomponent Module (Hide Title)</id>
+            <components>
+                <component>
+                    <region-id>title</region-id>
+                    <!-- It's possible to specify a specific user here, but this will target all user dashboards -->
+                    <source-id>user/{userid}/dashboard</source-id> 
+                    <scope>page</scope>
+                    <sub-components>
+                        <!-- The 'default' sub-component will always be present -->
+                        <sub-component id="default">
+                            <evaluations>
+                                <evaluation id="guaranteedToHide">
+                                    <render>false</render>
+                                </evaluation>
+                            </evaluations>
+                        </sub-component>
+                    </sub-components>
+                </component>
+            </components>
+        </module>
+        
+    </modules>
+</extension>
