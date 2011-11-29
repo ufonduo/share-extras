@@ -2,7 +2,7 @@
     * [http://code.google.com/p/share-extras/w/list?q=Addon%3DDashlet Dashlets]
     * [http://code.google.com/p/share-extras/w/list?q=Addon%3DAction Actions]
     * [http://code.google.com/p/share-extras/w/list?q=Addon%3DTheme Themes]
-    * [http://code.google.com/p/share-extras/w/list?q=Addon%3DAdminConsole Admin Console Components]
+    * [http://code.google.com/p/share-extras/w/list?q=Addon%3DAdminConsole Admin Console]
     * [http://code.google.com/p/share-extras/w/list?q=Addon%3DForm Form Configuration]
     * [http://code.google.com/p/share-extras/w/list?q=Addon%3DPageComponent Page Components]
     * [http://code.google.com/p/share-extras/w/list?q=Addon%3DPage Pages]
