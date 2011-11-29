@@ -1,5 +1,5 @@
 #summary Describes the Sample Dashlet package for use with your own projects
-#labels Featured
+#labels Featured,SDK-Project
 
 =Introduction=
 
