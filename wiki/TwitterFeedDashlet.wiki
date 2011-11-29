@@ -1,5 +1,5 @@
 #summary Describes the Twitter Feed Dashlet add-on for Alfresco Share
-#labels Dashlet
+#labels Addon-Dashlet,AlfrescoVersion-3.x
 
 =Introduction=
 
