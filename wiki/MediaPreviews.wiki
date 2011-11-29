@@ -1,5 +1,5 @@
 #summary Media Previews add-on for Alfresco Share, providing video thumbnailing and previewing, audio previewing and a video dashlet
-#labels Addon-Dashlet,AlfrescoVersion-3.x
+#labels Addon-Dashlet,AlfrescoVersion-3.x,Addon-PageComponent
 
 =Introduction=
 
