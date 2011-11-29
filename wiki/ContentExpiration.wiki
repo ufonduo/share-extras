@@ -1,5 +1,5 @@
 #summary Describes the Content Expiration add-on for Alfresco Share
-#labels Addon-Dashlet,Addon-Page
+#labels Addon-Dashlet,Addon-Page,AlfrescoVersion-3.x
 
 =Introduction=
 
