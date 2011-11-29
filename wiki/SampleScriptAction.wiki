@@ -1,4 +1,5 @@
 #summary Describes the Sample Script Action package for use with your own projects
+#labels SDK-Project
 
 =Introduction=
 
