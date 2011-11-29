@@ -1,5 +1,5 @@
 #summary Tag cloud dashlet displays all tags used in the site on the site dashboard as a tag cloud
-#labels Dashlet,Tagging,Add-On,Addon-Dashlet
+#labels Addon-Dashlet
 
 =Introduction=
 
