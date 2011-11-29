@@ -16,5 +16,5 @@ The add-on's wiki page should be tagged with the versions that have been tested 
 
 In the [http://code.google.com/p/share-extras/downloads/list Downloads] section the versions supported should be obvious from the filename of the download.
 
-Version *0.x* and *1.x* downloads are intended for use with Alfresco 3.x
-Version *2.x* downloads are intended for use with Alfresco 4.x
+  * Version *0.x* and *1.x* downloads are intended for use with Alfresco 3.x
+  * Version *2.x* downloads are intended for use with Alfresco 4.x
