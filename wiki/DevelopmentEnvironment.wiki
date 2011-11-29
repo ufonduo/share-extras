@@ -1,5 +1,4 @@
 #summary Information on setting up a local development environment for Share Extras projects
-#labels Featured
 
 Share Extras utilises a single Subversion repository provided by the Google Code project for central SCM.
 
