@@ -1,5 +1,5 @@
 #summary Describes the Site Poll Dashlet add-on for Alfresco Share
-#labels Dashlet,Poll
+#labels Addon-Dashlet
 
 =Introduction=
 
