@@ -1,4 +1,5 @@
 #summary Describes the Twitter Search Dashlet add-on for Alfresco Share
+#labels Addon-Dashlet,AlfrescoVersion-3.x
 
 =Introduction=
 
