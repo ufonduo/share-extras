@@ -1,4 +1,4 @@
-  * [Add-ons]
+  * [AddOns]
     * [http://code.google.com/p/share-extras/w/list?q=Addon%3DDashlet Dashlets]
     * [http://code.google.com/p/share-extras/w/list?q=Addon%3DAction Actions]
     * [http://code.google.com/p/share-extras/w/list?q=Addon%3DTheme Themes]
