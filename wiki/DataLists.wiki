@@ -1,4 +1,5 @@
 #summary Describes the Sample Data Lists add-on for Alfresco Share
+#labels Addon-Forms,AlfrescoVersion-3.x
 
 <wiki:toc max_depth="1" />
 
