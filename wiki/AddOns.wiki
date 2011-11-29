@@ -1,0 +1,20 @@
+#summary Overview of the add-ons hosted on Share Extras
+
+Share Extras provides a wide range of add-ons for use with Alfresco Share 3.x and 4.x.
+
+  * [http://code.google.com/p/share-extras/w/list?q=Addon%3DDashlet Dashlets]
+  * [http://code.google.com/p/share-extras/w/list?q=Addon%3DAction Actions]
+  * [http://code.google.com/p/share-extras/w/list?q=Addon%3DTheme Themes]
+  * [http://code.google.com/p/share-extras/w/list?q=Addon%3DAdminConsole Admin Console]
+  * [http://code.google.com/p/share-extras/w/list?q=Addon%3DForms Form Configuration]
+  * [http://code.google.com/p/share-extras/w/list?q=Addon%3DPageComponent Page Components]
+  * [http://code.google.com/p/share-extras/w/list?q=Addon%3DPage Pages]
+
+Add-ons may be compatible with Alfresco 3.x, 4.x or both.
+
+The add-on's wiki page should be tagged with the versions that have been tested and supported, and full details should be provided in the page text.
+
+In the [http://code.google.com/p/share-extras/downloads/list Downloads] section the versions supported should be obvious from the filename of the download.
+
+Version *0.x* and *1.x* downloads are intended for use with Alfresco 3.x
+Version *2.x* downloads are intended for use with Alfresco 4.x
