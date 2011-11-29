@@ -1,8 +1,6 @@
 #summary Describes the Sample Dashlet package for use with your own projects
 #labels Featured,SDK-Project
 
-=Introduction=
-
 This project defines a common source directory layout, [http://www.eclipse.org/ Eclipse] project configuration and [http://ant.apache.org/ Ant] build script that is used by all the Share Extras add-ons, in addition to some sample files from a basic 'Hello World' dashlet.
 
 =Using the Sample Project=
