@@ -1,4 +1,5 @@
 #summary Describes the Execute Script Action add-on for Alfresco Share
+#labels Addon-Action,AlfrescoVersion-3.x
 
 =Introduction=
 
