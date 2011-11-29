@@ -1,5 +1,5 @@
 #summary Describes the features the CKEditor form control
-#labels Forms,Editor
+#labels Addon-Forms,AlfrescoVersion-3.x
 
 =Introduction=
 This is an addon to Share forms that lets you use the CKEditor as a wysiwyg editor for online edits.
