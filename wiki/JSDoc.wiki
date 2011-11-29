@@ -1,5 +1,5 @@
 #summary Instructions for documenting client-side JavaScript in Share Extras
-#labels Phase-Implementation,Featured,Draft
+#labels Phase-Implementation
 
 [http://code.google.com/p/jsdoc-toolkit/ JsDoc Toolkit] is used for generating client-side API documentation for Share Extras add-ons, from inline [http://en.wikipedia.org/wiki/JSDoc JSDoc] annotations.
 
