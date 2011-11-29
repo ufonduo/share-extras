@@ -1,4 +1,5 @@
 #summary Useful information to developing on top of Share
+#labels Featured
 
 The information in this section should help you in getting started with developing on top of Share.
 
