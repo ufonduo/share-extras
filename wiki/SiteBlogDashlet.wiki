@@ -1,5 +1,5 @@
 #summary Describes the Site Blog Dashlet add-on for Alfresco Share
-#labels Dashlet,Blog
+#labels Addon-Dashlet
 
 [http://share-extras.googlecode.com/svn/trunk/Site%20Blog%20Dashlet/site-blog-dashlet.png] [http://share-extras.googlecode.com/svn/trunk/Site%20Blog%20Dashlet/site-blog-dashlet-create-post.png]
 
