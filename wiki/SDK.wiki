@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary Sample projects for building your own add-ons
 
 The Share Extras SDK provides a number of sample projects that you can use as templates to build your own add-ons.
 
