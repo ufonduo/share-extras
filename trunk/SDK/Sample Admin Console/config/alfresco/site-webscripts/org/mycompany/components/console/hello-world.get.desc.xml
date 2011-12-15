@@ -1,0 +1,6 @@
+<webscript>
+    <shortname>Admin Console Sample Component</shortname>
+    <description>Administration Console - Sample Console</description>
+    <url>/mycompany/components/console/hello-world</url>
+    <family>admin-console</family>
+</webscript>
