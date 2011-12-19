@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<template-instance>
+   <template-type>org/alfresco/dlitem-details</template-type>
+   <properties>
+      <pageFamily>data-lists</pageFamily>
+      <container>dataLists</container>
+   </properties>
+   <components>
+      <!-- title: normal, portlet, repository & portlet+repository -->
+      <component>
+         <region-id>title</region-id>
+         <url>/components/title/collaboration-title</url>
+      </component>
+      <!-- navigation -->
+      <component>
+         <region-id>navigation</region-id>
+         <url>/components/navigation/collaboration-navigation</url>
+      </component>
+      <!-- edit-metadata-mgr -->
+      <component>
+         <region-id>edit-metadata-mgr</region-id>
+         <url>/components/edit-metadata/edit-metadata-mgr</url>
+      </component>
+      <!-- edit-metadata -->
+      <component>
+         <region-id>edit-metadata</region-id>
+         <url>/components/form</url>
+         <properties>
+            <itemKind>node</itemKind>
+            <itemId>{nodeRef}</itemId>
+            <mode>view</mode>
+         </properties>
+      </component>
+      <!-- comments -->
+      <!--
+      <component>
+         <region-id>comments</region-id>
+         <url>/components/blog/comments</url>
+         <properties>
+            <editorWidth>420</editorWidth>
+            <editorHeight>100</editorHeight>
+         </properties>
+      </component>
+      -->
+      <!-- createcomment -->
+      <!--
+      <component>
+         <region-id>createcomment</region-id>
+         <url>/components/blog/createcomment</url>
+         <properties>
+            <editorHeight>100</editorHeight>
+            <editorWidth>420</editorWidth>
+         </properties>
+      </component>
+      -->
+   </components>
+</template-instance>

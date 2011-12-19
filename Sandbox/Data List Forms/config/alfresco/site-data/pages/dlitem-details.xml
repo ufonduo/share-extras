@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<page>
+   <title>Data List Item Details</title>
+   <title-id>page.documentDetails.title</title-id>
+   <description>Data List Item details</description>
+   <description-id>page.documentDetails.description</description-id>
+   <template-instance>dlitem-details</template-instance>
+   <authentication>user</authentication>
+</page>
