@@ -7,6 +7,7 @@
     * [http://code.google.com/p/share-extras/w/list?q=Addon%3DPageComponent Page Components]
     * [http://code.google.com/p/share-extras/w/list?q=Addon%3DPage Pages]
   * [SDK]
+    * [SampleProject Sample Dashlet]
   * [DevelopmentGuide Development Guide]
     * [DevelopmentEnvironment Development Environment]
     * [JSDoc Generating JSDoc]
