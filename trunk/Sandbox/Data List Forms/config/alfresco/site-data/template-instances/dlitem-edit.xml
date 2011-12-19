@@ -21,7 +21,10 @@
          <region-id>edit-metadata-mgr</region-id>
          <url>/components/edit-metadata/edit-metadata-mgr</url>
       </component>
-      <!-- edit-metadata -->
+      <!--
+        Edit-metadata
+        See http://wiki.alfresco.com/wiki/Forms_Developer_Guide#Usage
+      -->
       <component>
          <region-id>edit-metadata</region-id>
          <url>/components/form</url>
@@ -32,6 +35,10 @@
             <submitType>json</submitType>
             <showCaption>true</showCaption>
             <showCancelButton>true</showCancelButton>
+            <!-- The form configuration to lookup, refers the id attribute of the form element. If omitted the default form i.e. the form element without an id attribute is used.  -->
+            <!--
+            <formId>blah</formId>
+            -->
          </properties>
       </component>
    </components>
