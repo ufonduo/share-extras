@@ -12,7 +12,7 @@ The page component will display automatically for content items which already ha
 http://share-extras.googlecode.com/svn/trunk/Document%20Geographic%20Details/geotag-action.png
 
 The dashlet has been developed to install on top of an existing Alfresco
-3.4 installation. It can work with version 3.3 if the `cm:geographic` aspect is added to the repository's content model - see _Known Issues_ below.
+3.4 or 4.0 installation. It can work with version 3.3 if the `cm:geographic` aspect is added to the repository's content model - see _Known Issues_ below.
 
 =Installation=
 
