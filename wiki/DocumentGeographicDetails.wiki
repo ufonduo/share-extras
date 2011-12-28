@@ -20,7 +20,34 @@ The component is packaged as a single JAR file for easy installation into Alfres
 
 To install the component, simply drop the `document-geographic-details.jar` file into the `tomcat/shared/lib` folder within your Alfresco installation, and restart the application server. You might need to create this folder if it does not already exist.
 
-See [http://code.google.com/p/share-extras/source/browse/trunk/Document%20Geographic%20Details/README.txt README.txt] for instructions on how to enable the Geotag custom action in the Document Library.
+==Custom Action Installation (Share 3.x, Optional)==
+
+See [http://code.google.com/p/share-extras/source/browse/trunk/Document%20Geographic%20Details/README.txt README.txt] for instructions on how to enable the Geotag custom action in the Document Library in 3.3 and 3.4.
+
+==Custom Actions Installation (Share 4.x, Optional)==
+
+The custom Geotag action is also supported on Alfresco 4.0, and is supplied with two other actions which allow you to choose [http://www.openstreetmap.org/ OpenStreetMap] or other map-based views.
+
+You can enable the actions on both the document details and document list pages by adding the following configuration to your `share-config-custom.xml`.
+
+{{{
+   <config evaluator="string-compare" condition="DocLibActions">
+      <actionGroups>
+         <actionGroup id="document-browse">
+            <action index="996" id="org_sharextras_document-view-osm" />
+            <action index="997" id="org_sharextras_document-view-geohack" />
+            <action index="998" id="org_sharextras_document-geotag" />
+         </actionGroup>
+         <actionGroup id="document-details">
+            <action index="996" id="org_sharextras_document-view-osm" />
+            <action index="997" id="org_sharextras_document-view-geohack" />
+            <action index="998" id="org_sharextras_document-geotag" />
+         </actionGroup>
+      </actionGroups>
+   </config>
+}}}
+
+If you only wish to show some of the actions, or only on the document details or document list page, then you can simply remove the other items.
 
 =Building from Source=
 
