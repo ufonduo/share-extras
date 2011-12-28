@@ -70,7 +70,7 @@ As of Nov 11 it has not been possible to register Share Extras with Yammer as a 
 
 The workaround is to [https://www.yammer.com/client_applications register your own Yammer application], which will give you a client token and secret that you can then use with your own network.
 
-To configure these parameters, add the following to your share-config-custom.xml
+To configure these parameters, add the following to your `share-config-custom.xml`
 
 {{{
  	<config evaluator="string-compare" condition="Remote">
