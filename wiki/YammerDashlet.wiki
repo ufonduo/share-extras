@@ -23,6 +23,23 @@ The dashlet is packaged as a single JAR file for easy installation into Alfresco
 
 To install the dashlet, simply drop the `yammer-dashlet.jar` file into the `tomcat/shared/lib` folder within your Alfresco installation, and restart the application server. You might need to create this folder if it does not already exist.
 
+==Custom Action Installation (Optional)==
+
+The custom _Post to Yammer_ action is supported on Alfresco 4.0 and above. You can enable it on both the document details and document list pages by adding the following configuration to your `share-config-custom.xml`.
+
+{{{
+   <config evaluator="string-compare" condition="DocLibActions">
+      <actionGroups>
+         <actionGroup id="document-browse">
+            <action index="999" id="document-yammer-post" />
+         </actionGroup>
+         <actionGroup id="document-details">
+            <action index="999" id="document-yammer-post" />
+         </actionGroup>
+      </actionGroups>
+   </config>
+}}}
+
 =Building from Source=
 
 Check out the project if you have not already done so
