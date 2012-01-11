@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<page>
+   <title>PDF Viewer</title>
+   <description>Page for pdf.js Preview</description>
+   <template-instance>pdfviewer</template-instance>
+   <authentication>user</authentication>
+</page>
