@@ -47,7 +47,10 @@ Alfresco.WebPreview.prototype.Plugins.PdfViewer.prototype =
             pdfplugininstalled : false,
             // Force the plugin used, mostly for developer use
             // Valid options are pdfjs or plugin
-            forceplugin : null
+            forceplugin : null,
+            // Skip test, use together with forceplugin
+            // If browser tests are skipped, then it will try to load regardless
+            skipbrowsertest : null
          },
       
       /**
@@ -61,34 +64,38 @@ Alfresco.WebPreview.prototype.Plugins.PdfViewer.prototype =
        */
       report : function PdfViewer_report()
       {
-         if (!this.attributes.forceplugin)
+         var skipbrowsertest = (this.attributes.skipbrowsertest && this.attributes.skipbrowsertest === "true") ? true : false;
+         
+         if (skipbrowsertest === false)
          {
-            // Test if canvas is supported
-            if (window.HTMLCanvasElement)
+            if (this.attributes.forceplugin !== "plugin")
             {
-               this.attributes.canvassupport = true;
-               // Do some engine test as well, some support canvas but not the
-               // rest
-               if (YAHOO.env.ua.webkit > 0 && YAHOO.env.ua.webkit < 534)
+               // Test if canvas is supported
+               if (window.HTMLCanvasElement)
                {
-                  // http://en.wikipedia.org/wiki/Google_Chrome
-                  // Guessing for the same for safari
-                  this.attributes.canvassupport = false;
-               }
-               if (YAHOO.env.ua.ie > 0 && YAHOO.env.ua.ie < 9)
-               {
-                  this.attributes.canvassupport = false;
-               }
-               if (YAHOO.env.ua.gecko > 0 && YAHOO.env.ua.gecko < 5)
-               {
-                  // http://en.wikipedia.org/wiki/Gecko_(layout_engine)
-                  this.attributes.canvassupport = false;
+                  this.attributes.canvassupport = true;
+                  // Do some engine test as well, some support canvas but not the rest for full html5
+                  if (YAHOO.env.ua.webkit > 0 && YAHOO.env.ua.webkit < 534)
+                  {
+                     // http://en.wikipedia.org/wiki/Google_Chrome
+                     // Guessing for the same for safari
+                     this.attributes.canvassupport = false;
+                  }
+                  if (YAHOO.env.ua.ie > 0 && YAHOO.env.ua.ie < 9)
+                  {
+                     this.attributes.canvassupport = false;
+                  }
+                  if (YAHOO.env.ua.gecko > 0 && YAHOO.env.ua.gecko < 5)
+                  {
+                     // http://en.wikipedia.org/wiki/Gecko_(layout_engine)
+                     this.attributes.canvassupport = false;
+                  }
                }
             }
-            if (this.attributes.canvassupport === false)
+            
+            if (this.attributes.forceplugin !== "pdfjs" && this.attributes.canvassupport === false)
             {
-               // We only need to test for pdf plugin if canvas is not
-               // supported
+               // We only need to test for pdf plugin if canvas is not supported
                if (Alfresco.util.isBrowserPluginInstalled("application/pdf"))
                {
                   this.attributes.pdfplugininstalled = true;
