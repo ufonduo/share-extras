@@ -1,0 +1,6 @@
+<webscript>
+  <shortname>pdfviewerform</shortname>
+  <description>Get form for pdf viewer</description>
+  <url>/components/preview/pdfviewerform</url>
+  <format default="html"/>
+</webscript>
