@@ -23,16 +23,16 @@
     project directory. These may be removed at any time using the 'clean' target.
 
 -->
-<project basedir="." default="dist-jar" name="PdfJs Viewer Build Script">
+<project basedir="." default="dist-jar" name="Viewer Extension Build Script">
 
    <!-- Allow override properties -->
     <property file="build.properties" />
     <property file="${user.home}/build.properties" />
    
    <!-- Property default values. May be overridden using above files or via command-line args -->
-    <property name="jar.name" value="pdfjs-viewer.jar" />
-    <property name="zip.name" value="pdfjs-viewer.zip" />
-    <property name="amp.name" value="pdfjs-viewer.amp" />
+    <property name="jar.name" value="shareextras-viewer-extension.jar" />
+    <property name="zip.name" value="shareextras-viewer-extension.zip" />
+    <property name="amp.name" value="shareextras-viewer-extension.amp" />
     <property name="config.includes" value="**/*.*" />
     <property name="config.excludes" value="" />
     <property name="build.res.includes" value="**/*.*" />
