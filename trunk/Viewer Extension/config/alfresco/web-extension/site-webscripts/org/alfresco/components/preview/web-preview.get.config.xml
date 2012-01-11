@@ -92,7 +92,7 @@
       </condition>
       
 	  <condition mimeType="application/pdf">
-         <plugin>PdfViewer</plugin>
+         <plugin forceplugin="pdfjs" skipbrowsertest="false">PdfViewer</plugin>
       </condition>
 
 <!-- Remove condition below if you only want to use it for pdf files -->
