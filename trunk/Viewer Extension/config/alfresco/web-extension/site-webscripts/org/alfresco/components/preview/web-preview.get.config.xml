@@ -90,10 +90,18 @@
 	  <condition mimeType="text/plain">
          <plugin>IframeView</plugin>
       </condition>
-      
+
+	  <condition mimeType="application/pdf">
+         <plugin>PdfViewer</plugin>
+      </condition>
+
+<!-- Example config to force a plugin and skip browser test if plugin is available -->
+<!-- Valid options are for forceplugin are pdfjs and plugin -->
+<!--       
 	  <condition mimeType="application/pdf">
          <plugin forceplugin="pdfjs" skipbrowsertest="false">PdfViewer</plugin>
       </condition>
+-->
 
 <!-- Remove condition below if you only want to use it for pdf files -->
       <condition thumbnail="pdf">
