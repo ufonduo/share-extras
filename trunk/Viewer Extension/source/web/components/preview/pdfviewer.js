@@ -701,7 +701,23 @@ var PageView = function pageView(container, content, id, pageWidth, pageHeight,
 
   this.scrollIntoView = function pageViewScrollIntoView(dest) {
       if (!dest) {
-        div.scrollIntoView(true);
+//ShareExtras Changes Start
+        if (top.location!= self.location) {
+          //We are in an iframe, and need to handle that for scrolling
+          //Test for Webkit or gecko
+          var currenttop = parent.document.body.scrollTop ?  parent.document.body.scrollTop : parent.window.pageYOffset,
+                currentleft = parent.document.body.scrollLeft ?  parent.document.body.scrollLeft : parent.window.pageXOffset;
+          div.scrollIntoView(true);
+          if(parent.document.body.scrollTop)
+          {
+             parent.document.body.scrollTop = currenttop;
+          } else {
+             parent.window.scrollTo(currentleft,currenttop);
+          }
+        } else {
+          div.scrollIntoView(true);
+        }
+//ShareExtras Changes End
         return;
       }
 
@@ -767,7 +783,23 @@ var PageView = function pageView(container, content, id, pageWidth, pageHeight,
         tempDiv.style.width = Math.ceil(width * scale) + 'px';
         tempDiv.style.height = Math.ceil(height * scale) + 'px';
         div.appendChild(tempDiv);
-        tempDiv.scrollIntoView(true);
+//ShareExtras Changes Start
+        if (top.location!= self.location) {
+          //We are in an iframe, and need to handle that for scrolling
+          //Test for Webkit or gecko
+          var currenttop = parent.document.body.scrollTop ?  parent.document.body.scrollTop : parent.window.pageYOffset,
+                currentleft = parent.document.body.scrollLeft ?  parent.document.body.scrollLeft : parent.window.pageXOffset;
+          tempDiv.scrollIntoView(true);
+          if(parent.document.body.scrollTop)
+          {
+            parent.document.body.scrollTop = currenttop;
+          } else {
+             parent.window.scrollTo(currentleft,currenttop);
+          }
+        } else {
+          tempDiv.scrollIntoView(true);
+        }
+//ShareExtras Changes End
         div.removeChild(tempDiv);
       }, 0);
   };
