@@ -159,7 +159,8 @@ Alfresco.WebPreview.prototype.Plugins.PdfViewer.prototype =
          if (this.attributes.canvassupport)
          {
             // html5 is supported, display with pdf.js
-            displaysource = '<iframe id="PdfViewer" src="' + Alfresco.constants.URL_PAGECONTEXT + 'pdfviewer?file=' + fileurl
+            // id and name needs to be equal, easier if you need scripting access to iframe
+            displaysource = '<iframe id="PdfViewer" name="PdfViewer" src="' + Alfresco.constants.URL_PAGECONTEXT + 'pdfviewer?file=' + fileurl
                   + '" scrolling="yes" marginwidth="0" marginheight="0" frameborder="0" vspace="5" hspace="5" ></iframe>';
          } else if (this.attributes.pdfplugininstalled)
          {
@@ -176,7 +177,7 @@ Alfresco.WebPreview.prototype.Plugins.PdfViewer.prototype =
                   + 'components/documentlibrary/actions/document-view-content-16.png)">';
             displaysource += '<span>' + Alfresco.util.message("actions.document.view") + ' </span></a></div></div>'
             // Set the iframe
-            displaysource += '<iframe id="PdfViewer" src="' + fileurl
+            displaysource += '<iframe id="PdfViewer" name="PdfViewer" src="' + fileurl
                   + '" scrolling="yes" marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0" ></iframe>';
          } else
          {
