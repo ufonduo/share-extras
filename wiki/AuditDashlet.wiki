@@ -149,6 +149,10 @@ The dashlet search box allows more search capabilities than the server side filt
     4. etc ...
 
 = Changelog =
+  * 0.43:
+    * allow the 'additional' query string to override any other configured options, not just the sort order
+    * switched the copyright header from 'Share Extras project' to 'Share Extras contributors'
+
   * 0.42:
     * switched to share extras namespace
     * some comments and jsdoc review
