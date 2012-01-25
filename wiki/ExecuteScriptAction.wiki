@@ -14,9 +14,37 @@ The custom action has been developed to install on top of an existing Alfresco 3
 
 The dashlet is packaged as a JAR file for easy installation into Alfresco Share, although some additional steps are required after installing the JAR file to configure the action into the Document Library.
 
-To install the action, drop the `execute-script-action.jar` file into the `tomcat/shared/lib` folder within your Alfresco installation, and restart the application server. You might need to create this folder if it does not already exist.
+To install the action, drop the `execute-script-action.jar` file into the `tomcat/shared/lib` folder within your Alfresco installation. You might need to create this folder if it does not already exist.
 
 Once the JAR file has been deployed into your application server you will need to configure the Share application to display the action.
+
+==Share 4.x==
+
+You can enable the actions on the details and list pages for documents and folders by adding the following configuration to your `share-config-custom.xml`.
+
+{{{
+   <!-- Custom Execute Script Action -->
+   <config evaluator="string-compare" condition="DocLibActions">
+      <actionGroups>
+         <actionGroup id="folder-browse">
+            <action index="980" id="org_sharextras_execute-script" />
+         </actionGroup>
+         <actionGroup id="folder-details">
+            <action index="980" id="org_sharextras_execute-script" />
+         </actionGroup>
+         <actionGroup id="document-browse">
+            <action index="980" id="org_sharextras_execute-script" />
+         </actionGroup>
+         <actionGroup id="document-details">
+            <action index="980" id="org_sharextras_execute-script" />
+         </actionGroup>
+      </actionGroups>
+   </config>
+}}}
+
+If you only wish to show the action on some of the pages, then you can simply remove the other items.
+
+==Share 3.x==
 
 Firstly, copy the web script configuration file 
 `WEB-INF/classes/alfresco/site-webscripts/org/alfresco/components/documentlibrary/documentlist.get.config.xml` 
