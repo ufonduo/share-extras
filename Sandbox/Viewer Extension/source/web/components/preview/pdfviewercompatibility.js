@@ -230,3 +230,10 @@
     }
   });
 })();
+
+// Check console compatability
+(function checkConsoleCompatibility() {
+  if (typeof console == 'undefined') {
+    console = {log: function() {}};
+  }
+})();
