@@ -212,6 +212,22 @@ var printoutput = []
 // return the script that was executed back to the caller
 model.input = jscode;
 
+//---Add includes from Data Dictionary --------------------
+var includeCode = "";
+var includeFolder = search.xpathSearch("/app:company_home/app:dictionary/app:scripts/app:jsincludes")[0];
+if(!includeFolder) {
+  logger.log("Creating new Javascript Console Includes folder"); 
+  var dictionary = search.xpathSearch("/app:company_home/app:dictionary/app:scripts")[0];
+  includeFolder = dictionary.createNode("Javascript Console Includes", "cm:folder", [], "cm:contains", "app:jsincludes");
+}
+
+for each(script in includeFolder.children) {
+	includeCode = includeCode + script.content + "\n";  
+}
+
+eval( includeCode );
+// -----------------------
+
 // execute the script and capture the return value
 var result = eval("((function() {" + jscode + "}).call(this))");
 
@@ -220,4 +236,10 @@ if (!result) result = [];
 
 model.result = jsonUtils.toJSONString(JSCONSOLE.convertReturnValues(result)); 
 model.output = printoutput;
-
+if (space) {
+	model.spaceNodeRef = ""+space.nodeRef;
+	model.spacePath = space.displayPath + "/" + space.name;
+} else {
+	model.spaceNodeRef = "";
+	model.spacePath = "";
+}

@@ -5,6 +5,8 @@
 		<#list output as line>
 		"${line!""?js_string}"<#if line_has_next>,</#if> 
 		</#list> 
+	],
+	"spaceNodeRef" : "${spaceNodeRef}",
+	"spacePath" : "${spacePath}"
 </#escape>
-	]
 }
