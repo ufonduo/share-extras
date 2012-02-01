@@ -640,6 +640,10 @@ if (typeof Fme == "undefined" || !Fme)
             	 this.printExecutionStats();
             	 this.clearOutput();
             	 this.appendLineArrayToOutput(res.json.output);
+                 if (res.json.spaceNodeRef) {
+                	 this.widgets.nodeField.value = res.json.spaceNodeRef;
+                     this.widgets.pathField.innerHTML = res.json.spacePath;
+                 }                 
                  this.widgets.scriptOutput.disabled = false;
            	     this.widgets.executeButton.disabled = false;
                  this.showResultTable(res.json.result);
