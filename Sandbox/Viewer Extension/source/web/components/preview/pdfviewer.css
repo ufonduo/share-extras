@@ -3,14 +3,13 @@
 
 body {
   background-color: #929292;
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 80%;
+  font-family: 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Arial, Verdana, sans-serif;
   margin: 0px;
   padding: 0px;
 }
 
 [hidden] {
-  display: none;
+  display: none !important;
 }
 
 /* === Toolbar === */
@@ -234,6 +233,16 @@ canvas {
   box-shadow: 0px 2px 10px #ff0;
   -moz-box-shadow: 0px 2px 10px #ff0;
   -webkit-box-shadow: 0px 2px 10px #ff0;
+}
+
+.loadingIcon {
+  position: absolute;
+  display: block;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: url('images/loading-icon.gif') center no-repeat;
 }
 
 .textLayer {
