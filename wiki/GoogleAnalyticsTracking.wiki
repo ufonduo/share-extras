@@ -17,7 +17,7 @@ The component is packaged as a single JAR file for easy installation into Alfres
 
 To install the component, simply drop the `google-analytics-tracking.jar` file into the `tomcat/shared/lib` folder within your Alfresco installation, and restart the application server. You might need to create this folder if it does not already exist.
 
-In Alfresco 4.x, you need to enable the _Google Analytics tracking_ module within the module deployment console, once you have started Alfresco. You can access the console by visiting the following URL.
+In *Alfresco 4.x*, you need to enable the _Google Analytics tracking_ module within the module deployment console, once you have started Alfresco. You can access the console by visiting the following URL.
 
 `http://servername:port/share/page/modules/deploy`
 
