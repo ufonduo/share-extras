@@ -33,6 +33,8 @@
 <@script type="text/javascript" src="${page.url.context}/res/components/preview/Image.js"></@script>
 
 <!-- Share Extras viewers -->
+<#-- Extend base web-preview with common methods -->
+<@script type="text/javascript" src="${page.url.context}/res/components/preview/web-preview-extend.js"></@script>
 <@script type="text/javascript" src="${page.url.context}/res/components/preview/pdfviewerloader.js"></@script>
 <@link rel="stylesheet" type="text/css" href="${page.url.context}/res/components/preview/pdfviewerloader.css" />
 <@script type="text/javascript" src="${page.url.context}/res/components/preview/IframeView.js"></@script>
