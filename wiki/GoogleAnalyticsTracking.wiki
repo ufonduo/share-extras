@@ -1,5 +1,5 @@
 #summary Describes the Google Analytics Tracking add-on for Alfresco Share
-#labels Addon-PageComponent,AlfrescoVersion-3.x
+#labels Addon-PageComponent,AlfrescoVersion-3.x,AlfrescoVersion-4.x
 
 =Introduction=
 
@@ -16,6 +16,12 @@ The add-on should work with Alfresco version 3.3 and upwards.
 The component is packaged as a single JAR file for easy installation into Alfresco Share.
 
 To install the component, simply drop the `google-analytics-tracking.jar` file into the `tomcat/shared/lib` folder within your Alfresco installation, and restart the application server. You might need to create this folder if it does not already exist.
+
+In Alfresco 4.x, you need to enable the _Google Analytics tracking_ module within the module deployment console, once you have started Alfresco. You can access the console by visiting the following URL.
+
+`http://servername:port/share/page/modules/deploy`
+
+Once you have added the module to the Deployed list, you must then click *Apply Changes* to make the changes take effect.
 
 =Building from Source=
 
