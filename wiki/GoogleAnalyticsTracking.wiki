@@ -11,6 +11,12 @@ Alternatively, global tracking of Share usage can be enabled by setting `<global
 
 The add-on should work with Alfresco version 3.3 and upwards.
 
+=Download=
+
+For *Alfresco 3.x*, download the *0.x* or *1.0* version. For *Alfresco 4.x*, download the *2.0* version.
+
+[http://code.google.com/p/share-extras/downloads/list?q=google-analytics-tracking Download Google Analytics Tracking add-on]
+
 =Installation=
 
 The component is packaged as a single JAR file for easy installation into Alfresco Share.
