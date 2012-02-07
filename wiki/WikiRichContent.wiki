@@ -7,6 +7,8 @@ This project implements a number of customisations to the Alfresco Share wiki co
 
 The add-on should work with Alfresco version 3.3/3.4 and version 4.x (inline document previews are not currently supported in Alfresco 4.x).
 
+[#Download Download Wiki Rich Content add-on]
+
 http://share-extras.googlecode.com/svn/trunk/Wiki%20Rich%20Content/screenshots/wiki-toc-preview.png
 http://share-extras.googlecode.com/svn/trunk/Wiki%20Rich%20Content/screenshots/wiki-prettify.png
 
