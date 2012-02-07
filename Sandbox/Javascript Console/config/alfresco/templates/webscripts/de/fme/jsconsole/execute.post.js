@@ -93,6 +93,20 @@ function recurse(scriptNode, processorOrOptions) {
 
 
 JSCONSOLE = {
+  global : this,
+		
+  resolveImports : function(scriptcode) {
+    var RhinoScriptProcessor = Packages.org.alfresco.repo.jscript.RhinoScriptProcessor;
+    var LogFactory = Packages.org.apache.commons.logging.LogFactory;
+	var ScriptResourceHelper = Packages.org.alfresco.scripts.ScriptResourceHelper;
+			  
+	var log = LogFactory.getLog(RhinoScriptProcessor);
+	var ctx = Packages.org.springframework.web.context.ContextLoader.getCurrentWebApplicationContext();
+	var javaScriptProcessor = ctx.getBean("javaScriptProcessor");
+			  
+	return ScriptResourceHelper.resolveScriptImports(scriptcode, javaScriptProcessor, log);
+  },		
+		
   convertScriptNode : function(node) {
     return { 
       name : node.name, 
@@ -184,6 +198,28 @@ JSCONSOLE = {
   			return lines;
   		default: return "type conversion undefined";
   	}
+  },
+  
+  getDataDictionaryIncludes : function() {
+	//---Add includes from Data Dictionary --------------------
+	  var includeFolders = search.xpathSearch("/app:company_home/app:dictionary/app:jsincludes");
+	  var includeFolder = null;
+	  if(includeFolders && includeFolders.length == 1) {
+		 includeFolder = includeFolders[0];
+	  }
+	  else {
+	    logger.log("Creating new Javascript Console Includes folder"); 
+	    var dictionary = search.xpathSearch("/app:company_home/app:dictionary")[0];
+	    includeFolder = dictionary.createNode("Javascript Console Includes", "cm:folder", [], "cm:contains", "app:jsincludes");
+	  }
+
+	  var includeScript = "";
+	  if (includeFolder) {
+		  for each(script in includeFolder.children) {
+			  includeScript = includeScript + JSCONSOLE.resolveImports(script.content);
+		  }
+	  }
+	  return includeScript;
   }
   
 };
@@ -197,7 +233,7 @@ function print(object) {
 }
 
 /**
- * Main / Script execution 
+ * Main / Script execution ----------------------------------------- 
  */
 var jsonData = jsonUtils.toObject(requestbody.content); 
 var jscode = jsonData.input;
@@ -209,33 +245,26 @@ if (jsonData.space) {
 // array of strings that are the lines of output filled by the print function
 var printoutput = []
 
-// return the script that was executed back to the caller
-model.input = jscode;
-
-//---Add includes from Data Dictionary --------------------
-var includeCode = "";
-var includeFolder = search.xpathSearch("/app:company_home/app:dictionary/app:scripts/app:jsincludes")[0];
-if(!includeFolder) {
-  logger.log("Creating new Javascript Console Includes folder"); 
-  var dictionary = search.xpathSearch("/app:company_home/app:dictionary/app:scripts")[0];
-  includeFolder = dictionary.createNode("Javascript Console Includes", "cm:folder", [], "cm:contains", "app:jsincludes");
+try {
+	eval(JSCONSOLE.getDataDictionaryIncludes());
 }
-
-for each(script in includeFolder.children) {
-	includeCode = includeCode + script.content + "\n";  
+catch (err) {
+	throw("Error executing one if the included scripts from the data dictionary.\n" + err);
 }
-
-eval( includeCode );
-// -----------------------
 
 // execute the script and capture the return value
-var result = eval("((function() {" + jscode + "}).call(this))");
+var result = eval("((function() {" + JSCONSOLE.resolveImports(jscode) + "}).call(this))");
 
 // return an empty array if no result is defined
 if (!result) result = [];
-
 model.result = jsonUtils.toJSONString(JSCONSOLE.convertReturnValues(result)); 
+
+//return the script that was executed back to the caller
+model.input = JSCONSOLE.resolveImports(jscode);
+
 model.output = printoutput;
+
+// return the state of the space variable
 if (space) {
 	model.spaceNodeRef = ""+space.nodeRef;
 	model.spacePath = space.displayPath + "/" + space.name;
