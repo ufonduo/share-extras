@@ -1,5 +1,5 @@
 #summary Describes the Audit Dashlet add-on for Alfresco Share
-#labels Featured,Addon-Dashlet,AlfrescoVersion-3.x,AlfrescoVersion-4.x
+#labels Addon-Dashlet,AlfrescoVersion-3.x,AlfrescoVersion-4.x
 
 =Introduction=
 
