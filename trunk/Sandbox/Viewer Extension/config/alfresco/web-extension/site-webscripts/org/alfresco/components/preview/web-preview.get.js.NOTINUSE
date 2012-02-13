@@ -1,0 +1,105 @@
+<import resource="classpath:/alfresco/templates/org/alfresco/import/alfresco-util.js">
+
+function getPluginConditions(xmlConfig)
+{
+	// Create a json representation of the conditions that will be used to decide which previewer that shall be used
+   var pluginConditions = [], conditionNode, conditionNodes, pluginNode, pluginNodes, condition, plugin, attribute, attributes;
+   if (xmlConfig)
+   {
+   	conditionNodes = xmlConfig.getChildren("condition");
+      for (var i = 0; i < conditionNodes.size(); i++)
+      {
+         condition =
+         {
+            attributes: {},
+            plugins: []
+         };
+
+         
+         conditionNode = conditionNodes.get(i);
+         attributes = eval(conditionNode.getAttributes());
+         logger.log("LX Cond Attr typ "+ attributes);
+         
+         for each (attribute in attributes)
+         {
+         	logger.log("LX Cond Attr "+ attributes[attribute]);
+         	logger.log("LX Cond Attr "+ attribute);
+            condition.attributes[attributes[attribute]] = attribute;
+         }
+         
+         pluginNodes = conditionNode.getChildren("plugin");
+         for (var j = 0; j < pluginNodes.size(); j++)
+         {
+         	pluginNode = pluginNodes.get(j);
+         	logger.log("LX PluginNode  "+ pluginNode.getValue());
+         	plugin =
+            {
+               name: pluginNode.getValue(),
+               attributes: {}
+            };
+         	attributes = pluginNode.getAttributes();
+            for each (attribute in attributes)
+            {
+            	logger.log("LX Plug Attr "+ attributes[attribute]);
+            	logger.log("LX Plug Attr "+ attribute);
+               plugin.attributes[attributes[attribute]] = attribute;
+            }
+            condition.plugins.push(plugin);
+         }
+         pluginConditions.push(condition);
+      }
+      return pluginConditions;
+   }
+}
+
+function getDocumentNode(nodeRef, defaultValue)
+{
+
+   var metadata = AlfrescoUtil.getMetaData(nodeRef, {});
+   if (metadata.properties)
+   {
+      var node = {},
+         mcns = "{http://www.alfresco.org/model/content/1.0}",
+         content = metadata.properties[mcns + "content"];
+
+      node.name = metadata.properties[mcns + "name"];
+      node.mimeType = metadata.mimetype;
+      if (content)
+      {
+         var size = content.substring(content.indexOf("size=") + 5);
+         size = size.substring(0, size.indexOf("|"));
+         node.size = size;
+      }
+      else
+      {
+         node.size = "0";
+      }
+      node.thumbnails = AlfrescoUtil.getThumbnails(nodeRef);
+      return node;
+   }
+   else
+   {
+      return defaultValue;
+   }
+}
+
+function main()
+{
+   // Populate model with parameters
+   AlfrescoUtil.param("nodeRef");
+
+   // Populate model with data from repo
+   var documentNode = getDocumentNode(model.nodeRef, null);
+   if (documentNode)
+   {
+      // Populate model with data from node and config
+      model.node = documentNode;
+      logger.log(config.scoped["Viewers"]);
+      var pluginConditions = getPluginConditions(config.scoped["Viewers"]["plugin-conditions"]);
+      model.pluginConditionsJSON = jsonUtils.toJSONString(pluginConditions);
+      logger.log("LX "+ model.pluginConditionsJSON)
+   }
+}
+
+// Start the webscript
+main();
