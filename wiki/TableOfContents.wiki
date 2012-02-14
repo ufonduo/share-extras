@@ -14,5 +14,5 @@
   * [DevelopmentGuide Development Guide]
     * [DevelopmentEnvironment Development Environment]
     * [JSDoc Generating JSDoc]
-    * LicenseTemplate
+    * [LicenseTemplate License Template]
   * [ContributionProcess Contribution Process]
