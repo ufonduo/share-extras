@@ -1,21 +1,30 @@
-/**
- * This file is part of the Share Extras pdfJS project.
- * It is an extension/rewrite of of Alfresco source code
- * and subject to their license.
+/*
+ * Copyright (C) 2010-2012 Share Extras contributors
+ *
+ * This file is part of the Share Extras project.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 /**
- * This is the "IframeView" plugin used to display text files using the <iframe>
- * element.
- * 
- * Supports at least the following mime types: "plain/text".
- * 
- * @param wp
- *           {Alfresco.WebPreview} The Alfresco.WebPreview instance that decides
- *           which plugin to use
- * @param attributes
- *           {Object} Arbitrary attributes brought in from the <plugin> element
+ * This is the "IframeView" plug-in used to display file formats such as
+ * text and html that can render directly in the web browser.
+ *
+ * @namespace Alfresco.WebPreview.prototype.Plugins
+ * @class Alfresco.WebPreview.prototype.Plugins.IframeView
+ * @author Peter Lšfgren Loftux AB
  */
+
 Alfresco.WebPreview.prototype.Plugins.IframeView = function(wp, attributes)
 {
 	this.wp = wp;
@@ -57,7 +66,7 @@ Alfresco.WebPreview.prototype.Plugins.IframeView.prototype = {
 	},
 
 	/**
-	 * Display the node.
+	 * Display the node using in iframe.
 	 * 
 	 * @method display
 	 * @public

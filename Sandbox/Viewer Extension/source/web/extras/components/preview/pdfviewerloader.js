@@ -1,21 +1,33 @@
-/**
- * This file is part of the Share Extras pdfJS project.
- * It is an extension/rewrite of of Alfresco source code
- * and subject to their license.
+/*
+ * Copyright (C) 2010-2012 Share Extras contributors
+ *
+ * This file is part of the Share Extras project.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 /**
- * This is the "PdfViewer" plugin used to display text files using the <iframe>
- * element.
+ * This is the "PdfViewer" plugin that renders pdf file using
+ * third party pdf.js library, or as fallback any pdf viewer plugin
+ * installed in the browser
  * 
- * Supports at least the following mime types: "plain/text".
- * 
- * @param wp
- *           {Alfresco.WebPreview} The Alfresco.WebPreview instance that decides
- *           which plugin to use
- * @param attributes
- *           {Object} Arbitrary attributes brought in from the <plugin> element
+ * Supports the following mime types: "application/pdf".
+ *
+ * @namespace Alfresco.WebPreview.prototype.Plugins
+ * @class Alfresco.WebPreview.prototype.Plugins.PdfViewer
+ * @author Peter Lšfgren Loftux AB
  */
+
 Alfresco.WebPreview.prototype.Plugins.PdfViewer = function(wp, attributes)
 {
 	this.wp = wp;
@@ -39,15 +51,43 @@ Alfresco.WebPreview.prototype.Plugins.PdfViewer.prototype = {
 		 * @default null
 		 */
 		src : null,
-		// If html5 canvas is supported
+		/**
+		 * Sets if canvas is supported and pdf.js can be used.
+		 * Internal only.
+		 * 
+		 * @property canvassuport
+		 * @type Boolean
+		 * @default false
+		 */
 		canvassupport : false,
-		// If pdf plugin is installed
+		/**
+		 * Sets if there is a pdf plugin installed
+		 * Internal only.
+		 * 
+		 * @property pdfplugininstalled
+		 * @type Boolean
+		 * @default false
+		 */
 		pdfplugininstalled : false,
-		// Force the plugin used, mostly for developer use
-		// Valid options are pdfjs or plugin
+		/**
+		 * Force the use of selected plugin
+		 * Valid options
+		 * pdfjs - use the pdf.js library
+		 * plugin - use the browser plugin
+		 * 
+		 * @property forceplugin
+		 * @type String
+		 * @default null
+		 */		
 		forceplugin : null,
-		// Skip test, use together with forceplugin
-		// If browser tests are skipped, then it will try to load regardless
+		/**
+		 * Skipbrowser test, mostly for developer to force test loading
+		 * Valid options "true" "false" as String
+		 * 
+		 * @property forceplugin
+		 * @type String
+		 * @default null
+		 */		
 		skipbrowsertest : null
 	},
 
@@ -193,6 +233,12 @@ Alfresco.WebPreview.prototype.Plugins.PdfViewer.prototype = {
 
 	},
 
+	/**
+	 * Detect PDF plugin in IE
+	 * 
+	 * @method _detectPdfPluginIE
+	 * @private
+	 */
 	_detectPdfPluginIE : function PdfViewer_detectPDFPluginIE()
 	{
 		// TODO: Add more known pdf plugins

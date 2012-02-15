@@ -2,12 +2,12 @@
 <#assign el=args.htmlid?html>
     <div id="controls">
       <button id="previous" onclick="PDFView.page--;" oncontextmenu="return false;">
-        <img src="${url.context}/res/components/preview/images/go-up.svg" align="top" height="16"/>
+        <img src="${url.context}/res/extras/components/preview/pdfjs/images/go-up.svg" align="top" height="16"/>
         ${msg("button.previous")}
       </button>
 
       <button id="next" onclick="PDFView.page++;" oncontextmenu="return false;">
-        <img src="${url.context}/res/components/preview/images/go-down.svg" align="top" height="16"/>
+        <img src="${url.context}/res/extras/components/preview/pdfjs/images/go-down.svg" align="top" height="16"/>
         ${msg("button.next")}
       </button>
 
@@ -21,10 +21,10 @@
       <div class="separator"></div>
 
       <button id="zoomOut" title="${msg("button.zoomout")}" onclick="PDFView.zoomOut();" oncontextmenu="return false;">
-        <img src="${url.context}/res/components/preview/images/zoom-out.svg" align="top" height="16"/>
+        <img src="${url.context}/res/extras/components/preview/pdfjs/images/zoom-out.svg" align="top" height="16"/>
       </button>
       <button id="zoomIn" title="${msg("button.zoomin")}" onclick="PDFView.zoomIn();" oncontextmenu="return false;">
-        <img src="${url.context}/res/components/preview/images/zoom-in.svg" align="top" height="16"/>
+        <img src="${url.context}/res/extras/components/preview/pdfjs/images/zoom-in.svg" align="top" height="16"/>
       </button>
 
       <div class="separator"></div>
@@ -45,19 +45,19 @@
       <div class="separator"></div>
 
       <button id="print" onclick="window.print();" oncontextmenu="return false;">
-        <img src="${url.context}/res/components/preview/images/document-print.svg" align="top" height="16"/>
+        <img src="${url.context}/res/extras/components/preview/pdfjs/images/document-print.svg" align="top" height="16"/>
         ${msg("button.print")}
       </button>
 
       <button id="download" title="${msg("button.download")}" onclick="PDFView.download();" oncontextmenu="return false;">
-        <img src="${url.context}/res/components/preview/images/download.svg" align="top" height="16"/>
+        <img src="${url.context}/res/extras/components/preview/pdfjs/images/download.svg" align="top" height="16"/>
         ${msg("button.download")}
       </button>
 
       <div class="separator"></div>
 
       <button id="fullpage" title="${msg("button.fullpage")}" onclick="window.open(window.location, '_blank');" oncontextmenu="return false;">
-        <img src="${url.context}/res/components/preview/images/bookmark.svg" align="top" height="16"/>
+        <img src="${url.context}/res/extras/components/preview/pdfjs/images/bookmark.svg" align="top" height="16"/>
         ${msg("button.fullpage")}
       </button>
 
@@ -92,10 +92,10 @@
         </div>
         <div id="sidebarControls">
           <button id="thumbsSwitch" title="${msg("sidebar.showthumbnails")}" onclick="PDFView.switchSidebarView('thumbs')" data-selected>
-            <img src="${url.context}/res/components/preview/images/nav-thumbs.svg" align="top" height="16" alt="${msg("sidebar.showthumbnails.alt")}" />
+            <img src="${url.context}/res/extras/components/preview/pdfjs/images/nav-thumbs.svg" align="top" height="16" alt="${msg("sidebar.showthumbnails.alt")}" />
           </button>
           <button id="outlineSwitch" title="${msg("sidebar.showoutline")}" onclick="PDFView.switchSidebarView('outline')" disabled>
-            <img src="${url.context}/res/components/preview/images/nav-outline.svg" align="top" height="16" alt="${msg("sidebar.showoutline.alt")}" />
+            <img src="${url.context}/res/extras/components/preview/pdfjs/images/nav-outline.svg" align="top" height="16" alt="${msg("sidebar.showoutline.alt")}" />
           </button>
         </div>
      </div>

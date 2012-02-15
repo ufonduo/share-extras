@@ -73,7 +73,7 @@
    
 	<!-- yuicompress doesn't work with pdf.js https://github.com/mozilla/pdf.js/issues/710 -->
 	<!-- Using jsmin instead, not as efficient, but works -->
-	<!--
+	
 	<path id="yuicompressor.classpath">
        <fileset dir="lib">
              <include name="yuicompressor-2.4.2.jar"/>
@@ -86,7 +86,7 @@
             <path refid="yuicompressor.classpath"/>
          </classpath>
    </taskdef>
-    -->
+   
 	<taskdef name="jsmin" classname="net.matthaynes.jsmin.JSMin_Task" classpath="${basedir}/lib/jsmin.0.2.4.jar"/>
 	
    <!-- Clean out the build and distribution directories -->
@@ -144,15 +144,18 @@
             </fileset>
             <globmapper from="alfresco/web-extension/*.xml" to="*.xml" handledirsep="true" />
         </copy>
-        <!-- Minify JS -->
+
+      <yuicompress fromdir="${res.dir}" todir="${build.jar.dir}/META-INF" excludes="**/*-min.js" warn="${yuicompress.warn}">
+          <include name="extras/components/**/*.js" />
+      	 <exclude name="extras/components/**/pdf.js" />
+      </yuicompress>
+
+    	 <!-- Minify JS -->
         <jsmin suffix="true" suffixvalue="-min" >
-        	<fileset dir="${build.jar.dir}/META-INF/components/" includes="**/*.js" excludes="**/*-min.js"/>
+        	<fileset dir="${build.jar.dir}/META-INF/components/" includes="**/pdf.js" excludes="**/*-min.js"/>
         </jsmin>
-    	<!--
-        <yuicompress fromdir="${res.dir}" todir="${build.jar.dir}/META-INF" excludes="**/*-min.js" warn="${yuicompress.warn}">
-            <include name="components/**/*.js" />
-        </yuicompress>
-        -->
+
+
     </target>
    
    <!-- Build the JAR file -->
@@ -192,16 +195,16 @@
         <copy todir="${build.zip.dir}/${build.res.dir}">
             <fileset dir="${res.dir}" includes="${build.res.includes}" excludes="${build.res.excludes}" />
         </copy>
-        <!-- Minify JS -->
-        <!-- Minify JS -->
+
+      <yuicompress fromdir="${res.dir}" todir="${build.zip.dir}/${build.res.dir}" excludes="**/*-min.js" warn="${yuicompress.warn}">
+          <include name="extras/components/**/*.js" />
+      	 <exclude name="extras/components/**/pdf.js" />
+      </yuicompress>
+
+    	 <!-- Minify JS -->
         <jsmin suffix="true" suffixvalue="-min" >
-        	<fileset dir="${build.zip.dir}/webapps/share" includes="**/*.js" excludes="**/*-min.js"/>
+        	<fileset dir="${build.zip.dir}/webapps/share" includes="**/pdf.js" excludes="**/*-min.js"/>
         </jsmin>
-    	<!--
-        <yuicompress fromdir="${res.dir}" todir="${build.zip.dir}/${build.res.dir}" excludes="**/*-min.js" warn="${yuicompress.warn}">
-            <include name="components/**/*.js" />
-        </yuicompress>
-        -->
     </target>
 
     <target name="build-zip-prepare">
