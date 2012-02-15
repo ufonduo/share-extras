@@ -1,28 +1,46 @@
-/**
- * This file is part of the Share Extras pdfJS project.
- * It is an extension/rewrite of of Alfresco source code
- * and subject to their license.
+/*
+ * Copyright (C) 2010-2012 Share Extras contributors
+ *
+ * This file is part of the Share Extras project.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 /**
- * This is an extension point for comment methods and properties used by viewers
- * in the extension project.
- * 
+ * This is an extension that augments Alfresco.WebPreview
+ * with functions and properties that can be used by all viewers.
+ *
+ * @namespace ShareExtras
+ * @class ShareExtras.ViewerExtension
+ * @author Peter Lšfgren Loftux AB
  */
 
 (function()
 {
-
-	if (typeof Alfresco.ViewerExtension == "undefined" || !Alfresco.ViewerExtension)
+	if (typeof ShareExtras == "undefined" || !ShareExtras)
 	{
-		Alfresco.ViewerExtension = {};
+		ShareExtras = {};
+	}
+	if (typeof ShareExtras.ViewerExtension == "undefined" || !ShareExtras.ViewerExtension)
+	{
+		ShareExtras.ViewerExtension = {};
 	}
 
-	Alfresco.ViewerExtension.prototype = {
+	ShareExtras.ViewerExtension.prototype = {
 		/**
-		 * Will find a previewer and set it up if one existed
+		 * Set up the available preview size
 		 * 
-		 * @method resolvePreviewer
+		 * @method setupPreviewSize
 		 * @return {integer} size in pixels that preview div is set to
 		 * @public
 		 */
@@ -67,5 +85,5 @@
 
 	}
 
-	YAHOO.lang.augmentProto(Alfresco.WebPreview, Alfresco.ViewerExtension);
+	YAHOO.lang.augmentProto(Alfresco.WebPreview, ShareExtras.ViewerExtension);
 })();
