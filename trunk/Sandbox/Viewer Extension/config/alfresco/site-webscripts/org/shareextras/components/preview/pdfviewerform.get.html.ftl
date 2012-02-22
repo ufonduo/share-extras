@@ -13,7 +13,7 @@
 
       <div class="separator"></div>
 
-      <input type="number" id="pageNumber" onchange="PDFView.page = this.value;" value="1" size="2" min="1" />
+      <input type="number" id="pageNumber" onchange="PDFView.page = this.value;" value="1" size="4" min="1" />
 
       <span>/</span>
       <span id="numPages">--</span>
@@ -84,6 +84,7 @@
 
     <div id="sidebar">
       <div id="sidebarBox">
+        <div id="pinIcon" onClick="PDFView.pinSidebar()"></div>
         <div id="sidebarScrollView">
           <div id="sidebarView"></div>
         </div>
@@ -98,7 +99,7 @@
             <img src="${url.context}/res/extras/components/preview/pdfjs/images/nav-outline.svg" align="top" height="16" alt="${msg("sidebar.showoutline.alt")}" />
           </button>
         </div>
-     </div>
+      </div>
     </div>
 
     <div id="loading">${msg("loading")}... 0%</div>

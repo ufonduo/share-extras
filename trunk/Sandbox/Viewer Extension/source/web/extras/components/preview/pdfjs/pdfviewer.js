@@ -43,10 +43,6 @@ var RenderingQueue = (function RenderingQueueClosure() {
       if (!item.drawingRequired())
         return; // as no redraw required, no need for queueing.
 
-      if ('rendering' in item)
-        return; // is already in the queue
-
-      item.rendering = true;
       this.items.push(item);
       if (this.items.length > 1)
         return; // not first item
@@ -55,7 +51,6 @@ var RenderingQueue = (function RenderingQueueClosure() {
     },
     continueExecution: function RenderingQueueContinueExecution() {
       var item = this.items.shift();
-      delete item.rendering;
 
       if (this.items.length == 0)
         return; // queue is empty
@@ -94,16 +89,19 @@ var FirefoxCom = (function FirefoxComClosure() {
 })();
 
 // Settings Manager - This is a utility for saving settings
-// First we see if localStorage is available, FF bug #495747
+// First we see if localStorage is available
 // If not, we use FUEL in FF
 var Settings = (function SettingsClosure() {
   var isLocalStorageEnabled = (function localStorageEnabledTest() {
+    // Feature test as per http://diveintohtml5.info/storage.html
+    // The additional localStorage call is to get around a FF quirk, see
+    // bug #495747 in bugzilla
     try {
-      localStorage;
+      return 'localStorage' in window && window['localStorage'] !== null &&
+          localStorage;
     } catch (e) {
       return false;
     }
-    return true;
   })();
 
   var isFirefoxExtension = PDFJS.isFirefoxExtension;
@@ -112,7 +110,7 @@ var Settings = (function SettingsClosure() {
     var database = null;
     var index;
     if (isFirefoxExtension)
-      database = FirefoxCom.request('getDatabase', null);
+      database = FirefoxCom.request('getDatabase', null) || '{}';
     else if (isLocalStorageEnabled)
       database = localStorage.getItem('database') || '{}';
     else
@@ -134,12 +132,13 @@ var Settings = (function SettingsClosure() {
       index = database.files.push({fingerprint: fingerprint}) - 1;
     this.file = database.files[index];
     this.database = database;
-    if (isLocalStorageEnabled)
-      localStorage.setItem('database', JSON.stringify(database));
   }
 
   Settings.prototype = {
     set: function settingsSet(name, val) {
+      if (!('file' in this))
+        return false;
+
       var file = this.file;
       file[name] = val;
       var database = JSON.stringify(this.database);
@@ -150,6 +149,9 @@ var Settings = (function SettingsClosure() {
     },
 
     get: function settingsGet(name, defaultValue) {
+      if (!('file' in this))
+        return defaultValue;
+
       return this.file[name] || defaultValue;
     }
   };
@@ -324,7 +326,8 @@ var PDFView = {
       if (pageNumber) {
         var pdfOpenParams = PDFView.getAnchorUrl('#page=' + pageNumber);
         var destKind = dest[1];
-        if ('name' in destKind && destKind.name == 'XYZ') {
+        if (typeof destKind === 'object' && 'name' in destKind &&
+            destKind.name == 'XYZ') {
           var scale = (dest[4] || this.currentScale);
           pdfOpenParams += '&zoom=' + (scale * 100);
           if (dest[2] || dest[3]) {
@@ -386,8 +389,14 @@ var PDFView = {
 
     if (moreInfo) {
       errorMoreInfo.value += 'Message: ' + moreInfo.message;
-      if (moreInfo.stack)
+      if (moreInfo.stack) {
         errorMoreInfo.value += '\n' + 'Stack: ' + moreInfo.stack;
+      } else {
+        if (moreInfo.filename)
+          errorMoreInfo.value += '\n' + 'File: ' + moreInfo.filename;
+        if (moreInfo.lineNumber)
+          errorMoreInfo.value += '\n' + 'Line: ' + moreInfo.lineNumber;
+      }
     }
     errorMoreInfo.rows = errorMoreInfo.value.split('\n').length - 1;
   },
@@ -504,13 +513,7 @@ var PDFView = {
       return;
 
     if (hash.indexOf('=') >= 0) {
-      // parsing query string
-      var paramsPairs = hash.split('&');
-      var params = {};
-      for (var i = 0; i < paramsPairs.length; ++i) {
-        var paramPair = paramsPairs[i].split('=');
-        params[paramPair[0]] = paramPair[1];
-      }
+      var params = PDFView.parseQueryString(hash);
       // borrowing syntax from "Parameters for Opening PDF Files"
       if ('nameddest' in params) {
         PDFView.navigateTo(params.nameddest);
@@ -566,6 +569,10 @@ var PDFView = {
     }
   },
 
+  pinSidebar: function pdfViewPinSidebar() {
+    document.getElementById('sidebar').classList.toggle('pinned');
+  },
+
   getVisiblePages: function pdfViewGetVisiblePages() {
     var pages = this.pages;
     var kBottomMargin = 10;
@@ -618,6 +625,19 @@ var PDFView = {
     }
 
     return visibleThumbs;
+  },
+
+  // Helper function to parse query string (e.g. ?param1=value&parm2=...).
+  parseQueryString: function pdfViewParseQueryString(query) {
+    var parts = query.split('&');
+    var params = {};
+    for (var i = 0, ii = parts.length; i < parts.length; ++i) {
+      var param = parts[i].split('=');
+      var key = param[0];
+      var value = param.length > 1 ? param[1] : null;
+      params[unescape(key)] = unescape(value);
+    }
+    return params;
   }
 };
 
@@ -892,7 +912,10 @@ var PageView = function pageView(container, content, id, pageWidth, pageHeight,
     var self = this;
     stats.begin = Date.now();
     this.content.startRendering(ctx, function pageViewDrawCallback(error) {
-      div.removeChild(self.loadingIconDiv);
+      if (self.loadingIconDiv) {
+        div.removeChild(self.loadingIconDiv);
+        delete self.loadingIconDiv;
+      }
 
       if (error)
         PDFView.error('An error occurred while rendering the page.', error);
@@ -992,7 +1015,7 @@ var ThumbnailView = function thumbnailView(container, page, id, pageRatio) {
   };
 
   this.setImage = function thumbnailViewSetImage(img) {
-    if (this.hasImage)
+    if (this.hasImage || !img)
       return;
 
     var ctx = getPageDrawContext();
@@ -1108,9 +1131,9 @@ var TextLayerBuilder = function textLayerBuilder(textLayerDiv) {
     // vScale and hScale already contain the scaling to pixel units
     var fontHeight = fontSize * text.geom.vScale;
     textDiv.dataset.canvasWidth = text.canvasWidth * text.geom.hScale;
+    textDiv.dataset.fontName = fontName;
 
     textDiv.style.fontSize = fontHeight + 'px';
-    textDiv.style.fontFamily = fontName || 'sans-serif';
     textDiv.style.left = text.geom.x + 'px';
     textDiv.style.top = (text.geom.y - fontHeight) + 'px';
     textDiv.textContent = text.str;
@@ -1120,21 +1143,18 @@ var TextLayerBuilder = function textLayerBuilder(textLayerDiv) {
 };
 
 window.addEventListener('load', function webViewerLoad(evt) {
-  var params = document.location.search.substring(1).split('&');
-  for (var i = 0; i < params.length; i++) {
-    var param = params[i].split('=');
-    params[unescape(param[0])] = unescape(param[1]);
-  }
+  var params = PDFView.parseQueryString(document.location.search.substring(1));
 
-  var scale = ('scale' in params) ? params.scale : 0;
+  var file = PDFJS.isFirefoxExtension ?
+              window.location.toString() : params.file || kDefaultURL;
 //ShareExtras Changes Start
   if(params.file.indexOf("thumbnail")>0)
      {
-        PDFView.open(params.file+'?noCache=' + new Date().getTime()+'&c=force', parseFloat(scale));
+        PDFView.open(file+'?noCache=' + new Date().getTime()+'&c=force', 0);
      }
   else
      {
-        PDFView.open(params.file, parseFloat(scale));
+        PDFView.open(file, 0);
      }
 
 //  if (PDFJS.isFirefoxExtension || !window.File || !window.FileReader ||
@@ -1146,11 +1166,33 @@ window.addEventListener('load', function webViewerLoad(evt) {
 //    document.getElementById('fileInput').value = null;
 //  }
 //ShareExtras Changes End
-  if ('disableWorker' in params)
-    PDFJS.disableWorker = (params['disableWorker'] === 'true');
 
-  if ('disableTextLayer' in params)
-    PDFJS.disableTextLayer = (params['disableTextLayer'] === 'true');
+  // Special debugging flags in the hash section of the URL.
+  var hash = document.location.hash.substring(1);
+  var hashParams = PDFView.parseQueryString(hash);
+
+  if ('disableWorker' in hashParams)
+    PDFJS.disableWorker = (hashParams['disableWorker'] === 'true');
+
+  if ('disableTextLayer' in hashParams)
+    PDFJS.disableTextLayer = (hashParams['disableTextLayer'] === 'true');
+
+  if ('pdfBug' in hashParams) {
+    PDFJS.pdfBug = true;
+    var pdfBug = hashParams['pdfBug'];
+    var all = false, enabled = [];
+    if (pdfBug === 'all')
+      all = true;
+    else
+      enabled = pdfBug.split(',');
+    var debugTools = PDFBug.tools;
+    for (var i = 0; i < debugTools.length; ++i) {
+      var tool = debugTools[i];
+      if (all || enabled.indexOf(tool.id) !== -1)
+        tool.enabled = true;
+    }
+    PDFBug.init();
+  }
 
   var sidebarScrollView = document.getElementById('sidebarScrollView');
   sidebarScrollView.addEventListener('scroll', updateThumbViewArea, true);
@@ -1237,7 +1279,6 @@ function updateViewarea() {
 window.addEventListener('scroll', function webViewerScroll(evt) {
   updateViewarea();
 }, true);
-
 
 var thumbnailTimer;
 
