@@ -2,23 +2,23 @@
 <#assign el=args.htmlid?html>
     <div id="controls">
       <button id="previous" onclick="PDFView.page--;" oncontextmenu="return false;">
-        <img src="${url.context}/res/extras/components/preview/pdfjs/images/go-up.svg" align="top" height="16"/>
+        <img src="${url.context}/res/components/images/back-arrow.png" align="top" height="16"/>
         ${msg("button.previous")}
       </button>
 
       <button id="next" onclick="PDFView.page++;" oncontextmenu="return false;">
-        <img src="${url.context}/res/extras/components/preview/pdfjs/images/go-down.svg" align="top" height="16"/>
+        <img src="${url.context}/res/components/images/forward-arrow-16.png" align="top" height="16"/>
         ${msg("button.next")}
       </button>
 
-      <div class="separator"></div>
+
 
       <input type="number" id="pageNumber" onchange="PDFView.page = this.value;" value="1" size="4" min="1" />
 
       <span>/</span>
       <span id="numPages">--</span>
 
-      <div class="separator"></div>
+
 
       <button id="zoomOut" title="${msg("button.zoomout")}" onclick="PDFView.zoomOut();" oncontextmenu="return false;">
         <img src="${url.context}/res/extras/components/preview/pdfjs/images/zoom-out.svg" align="top" height="16"/>
@@ -27,7 +27,7 @@
         <img src="${url.context}/res/extras/components/preview/pdfjs/images/zoom-in.svg" align="top" height="16"/>
       </button>
 
-      <div class="separator"></div>
+
 
       <select id="scaleSelect" onchange="PDFView.parseScale(this.value);" oncontextmenu="return false;">
         <option id="customScaleOption" value="custom"></option>
@@ -42,22 +42,22 @@
         <option id="pageAutoOption" value="auto" selected="selected">${msg("select.auto")}</option>
       </select>
 
-      <div class="separator"></div>
+
 
       <button id="print" onclick="window.print();" oncontextmenu="return false;">
-        <img src="${url.context}/res/extras/components/preview/pdfjs/images/document-print.svg" align="top" height="16"/>
+        <img src="${url.context}/res/components/images/printer-16.png" align="top" height="16"/>
         ${msg("button.print")}
       </button>
 
       <button id="download" title="${msg("button.download")}" onclick="PDFView.download();" oncontextmenu="return false;">
-        <img src="${url.context}/res/extras/components/preview/pdfjs/images/download.svg" align="top" height="16"/>
+        <img src="${url.context}/res/components/documentlibrary/actions/document-download-16.png" align="top" height="16"/>
         ${msg("button.download")}
       </button>
 
-      <div class="separator"></div>
+
 
       <button id="fullpage" title="${msg("button.fullpage")}" onclick="window.open(window.location, '_blank');" oncontextmenu="return false;">
-        <img src="${url.context}/res/extras/components/preview/pdfjs/images/bookmark.svg" align="top" height="16"/>
+        <img src="${url.context}/res/components/documentlibrary/actions/default-16.png" align="top" height="16"/>
         ${msg("button.fullpage")}
       </button>
 

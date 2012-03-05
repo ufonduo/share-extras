@@ -36,18 +36,36 @@ body {
   border-right: 1px solid #fff;
   height: 16px;
   width:0px;
-  margin: 4px;
+  margin: 4px 4px 4px 1px;
 }
 
+#numPages {
+	font-size: 80%;
+	margin-left: -3px;
+}
 #controls > a > img {
     margin: 4px;
     height: 16px;
 }
 
 #controls > button {
-  line-height: 16px;
+	line-height: 16px;
+	border-color: #B7B7B7;
+	border-style: solid;
+	border-width: 1px;
+	background-color: transparent;
+}
+#controls > button:hover {
+	background-image: url(../../../../themes/default/images/sprite.png);
 }
 
+#controls > select {
+	line-height: 16px;
+	border-color: #B7B7B7;
+	border-style: solid;
+	border-width: 1px;
+	background-color: transparent;
+}
 #controls > button > img {
   width: 16px;
   height: 16px;
