@@ -19,7 +19,7 @@ body {
   background: -moz-linear-gradient(center bottom, #eee 0%, #fff 100%);
   background: -webkit-gradient(linear, left bottom, left top, color-stop(0.0, #ddd), color-stop(1.0, #fff));
   border-bottom: 1px solid #666;
-  padding: 3px;
+  padding: 3px 3px 3px 0px;
   position: fixed;
   left: 0px;
   top: 0px;
