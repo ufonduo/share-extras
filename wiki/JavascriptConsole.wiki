@@ -9,7 +9,7 @@ http://share-extras.googlecode.com/svn/trunk/Sandbox/Javascript%20Console/javasc
 
 This videos shows the Javascript Console in use:
 
-<wiki:video url="http://www.youtube.com/watch?v=simzAhXogUg" width="720"/>
+<wiki:video url="http://www.youtube.com/watch?v=simzAhXogUg" width="860" height="480"/>
 
 =Installation=
 
