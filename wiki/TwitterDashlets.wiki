@@ -71,3 +71,7 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
  # For the Twitter Timeline dashlet click the Connect button if you have not previously done so. Once you have authorised the application you will be redirected to your user dashboard.
 
 = Known Issues =
+
+*Could not connect to Twitter as OAuth support is not available. Please contact your administrator.*
+
+This status may be shown in the Twitter Timeline dashlet, which requires authenticated access to the Twitter API, if the [ShareOAuth Share OAuth] add-on is not found. You must ensure that you have installed the Share OAuth JAR file inside the WEB-INF/lib folder of both the repository and Share webapps.
