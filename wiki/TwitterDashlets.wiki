@@ -5,6 +5,8 @@
 
 This project defines three custom dashlets which you can use to interact with Twitter from within Alfresco Share.
 
+*The dashlets require Alfresco 4.0, and for authenticated Twitter access require the Share Extras [http://code.google.com/p/share-extras/wiki/ShareOAuth OAuth extension], version 2.2, is also needed. Older 3.x versions of Alfresco may use the standalone [TwitterFeedDashlet Twitter Feed] or [TwitterSearchDashlet Twitter Search] dashlets.*
+
 The *Twitter Feed dashlet* displays recent Tweets from any public Twitter user, or any public list belonging to a user.
 
 [http://share-extras.googlecode.com/svn/trunk/Twitter%20Dashlets/screenshots/twitter-timeline-dashlet-user.png] 
@@ -21,8 +23,6 @@ Finally, the *Twitter Timeline dashlet* allows you to connect to Twitter as an a
 You can view messages in the dashlet, and the standard Favorite, Reply and Retweet actions are available, as well as the ability to post a new Tweet.
 
 [http://share-extras.googlecode.com/svn/trunk/Twitter%20Dashlets/screenshots/twitter-new-tweet.png]
-
-*The dashlets require Alfresco 4.0, and for authenticated access require the Share Extras [http://code.google.com/p/share-extras/wiki/ShareOAuth OAuth extension], version 2.2, is also needed.*
 
 =Installation=
 
