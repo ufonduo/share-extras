@@ -1,4 +1,4 @@
-#summary Describes the Twitter Feed Dashlets add-on for Alfresco Share
+#summary Custom dashlets for interacting with Twitter from within Alfresco Share
 #labels Addon-Dashlet,AlfrescoVersion-4.x
 
 =Introduction=
