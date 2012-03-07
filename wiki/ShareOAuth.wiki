@@ -4,6 +4,12 @@
 
 This add-on provides a custom Spring Surf connector and client-side helper class, allowing easy OAuth-based access to external resources. It is a prerequisite for the Twitter, Yammer and LinkedIn dashlets provided by Share Extras.
 
+=Download=
+
+For *Alfresco 4.x*, download the *2.x* version of the add-on.
+
+[http://code.google.com/p/share-extras/downloads/list?q=share-oauth Download Share OAuth add-on]
+
 =Installation=
 
 The extension is packaged as a single JAR file for easy installation into Alfresco Share.
