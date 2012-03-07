@@ -1,4 +1,4 @@
-#summary Describes the Twitter Feed Dashlet add-on for Alfresco Share
+#summary Alfresco 3.x dashlet for viewing Twitter user timelines or lists
 #labels Addon-Dashlet,AlfrescoVersion-3.x
 
 =Introduction=
