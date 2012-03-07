@@ -1,9 +1,11 @@
-#summary Describes the Twitter Search Dashlet add-on for Alfresco Share
+#summary Alfresco 3.x dashlet for following Twitter search results
 #labels Addon-Dashlet,AlfrescoVersion-3.x
 
 =Introduction=
 
 This project defines a custom dashlet that displays the results of a Twitter search in real-time, using the Twitter search API.
+
+*For Alfresco 4.x, please see the combined [TwitterDashlets Twitter Dashlets]* project instead.*
 
 [http://share-extras.googlecode.com/svn/trunk/Twitter%20Search%20Dashlet/screenshots/twitter-search-dashlet.png]
 
