@@ -1,4 +1,4 @@
-#summary Custom dashlets for interacting with Twitter from within Alfresco Share
+#summary Custom dashlets for interacting with Twitter from within Alfresco Share 4.0
 #labels Addon-Dashlet,AlfrescoVersion-4.x
 
 =Introduction=
@@ -22,7 +22,7 @@ You can view messages in the dashlet, and the standard Favorite, Reply and Retwe
 
 [http://share-extras.googlecode.com/svn/trunk/Twitter%20Dashlets/screenshots/twitter-new-tweet.png]
 
-*Note that the Twitter Timeline dashlet requires an Alfresco 4.0 build, or a 3.4 installation with upgraded Spring Surf libraries, and you must also install the Share Extras [http://code.google.com/p/share-extras/wiki/ShareOAuth OAuth extension].*
+*The dashlets require Alfresco 4.0, and for authenticated access require the Share Extras [http://code.google.com/p/share-extras/wiki/ShareOAuth OAuth extension], version 2.2, is also needed.*
 
 =Installation=
 
