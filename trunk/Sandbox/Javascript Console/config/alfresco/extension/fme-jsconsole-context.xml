@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+<beans>
+
+	<bean id="webscript.de.fme.jsconsole.execute2.post" class="de.fme.jsconsole.ExecuteWebscript" parent="webscript">
+		<property name="scriptUtils">
+            <ref bean="utilsScript"/>
+        </property>        
+	</bean>
+	
+</beans>
+

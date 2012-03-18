@@ -7,6 +7,8 @@
 <@script type="text/javascript" src="${page.url.context}/res/modules/documentlibrary/global-folder.js"></@script>
 <@script type="text/javascript" src="${page.url.context}/res/components/console/codemirror/codemirror.js"></@script>
 <@script type="text/javascript" src="${page.url.context}/res/components/console/codemirror/javascript.js"></@script>
+<@script type="text/javascript" src="${page.url.context}/res/components/console/codemirror/xml.js"></@script>
+<@script type="text/javascript" src="${page.url.context}/res/components/console/codemirror/htmlmixed.js"></@script>
 <@link rel="stylesheet" type="text/css" href="${page.url.context}/res/components/console/codemirror/codemirror.css" />
 <@link rel="stylesheet" type="text/css" href="${page.url.context}/res/components/console/codemirror/default.css" />
 <@script type="text/javascript" src="${page.url.context}/res/yui/resize/resize.js"></@script>

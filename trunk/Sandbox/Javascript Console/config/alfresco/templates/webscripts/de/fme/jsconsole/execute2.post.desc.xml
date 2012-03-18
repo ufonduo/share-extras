@@ -1,0 +1,6 @@
+<webscript>
+  <shortname>fme JSConsole Execute Javascript</shortname>
+  <url>/de/fme/jsconsole/execute2</url>
+  <authentication>admin</authentication>
+  <format default="json">extension</format>
+</webscript>

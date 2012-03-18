@@ -48,7 +48,7 @@ if (typeof Fme == "undefined" || !Fme)
       Alfresco.util.ComponentManager.register(this);
       
       /* Load YUI Components */
-      Alfresco.util.YUILoaderHelper.require(["button", "container", "datasource", "datatable",  "paginator", "json", "history"], this.onComponentsLoaded, this);
+      Alfresco.util.YUILoaderHelper.require(["button", "container", "datasource", "datatable",  "paginator", "json", "history", "tabview"], this.onComponentsLoaded, this);
       
       /* Define panel handlers */
       var parent = this;
@@ -72,6 +72,8 @@ if (typeof Fme == "undefined" || !Fme)
         	 parent.widgets.nodeField = Dom.get(parent.id + "-nodeRef");
         	 parent.widgets.scriptInput = Dom.get(parent.id + "-jsinput");
         	 parent.widgets.scriptOutput = Dom.get(parent.id + "-jsoutput");
+        	 parent.widgets.templateInput = Dom.get(parent.id + "-templateinput");
+        	 parent.widgets.templateOutput = Dom.get(parent.id + "-templateoutput");
     		 
              // Buttons
         	 parent.widgets.selectDestinationButton = Alfresco.util.createYUIButton(parent, "selectDestination-button", parent.onSelectDestinationClick);
@@ -87,6 +89,7 @@ if (typeof Fme == "undefined" || !Fme)
    {
 	   clearOutput : function ACJC_clearOutput() {
 	       this.widgets.scriptOutput.innerHTML="";
+	       this.widgets.templateOutput.innerHTML="";
 	   },
 
 	   appendLineArrayToOutput: function ACJC_appendLineArrayToOutput(lineArray) {
@@ -102,7 +105,7 @@ if (typeof Fme == "undefined" || !Fme)
 	       outputfield.innerHTML = "";
 	       outputfield.appendChild(document.createTextNode(text));
 	   },
-  
+
 	   browserSupportsHtml5Storage: function ACJC_browserSupportsHtml5Storage() {
 		   try {
 		     return 'localStorage' in window && window['localStorage'] !== null;
@@ -184,6 +187,29 @@ if (typeof Fme == "undefined" || !Fme)
           
 	  },
 	   
+	  onEditorKeyEvent : function ACJC_onEditorKeyEvent(i, e) {
+ 		 // Hook into ctrl-enter
+          if (e.type=="keyup" && e.keyCode == 13 && (e.ctrlKey || e.metaKey) && !e.altKey) {
+	               e.stop();
+	               i.owner.onExecuteClick(i.owner, e);
+	         }
+         // Hook into ctrl-space
+         if (e.keyCode == 32 && (e.ctrlKey || e.metaKey) && !e.altKey) {
+            e.stop();
+            i.owner.onAutoComplete(i.owner, e);
+         }
+         // Hook into ctrl-z for Undo
+         if (e.keyCode == 122 && (e.ctrlKey || e.metaKey) && !e.altKey) {
+            e.stop();
+            i.owner.widgets.codeMirrorScript.undo(i.owner, e);
+         }
+         // Hook into ctrl-y for Redo
+         if (e.keyCode == 123 && (e.ctrlKey || e.metaKey) && !e.altKey) {
+            e.stop();
+            i.owner.widgets.codeMirrorScript.redo(i.owner, e);
+         }
+	  },
+	  
       /**
 		 * Fired by YUI when parent element is available for scripting.
 		 * Component initialisation, including instantiation of YUI widgets and
@@ -196,55 +222,70 @@ if (typeof Fme == "undefined" || !Fme)
          // Call super-class onReady() method
          Fme.JavascriptConsole.superclass.onReady.call(this);
          var self = this;
-         
+
          // Attach the CodeMirror highlighting
-         this.widgets.codeMirror = CodeMirror.fromTextArea(this.widgets.scriptInput, {
+         this.widgets.codeMirrorScript = CodeMirror.fromTextArea(this.widgets.scriptInput, {
+        	 mode : "javascript",
         	 lineNumbers: true,
         	 matchBrackets: true,
-        	 onKeyEvent: function(i, e) {
-        		 // Hook into ctrl-enter
-	             if (e.type=="keyup" && e.keyCode == 13 && (e.ctrlKey || e.metaKey) && !e.altKey) {
-		               e.stop();
-		               i.owner.onExecuteClick(i.owner, e);
-		         }
-                // Hook into ctrl-space
-                if (e.keyCode == 32 && (e.ctrlKey || e.metaKey) && !e.altKey) {
-                   e.stop();
-                   i.owner.onAutoComplete(i.owner, e);
-                }
-                // Hook into ctrl-z for Undo
-                if (e.keyCode == 122 && (e.ctrlKey || e.metaKey) && !e.altKey) {
-                   e.stop();
-                   i.owner.widgets.codeMirror.undo(i.owner, e);
-                }
-                // Hook into ctrl-y for Redo
-                if (e.keyCode == 123 && (e.ctrlKey || e.metaKey) && !e.altKey) {
-                   e.stop();
-                   i.owner.widgets.codeMirror.redo(i.owner, e);
-                }
-                
-        	 }
+        	 onKeyEvent: this.onEditorKeyEvent
+         });
+         
+         this.widgets.codeMirrorTemplate = CodeMirror.fromTextArea(this.widgets.templateInput, {
+        	 mode : "xml",
+        	 lineNumbers: true,
+        	 matchBrackets: true,
+        	 onKeyEvent: this.onEditorKeyEvent,
+        	 markParen: function(node, ok) { 
+        	        node.style.backgroundColor = ok ? "#CCF" : "#FCC#";
+        	        if(!ok) {
+        	            node.style.color = "red";
+        	        }
+        	    },
+        	    unmarkParen: function(node) { 
+        	         node.style.backgroundColor = "";
+        	         node.style.color = "";
+        	    },
+        	    indentUnit: 4        	 
          });
          
          // Store this for use in event
-         this.widgets.codeMirror.owner = this;
+         this.widgets.codeMirrorScript.owner = this;
+         this.widgets.codeMirrorTemplate.owner = this;
 
          this.setupResizableEditor();
+         
+         this.widgets.inputTabs = new YAHOO.widget.TabView(this.id + "-inputTabs");
+         this.widgets.outputTabs = new YAHOO.widget.TabView(this.id + "-outputTabs");
+         
+         var tab0 = this.widgets.inputTabs.getTab(1); // 2nd tab
+         tab0.addListener('click', function handleClick(e) { 
+        	 self.widgets.codeMirrorTemplate.refresh();
+         });         
 
          YAHOO.Bubbling.on("folderSelected", this.onDestinationSelected, this);
          
          // Store and Restore script content to and from local storage
     	 if (self.browserSupportsHtml5Storage()) {
              window.onbeforeunload = function(e) {
-           		 self.widgets.codeMirror.save();
+           		 self.widgets.codeMirrorScript.save();
            		 window.localStorage["javascript.console.script"] = self.widgets.scriptInput.value;
+           		 self.widgets.codeMirrorTemplate.save();
+           		 window.localStorage["javascript.console.template"] = self.widgets.templateInput.value;
              };
 
              if (window.localStorage["javascript.console.script"]) {
-            	 this.widgets.codeMirror.setValue(window.localStorage["javascript.console.script"]);
+            	 this.widgets.codeMirrorScript.setValue(window.localStorage["javascript.console.script"]);
              }
              else {
             	 this.loadDemoScript();
+             }
+
+             if (window.localStorage["javascript.console.template"]) {
+            	 this.widgets.codeMirrorTemplate.setValue(window.localStorage["javascript.console.template"]);
+             }
+             else {
+            	 this.loadDemoTemplate();
              }
     	 }
          
@@ -294,21 +335,38 @@ if (typeof Fme == "undefined" || !Fme)
       },
 
       setupResizableEditor: function() {
-         var codeMirror = this.widgets.codeMirror;
+    	  var me = this;
+    	  
+          var codeMirrorScript = this.widgets.codeMirrorScript;
+          var codeMirrorTemplate = this.widgets.codeMirrorTemplate;
+
+          var resize = new YAHOO.util.Resize(this.id + "-inputContentArea", { handles : ["b"] });
          
- 	     var resize = new YAHOO.util.Resize(this.id + "-editorResize", { handles : ["b"] });
+ 	     //var resize = new YAHOO.util.Resize(this.id + "-editorResize", { handles : ["b"] });
  	     resize.on('resize', function(ev) {
  	    	 var h = ev.height; 
- 	         Dom.setStyle(codeMirror.getScrollerElement(), "height", ""+ h + "px");
- 	         codeMirror.refresh();
+ 	         Dom.setStyle(codeMirrorScript.getScrollerElement(), "height", ""+ h + "px");
+ 	         codeMirrorScript.refresh();
+
+  	         Dom.setStyle(codeMirrorTemplate.getScrollerElement(), "height", ""+ h + "px");
+ 	         codeMirrorTemplate.refresh();
+ 	        
+  	         Dom.setStyle(me.id + "-inputContentArea", "width", "inherit");
  	     }); 
+ 	     
+ 	     resize.on('endResize', function(ev) {
+  	         Dom.setStyle(me.id + "-inputContentArea", "width", "inherit");
+	     }); 
  	     
  	     // Recalculate the horizontal size on a browser window resize event
           YAHOO.util.Event.on(window, "resize", function(e)
           {
  	         // YAHOO.util.Resize sets an absolute width, reset to auto width
- 	         Dom.setStyle(this.id + "-editorResize", "width", "auto"); 
-          }, this, true); 
+   	         Dom.setStyle(me.id + "-inputContentArea", "width", "inherit");
+          }, this, true);
+          
+    	  
+    	  
       },
 
       /**
@@ -383,7 +441,7 @@ if (typeof Fme == "undefined" || !Fme)
 		 */      
       onAutoComplete: function ACJC_onAutoComplete(e, p_obj)
       {
-  	    	var editor = this.widgets.codeMirror;
+  	    	var editor = this.widgets.codeMirrorScript;
 
   	    	var removeQuotes = function(text) {
   	    		while (text[0]=='"') text = text.substr(1);
@@ -602,22 +660,25 @@ if (typeof Fme == "undefined" || !Fme)
       onExecuteClick: function ACJC_onExecuteClick(e, p_obj)
       {
     	// Save any changes done in CodeMirror editor before submitting
-    	this.widgets.codeMirror.save();
+    	this.widgets.codeMirrorScript.save();
+    	this.widgets.codeMirrorTemplate.save();
     	
     	// If something is selected, only get the selected part of the script
     	var scriptCode = "";
-    	if (this.widgets.codeMirror.somethingSelected()) {
-    		scriptCode = this.widgets.codeMirror.getSelection();
+    	if (this.widgets.codeMirrorScript.somethingSelected()) {
+    		scriptCode = this.widgets.codeMirrorScript.getSelection();
     	}
     	else {
     		scriptCode = this.widgets.scriptInput.value;
     	}
     	
+    	templateCode = this.widgets.templateInput.value;
+    	
     	// Build JSON Object to send to the server
    	  	var input = { 
-     	   "input" : scriptCode,
-   	  	   "context" : {},
-           "space" : this.widgets.nodeField.value
+     	   "script" : scriptCode,
+     	   "template" : templateCode	,
+           "spaceNodeRef" : this.widgets.nodeField.value
    	  	};
 
    	  	// Disable the result textarea
@@ -629,7 +690,7 @@ if (typeof Fme == "undefined" || !Fme)
    	    
    	  	Alfresco.util.Ajax.request(
          {
-            url: Alfresco.constants.PROXY_URI + "de/fme/jsconsole/execute.json",
+            url: Alfresco.constants.PROXY_URI + "de/fme/jsconsole/execute2",
             method: Alfresco.util.Ajax.POST,
             dataObj: input,
             requestContentType: Alfresco.util.Ajax.JSON,
@@ -639,13 +700,17 @@ if (typeof Fme == "undefined" || !Fme)
             	 this.showLoadingAjaxSpinner(false);
             	 this.printExecutionStats();
             	 this.clearOutput();
-            	 this.appendLineArrayToOutput(res.json.output);
+            	 this.appendLineArrayToOutput(res.json.printOutput);
+            	 this.widgets.templateOutput.innerHTML = res.json.renderedTemplate;
+            		 
                  if (res.json.spaceNodeRef) {
                 	 this.widgets.nodeField.value = res.json.spaceNodeRef;
                      this.widgets.pathField.innerHTML = res.json.spacePath;
                  }                 
                  this.widgets.scriptOutput.disabled = false;
+                 this.widgets.templateOutput.disabled = false;
            	     this.widgets.executeButton.disabled = false;
+           	     
                  this.showResultTable(res.json.result);
                	 YAHOO.util.Dom.removeClass(this.widgets.scriptOutput, 'jserror'); 
                },
@@ -665,7 +730,8 @@ if (typeof Fme == "undefined" || !Fme)
 
                  this.widgets.scriptOutput.disabled = false;
            	     this.widgets.executeButton.disabled = false;
-               	 Dom.addClass(this.widgets.scriptOutput, 'jserror'); 
+               	 Dom.addClass(this.widgets.scriptOutput, 'jserror');
+               	this.widgets.outputTabs.selectTab(0); // show console tab               	 
                },
                scope: this
             }
@@ -686,12 +752,16 @@ if (typeof Fme == "undefined" || !Fme)
 	  },
 	  
 	  loadDemoScript: function ACJC_loadDemoScript() {
-		  this.widgets.codeMirror.setValue(
+		  this.widgets.codeMirrorScript.setValue(
 			'var nodes = search.luceneSearch("@name:alfresco");\n'+
 			'\n'+
 			'for each(var node in nodes) {\n'+
 	        '    logger.log(node.name + " (" + node.typeShort + "): " + node.nodeRef);\n'+
 	        '}\n');
+	  },
+
+	  loadDemoTemplate: function ACJC_loadDemoTemplate() {
+		  this.widgets.codeMirrorTemplate.setValue('no template');
 	  },
 	  
       /**
@@ -705,7 +775,7 @@ if (typeof Fme == "undefined" || !Fme)
           var callback = {
               success : function(o) {
         	  	  // set the new editor content
-            	  self.widgets.codeMirror.setValue(o.responseText);
+            	  self.widgets.codeMirrorScript.setValue(o.responseText);
               },
               failure: function(o) {
             	  text: self.msg("error.script.load", filename)
@@ -753,7 +823,7 @@ if (typeof Fme == "undefined" || !Fme)
 		 * @method onLoadScriptClick
 		 */ 	  
        onSaveScriptClick : function ACJC_onSaveScriptClick(p_sType, p_aArgs, self) { 
-    	  self.widgets.codeMirror.save();
+    	  self.widgets.codeMirrorScript.save();
     	   
     	  var menuItem = p_aArgs[1];
     	  var filename = menuItem.cfg.getProperty("text");
