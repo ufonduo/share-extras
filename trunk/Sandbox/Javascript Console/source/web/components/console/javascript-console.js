@@ -74,6 +74,10 @@ if (typeof Fme == "undefined" || !Fme)
         	 parent.widgets.scriptOutput = Dom.get(parent.id + "-jsoutput");
         	 parent.widgets.templateInput = Dom.get(parent.id + "-templateinput");
         	 parent.widgets.templateOutput = Dom.get(parent.id + "-templateoutput");
+        	 parent.widgets.config = {
+        			 runas : Dom.get(parent.id + "-runas"),
+        			 transaction : Dom.get(parent.id + "-transactions")
+        	 };
     		 
              // Buttons
         	 parent.widgets.selectDestinationButton = Alfresco.util.createYUIButton(parent, "selectDestination-button", parent.onSelectDestinationClick);
@@ -678,7 +682,9 @@ if (typeof Fme == "undefined" || !Fme)
    	  	var input = { 
      	   "script" : scriptCode,
      	   "template" : templateCode	,
-           "spaceNodeRef" : this.widgets.nodeField.value
+           "spaceNodeRef" : this.widgets.nodeField.value,
+           "transaction" : this.widgets.config.transaction.value ? this.widgets.config.transaction.value : "readwrite",
+           "runas" : this.widgets.config.runas.value ? this.widgets.config.runas.value : "admin"
    	  	};
 
    	  	// Disable the result textarea
