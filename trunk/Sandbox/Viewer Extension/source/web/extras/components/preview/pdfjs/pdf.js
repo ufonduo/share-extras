@@ -13,7 +13,7 @@ var PDFJS = {};
   // Use strict in our context only - users might not want it
   'use strict';
 
-  PDFJS.build = 'e1c6bfd';
+  PDFJS.build = 'dc9cb3d';
 
   // Files are inserted below - see Makefile
   /* PDFJSSCRIPT_INCLUDE_ALL */
@@ -82,13 +82,8 @@ var Page = (function PageClosure() {
   function Page(xref, pageNumber, pageDict, ref) {
     this.pageNumber = pageNumber;
     this.pageDict = pageDict;
-    this.stats = {
-      create: Date.now(),
-      compile: 0.0,
-      fonts: 0.0,
-      images: 0.0,
-      render: 0.0
-    };
+    this.stats = new StatTimer();
+    this.stats.enabled = !!globalScope.PDFJS.enableStats;
     this.xref = xref;
     this.ref = ref;
 
@@ -219,6 +214,8 @@ var Page = (function PageClosure() {
         return this.IRQueue;
       }
 
+      this.stats.time('Build IR Queue');
+
       var xref = this.xref;
       var content = xref.fetchIfRef(this.content);
       var resources = xref.fetchIfRef(this.resources);
@@ -236,11 +233,14 @@ var Page = (function PageClosure() {
       var pe = this.pe = new PartialEvaluator(
                                 xref, handler, 'p' + this.pageNumber + '_');
       var IRQueue = {};
-      return (this.IRQueue = pe.getIRQueue(content, resources, IRQueue,
-                                           dependency));
+      this.IRQueue = pe.getIRQueue(content, resources, IRQueue, dependency);
+
+      this.stats.timeEnd('Build IR Queue');
+      return this.IRQueue;
     },
 
     ensureFonts: function pageEnsureFonts(fonts, callback) {
+      this.stats.time('Font Loading');
       // Convert the font names to the corresponding font obj.
       for (var i = 0, ii = fonts.length; i < ii; i++) {
         fonts[i] = this.objs.objs[fonts[i]].data;
@@ -250,7 +250,7 @@ var Page = (function PageClosure() {
       var fontObjs = FontLoader.bind(
         fonts,
         function pageEnsureFontsFontObjs(fontObjs) {
-          this.stats.fonts = Date.now();
+          this.stats.timeEnd('Font Loading');
 
           callback.call(this);
         }.bind(this),
@@ -259,6 +259,8 @@ var Page = (function PageClosure() {
     },
 
     display: function pageDisplay(gfx, callback) {
+      var stats = this.stats;
+      stats.time('Rendering');
       var xref = this.xref;
       var resources = xref.fetchIfRef(this.resources);
       var mediaBox = xref.fetchIfRef(this.mediaBox);
@@ -285,8 +287,9 @@ var Page = (function PageClosure() {
       function next() {
         startIdx = gfx.executeIRQueue(IRQueue, startIdx, next, stepper);
         if (startIdx == length) {
-          self.stats.render = Date.now();
           gfx.endDrawing();
+          stats.timeEnd('Rendering');
+          stats.timeEnd('Overall');
           if (callback) callback();
         }
       }
@@ -329,6 +332,22 @@ var Page = (function PageClosure() {
           return null;
         return item.get(name);
       }
+      function isValidUrl(url) {
+        if (!url)
+          return false;
+        var colon = url.indexOf(':');
+        if (colon < 0)
+          return false;
+        var protocol = url.substr(0, colon);
+        switch (protocol) {
+          case 'http':
+          case 'https':
+          case 'ftp':
+            return true;
+          default:
+            return false;
+        }
+      }
 
       var annotations = xref.fetchIfRef(this.annotations) || [];
       var i, n = annotations.length;
@@ -357,7 +376,12 @@ var Page = (function PageClosure() {
             if (a) {
               switch (a.get('S').name) {
                 case 'URI':
-                  item.url = a.get('URI');
+                  var url = a.get('URI');
+                  // TODO: pdf spec mentions urls can be relative to a Base
+                  // entry in the dictionary.
+                  if (!isValidUrl(url))
+                    url = '';
+                  item.url = url;
                   break;
                 case 'GoTo':
                   item.dest = a.get('D');
@@ -429,15 +453,14 @@ var Page = (function PageClosure() {
       return items;
     },
     startRendering: function pageStartRendering(ctx, callback, textLayer)  {
-      this.startRenderingTime = Date.now();
-
+      var stats = this.stats;
+      stats.time('Overall');
       // If there is no displayReadyPromise yet, then the IRQueue was never
       // requested before. Make the request and create the promise.
       if (!this.displayReadyPromise) {
         this.pdf.startRendering(this);
         this.displayReadyPromise = new Promise();
       }
-
       // Once the IRQueue and fonts are loaded, perform the actual rendering.
       this.displayReadyPromise.then(
         function pageDisplayReadyPromise() {
@@ -729,7 +752,7 @@ var PDFDoc = (function PDFDocClosure() {
         var pageNum = data.pageNum;
         var page = this.pageCache[pageNum];
         var depFonts = data.depFonts;
-
+        page.stats.timeEnd('Page Request');
         page.startRenderingFromIRQueue(data.IRQueue, depFonts);
       }, this);
 
@@ -838,6 +861,7 @@ var PDFDoc = (function PDFDocClosure() {
     startRendering: function pdfDocStartRendering(page) {
       // The worker might not be ready to receive the page request yet.
       this.workerReadyPromise.then(function pdfDocStartRenderingThen() {
+        page.stats.time('Page Request');
         this.messageHandler.send('page_request', page.pageNumber + 1);
       }.bind(this));
     },
@@ -1050,57 +1074,6 @@ var Util = (function UtilClosure() {
   };
 
   return Util;
-})();
-
-// optimised CSS custom property getter/setter
-var CustomStyle = (function CustomStyleClosure() {
-
-  // As noted on: http://www.zachstronaut.com/posts/2009/02/17/
-  //              animate-css-transforms-firefox-webkit.html
-  // in some versions of IE9 it is critical that ms appear in this list
-  // before Moz
-  var prefixes = ['ms', 'Moz', 'Webkit', 'O'];
-  var _cache = { };
-
-  function CustomStyle() {
-  }
-
-  CustomStyle.getProp = function get(propName, element) {
-    // check cache only when no element is given
-    if (arguments.length == 1 && typeof _cache[propName] == 'string') {
-      return _cache[propName];
-    }
-
-    element = element || document.documentElement;
-    var style = element.style, prefixed, uPropName;
-
-    // test standard property first
-    if (typeof style[propName] == 'string') {
-      return (_cache[propName] = propName);
-    }
-
-    // capitalize
-    uPropName = propName.charAt(0).toUpperCase() + propName.slice(1);
-
-    // test vendor specific properties
-    for (var i = 0, l = prefixes.length; i < l; i++) {
-      prefixed = prefixes[i] + uPropName;
-      if (typeof style[prefixed] == 'string') {
-        return (_cache[propName] = prefixed);
-      }
-    }
-
-    //if all fails then set to undefined
-    return (_cache[propName] = 'undefined');
-  }
-
-  CustomStyle.setProp = function set(propName, element, str) {
-    var prop = this.getProp(propName);
-    if (prop != 'undefined')
-      element.style[prop] = str;
-  }
-
-  return CustomStyle;
 })();
 
 var PDFStringTranslateTable = [
@@ -1331,7 +1304,7 @@ var Promise = (function PromiseClosure() {
       if (this.isResolved) {
         var data = this.data;
         callback.call(null, data);
-      } else if (this.isRejected && errorback) {
+      } else if (this.isRejected && errback) {
         var error = this.error;
         errback.call(null, error);
       } else {
@@ -1345,6 +1318,58 @@ var Promise = (function PromiseClosure() {
   return Promise;
 })();
 
+var StatTimer = (function StatTimerClosure() {
+  function rpad(str, pad, length) {
+    while (str.length < length)
+      str += pad;
+    return str;
+  }
+  function StatTimer() {
+    this.started = {};
+    this.times = [];
+    this.enabled = true;
+  }
+  StatTimer.prototype = {
+    time: function statTimerTime(name) {
+      if (!this.enabled)
+        return;
+      if (name in this.started)
+        throw 'Timer is already running for ' + name;
+      this.started[name] = Date.now();
+    },
+    timeEnd: function statTimerTimeEnd(name) {
+      if (!this.enabled)
+        return;
+      if (!(name in this.started))
+        throw 'Timer has not been started for ' + name;
+      this.times.push({
+        'name': name,
+        'start': this.started[name],
+        'end': Date.now()
+      });
+      // Remove timer from started so it can be called again.
+      delete this.started[name];
+    },
+    toString: function statTimerToString() {
+      var times = this.times;
+      var out = '';
+      // Find the longest name for padding purposes.
+      var longest = 0;
+      for (var i = 0, ii = times.length; i < ii; ++i) {
+        var name = times[i]['name'];
+        if (name.length > longest)
+          longest = name.length;
+      }
+      for (var i = 0, ii = times.length; i < ii; ++i) {
+        var span = times[i];
+        var duration = span.end - span.start;
+        out += rpad(span['name'], ' ', longest) + ' ' + duration + 'ms\n';
+      }
+      return out;
+    }
+  };
+  return StatTimer;
+})();
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
@@ -1537,7 +1562,7 @@ function addContextCurrentTransform(ctx) {
 var CanvasGraphics = (function CanvasGraphicsClosure() {
   // Defines the time the executeIRQueue is going to be executing
   // before it stops and shedules a continue of execution.
-  var kExecutionTime = 50;
+  var kExecutionTime = 15;
 
   function CanvasGraphics(canvasCtx, objs, textLayer) {
     this.ctx = canvasCtx;
@@ -2741,6 +2766,8 @@ var Catalog = (function CatalogClosure() {
           while (queue.length > 0) {
             var i = queue.shift();
             var outlineDict = xref.fetch(i.obj);
+            if (outlineDict === null)
+              continue;
             if (!outlineDict.has('Title'))
               error('Invalid outline item');
             var dest = outlineDict.get('A');
@@ -3176,6 +3203,8 @@ var XRef = (function XRefClosure() {
     },
     getEntry: function xRefGetEntry(i) {
       var e = this.entries[i];
+      if (e === null)
+        return null;
       return e.free ? null : e; // returns null is the entry is free
     },
     fetchIfRef: function xRefFetchIfRef(obj) {
@@ -13824,6 +13853,12 @@ var FontLoader = {
       //
       // The postMessage() hackery was added to work around chrome bug
       // 82402.
+
+      // Validate the names parameter -- the values can used to construct HTML.
+      if (!/^\w+$/.test(names.join(''))) {
+        error('Invalid font name(s): ' + names.join());
+        return; // Keep the return in case if error() did not throw.
+      }
 
       var div = document.createElement('div');
       div.setAttribute('style',
@@ -31090,869 +31125,439 @@ var JpxImage = (function JpxImageClosure() {
   return JpxImage;
 })();
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
-
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
-
-
 
 'use strict';
 
-
-
 var bidi = PDFJS.bidi = (function bidiClosure() {
-
   // Character types for symbols from 0000 to 00FF.
-
   var baseTypes = [
-
     'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'S', 'B', 'S', 'WS',
-
     'B', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN',
-
     'BN', 'BN', 'B', 'B', 'B', 'S', 'WS', 'ON', 'ON', 'ET', 'ET', 'ET', 'ON',
-
     'ON', 'ON', 'ON', 'ON', 'ON', 'CS', 'ON', 'CS', 'ON', 'EN', 'EN', 'EN',
-
     'EN', 'EN', 'EN', 'EN', 'EN', 'EN', 'EN', 'ON', 'ON', 'ON', 'ON', 'ON',
-
     'ON', 'ON', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L',
-
     'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'ON', 'ON',
-
     'ON', 'ON', 'ON', 'ON', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L',
-
     'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L',
-
     'L', 'ON', 'ON', 'ON', 'ON', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'B', 'BN',
-
     'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN',
-
     'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN',
-
     'BN', 'CS', 'ON', 'ET', 'ET', 'ET', 'ET', 'ON', 'ON', 'ON', 'ON', 'L', 'ON',
-
     'ON', 'ON', 'ON', 'ON', 'ET', 'ET', 'EN', 'EN', 'ON', 'L', 'ON', 'ON', 'ON',
-
     'EN', 'L', 'ON', 'ON', 'ON', 'ON', 'ON', 'L', 'L', 'L', 'L', 'L', 'L', 'L',
-
     'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L',
-
     'L', 'ON', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L',
-
     'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L',
-
     'L', 'L', 'L', 'ON', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L'
-
   ];
-
-
 
   // Character types for symbols from 0600 to 06FF
-
   var arabicTypes = [
-
     'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL',
-
     'CS', 'AL', 'ON', 'ON', 'NSM', 'NSM', 'NSM', 'NSM', 'NSM', 'NSM', 'AL',
-
     'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL',
-
     'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL',
-
     'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL',
-
     'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL',
-
     'AL', 'AL', 'AL', 'AL', 'NSM', 'NSM', 'NSM', 'NSM', 'NSM', 'NSM', 'NSM',
-
     'NSM', 'NSM', 'NSM', 'NSM', 'NSM', 'NSM', 'NSM', 'AL', 'AL', 'AL', 'AL',
-
     'AL', 'AL', 'AL', 'AN', 'AN', 'AN', 'AN', 'AN', 'AN', 'AN', 'AN', 'AN',
-
     'AN', 'ET', 'AN', 'AN', 'AL', 'AL', 'AL', 'NSM', 'AL', 'AL', 'AL', 'AL',
-
     'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL',
-
     'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL',
-
     'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL',
-
     'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL',
-
     'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL',
-
     'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL',
-
     'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL',
-
     'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL',
-
     'AL', 'NSM', 'NSM', 'NSM', 'NSM', 'NSM', 'NSM', 'NSM', 'NSM', 'NSM', 'NSM',
-
     'NSM', 'NSM', 'NSM', 'NSM', 'NSM', 'NSM', 'NSM', 'NSM', 'NSM', 'ON', 'NSM',
-
     'NSM', 'NSM', 'NSM', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL',
-
     'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL', 'AL'
-
   ];
 
-
-
   function isOdd(i) {
-
     return (i & 1) != 0;
-
   }
-
-
 
   function isEven(i) {
-
     return (i & 1) == 0;
-
   }
-
-
 
   function findUnequal(arr, start, value) {
-
     var j;
-
     for (var j = start, jj = arr.length; j < jj; ++j) {
-
       if (arr[j] != value)
-
         return j;
-
     }
-
     return j;
-
   }
-
-
 
   function setValues(arr, start, end, value) {
-
     for (var j = start; j < end; ++j) {
-
       arr[j] = value;
-
     }
-
   }
-
-
 
   function reverseValues(arr, start, end) {
-
     for (var i = start, j = end - 1; i < j; ++i, --j) {
-
       var temp = arr[i];
-
       arr[i] = arr[j];
-
       arr[j] = temp;
-
     }
-
   }
-
-
 
   function mirrorGlyphs(c) {
-
     /*
-
      # BidiMirroring-1.txt
-
      0028; 0029 # LEFT PARENTHESIS
-
      0029; 0028 # RIGHT PARENTHESIS
-
      003C; 003E # LESS-THAN SIGN
-
      003E; 003C # GREATER-THAN SIGN
-
      005B; 005D # LEFT SQUARE BRACKET
-
      005D; 005B # RIGHT SQUARE BRACKET
-
      007B; 007D # LEFT CURLY BRACKET
-
      007D; 007B # RIGHT CURLY BRACKET
-
      00AB; 00BB # LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
-
      00BB; 00AB # RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK
-
      */
-
     switch (c) {
-
       case '(':
-
         return ')';
-
       case ')':
-
         return '(';
-
       case '<':
-
         return '>';
-
       case '>':
-
         return '<';
-
       case ']':
-
         return '[';
-
       case '[':
-
         return ']';
-
       case '}':
-
         return '{';
-
       case '{':
-
         return '}';
-
       case '\u00AB':
-
         return '\u00BB';
-
       case '\u00BB':
-
         return '\u00AB';
-
       default:
-
         return c;
-
     }
-
   }
 
-
-
-  return (function bidi(text, startLevel) {
-
+  function bidi(text, startLevel) {
     var str = text.str;
-
     var strLength = str.length;
-
     if (strLength == 0)
-
       return str;
-
-
 
     // get types, fill arrays
 
-
-
     var chars = new Array(strLength);
-
     var types = new Array(strLength);
-
     var oldtypes = new Array(strLength);
-
     var numBidi = 0;
 
-
-
     for (var i = 0; i < strLength; ++i) {
-
       chars[i] = str.charAt(i);
 
-
-
       var charCode = str.charCodeAt(i);
-
       var charType = 'L';
-
       if (charCode <= 0x00ff)
-
         charType = baseTypes[charCode];
-
       else if (0x0590 <= charCode && charCode <= 0x05f4)
-
         charType = 'R';
-
       else if (0x0600 <= charCode && charCode <= 0x06ff)
-
         charType = arabicTypes[charCode & 0xff];
-
       else if (0x0700 <= charCode && charCode <= 0x08AC)
-
         charType = 'AL';
 
-
-
       if (charType == 'R' || charType == 'AL' || charType == 'AN')
-
         numBidi++;
 
-
-
       oldtypes[i] = types[i] = charType;
-
     }
-
-
 
     // detect the bidi method
-
     //  if there are no rtl characters then no bidi needed
-
     //  if less than 30% chars are rtl then string is primarily ltr
-
     //  if more than 30% chars are rtl then string is primarily rtl
-
     if (numBidi == 0) {
-
       text.direction = 'ltr';
-
       return str;
-
     }
-
-
 
     if (startLevel == -1) {
-
       if ((strLength / numBidi) < 0.3) {
-
         text.direction = 'ltr';
-
         startLevel = 0;
-
       } else {
-
         text.direction = 'rtl';
-
         startLevel = 1;
-
       }
-
     }
-
-
 
     var levels = new Array(strLength);
 
-
-
     for (var i = 0; i < strLength; ++i) {
-
       levels[i] = startLevel;
-
     }
-
-
 
     var diffChars = new Array(strLength);
-
     var diffLevels = new Array(strLength);
-
     var diffTypes = new Array(strLength);
 
-
-
     /*
-
      X1-X10: skip most of this, since we are NOT doing the embeddings.
-
      */
-
-
 
     var e = isOdd(startLevel) ? 'R' : 'L';
-
     var sor = e;
-
     var eor = sor;
 
-
-
     /*
-
      W1. Examine each non-spacing mark (NSM) in the level run, and change the
-
      type of the NSM to the type of the previous character. If the NSM is at the
-
      start of the level run, it will get the type of sor.
-
      */
 
-
-
     var lastType = sor;
-
     for (var i = 0; i < strLength; ++i) {
-
       if (types[i] == 'NSM')
-
         types[i] = lastType;
-
       else
-
         lastType = types[i];
-
     }
 
-
-
     /*
-
      W2. Search backwards from each instance of a European number until the
-
      first strong type (R, L, AL, or sor) is found.  If an AL is found, change
-
      the type of the European number to Arabic number.
-
      */
-
-
 
     var lastType = sor;
-
     for (var i = 0; i < strLength; ++i) {
-
       var t = types[i];
-
       if (t == 'EN')
-
         types[i] = (lastType == 'AL') ? 'AN' : 'EN';
-
       else if (t == 'R' || t == 'L' || t == 'AL')
-
         lastType = t;
-
     }
 
-
-
     /*
-
      W3. Change all ALs to R.
-
      */
-
-
 
     for (var i = 0; i < strLength; ++i) {
-
       var t = types[i];
-
       if (t == 'AL')
-
         types[i] = 'R';
-
     }
 
-
-
     /*
-
      W4. A single European separator between two European numbers changes to a
-
      European number. A single common separator between two numbers of the same
-
      type changes to that type:
-
      */
-
-
 
     for (var i = 1; i < strLength - 1; ++i) {
-
       if (types[i] == 'ES' && types[i - 1] == 'EN' && types[i + 1] == 'EN')
-
         types[i] = 'EN';
-
       if (types[i] == 'CS' && (types[i - 1] == 'EN' || types[i - 1] == 'AN') &&
-
           types[i + 1] == types[i - 1])
-
         types[i] = types[i - 1];
-
     }
 
-
-
     /*
-
      W5. A sequence of European terminators adjacent to European numbers changes
-
      to all European numbers:
-
      */
 
-
-
     for (var i = 0; i < strLength; ++i) {
-
       if (types[i] == 'EN') {
-
         // do before
-
         for (var j = i - 1; j >= 0; --j) {
-
           if (types[j] != 'ET')
-
             break;
-
           types[j] = 'EN';
-
         }
-
         // do after
-
         for (var j = i + 1; j < strLength; --j) {
-
           if (types[j] != 'ET')
-
             break;
-
           types[j] = 'EN';
-
         }
-
       }
-
     }
 
-
-
     /*
-
      W6. Otherwise, separators and terminators change to Other Neutral:
-
      */
-
-
 
     for (var i = 0; i < strLength; ++i) {
-
       var t = types[i];
-
       if (t == 'WS' || t == 'ES' || t == 'ET' || t == 'CS')
-
         types[i] = 'ON';
-
     }
 
-
-
     /*
-
      W7. Search backwards from each instance of a European number until the
-
      first strong type (R, L, or sor) is found. If an L is found,  then change
-
      the type of the European number to L.
-
      */
-
-
 
     var lastType = sor;
-
     for (var i = 0; i < strLength; ++i) {
-
       var t = types[i];
-
       if (t == 'EN')
-
         types[i] = (lastType == 'L') ? 'L' : 'EN';
-
       else if (t == 'R' || t == 'L')
-
         lastType = t;
-
     }
 
-
-
     /*
-
      N1. A sequence of neutrals takes the direction of the surrounding strong
-
      text if the text on both sides has the same direction. European and Arabic
-
      numbers are treated as though they were R. Start-of-level-run (sor) and
-
      end-of-level-run (eor) are used at level run boundaries.
-
      */
 
-
-
     for (var i = 0; i < strLength; ++i) {
-
       if (types[i] == 'ON') {
-
         var end = findUnequal(types, i + 1, 'ON');
-
         var before = sor;
-
         if (i > 0)
-
           before = types[i - 1];
-
         var after = eor;
-
         if (end + 1 < strLength)
-
           after = types[end + 1];
-
         if (before != 'L')
-
           before = 'R';
-
         if (after != 'L')
-
           after = 'R';
-
         if (before == after)
-
           setValues(types, i, end, before);
-
         i = end - 1; // reset to end (-1 so next iteration is ok)
-
       }
-
     }
 
-
-
     /*
-
      N2. Any remaining neutrals take the embedding direction.
-
      */
 
-
-
     for (var i = 0; i < strLength; ++i) {
-
       if (types[i] == 'ON')
-
         types[i] = e;
-
     }
 
-
-
     /*
-
      I1. For all characters with an even (left-to-right) embedding direction,
-
      those of type R go up one level and those of type AN or EN go up two
-
      levels.
-
      I2. For all characters with an odd (right-to-left) embedding direction,
-
      those of type L, EN or AN go up one level.
-
      */
 
-
-
     for (var i = 0; i < strLength; ++i) {
-
       var t = types[i];
-
       if (isEven(levels[i])) {
-
         if (t == 'R') {
-
           levels[i] += 1;
-
         } else if (t == 'AN' || t == 'EN') {
-
           levels[i] += 2;
-
         }
-
       } else { // isOdd, so
-
         if (t == 'L' || t == 'AN' || t == 'EN') {
-
           levels[i] += 1;
-
         }
-
       }
-
     }
 
-
-
     /*
-
      L1. On each line, reset the embedding level of the following characters to
-
      the paragraph embedding level:
 
-
-
      segment separators,
-
      paragraph separators,
-
      any sequence of whitespace characters preceding a segment separator or
-
      paragraph separator, and any sequence of white space characters at the end
-
      of the line.
-
      */
-
-
 
     // don't bother as text is only single line
 
-
-
     /*
-
      L2. From the highest level found in the text to the lowest odd level on
-
      each line, reverse any contiguous sequence of characters that are at that
-
      level or higher.
-
      */
-
-
 
     // find highest level & lowest odd level
 
-
-
     var highestLevel = -1;
-
     var lowestOddLevel = 99;
-
     for (var i = 0, ii = levels.length; i < ii; ++i) {
-
       var level = levels[i];
-
       if (highestLevel < level)
-
         highestLevel = level;
-
       if (lowestOddLevel > level && isOdd(level))
-
         lowestOddLevel = level;
-
     }
-
-
 
     // now reverse between those limits
 
-
-
     for (var level = highestLevel; level >= lowestOddLevel; --level) {
-
       // find segments to reverse
-
       var start = -1;
-
       for (var i = 0, ii = levels.length; i < ii; ++i) {
-
         if (levels[i] < level) {
-
           if (start >= 0) {
-
             reverseValues(chars, start, i);
-
             start = -1;
-
           }
-
         } else if (start < 0) {
-
           start = i;
-
         }
-
       }
-
       if (start >= 0) {
-
         reverseValues(chars, start, levels.length);
-
       }
-
     }
 
-
-
     /*
-
      L3. Combining marks applied to a right-to-left base character will at this
-
      point precede their base character. If the rendering engine expects them to
-
      follow the base characters in the final display process, then the ordering
-
      of the marks and the base character must be reversed.
-
      */
-
-
 
     // don't bother for now
 
-
-
     /*
-
      L4. A character that possesses the mirrored property as specified by
-
      Section 4.7, Mirrored, must be depicted by a mirrored glyph if the resolved
-
      directionality of that character is R.
-
      */
-
-
 
     // don't mirror as characters are already mirrored in the pdf
 
-
-
     // Finally, return string
 
-
-
     var result = '';
-
     for (var i = 0, ii = chars.length; i < ii; ++i) {
-
       var ch = chars[i];
-
       if (ch != '<' && ch != '>')
-
         result += ch;
-
     }
-
     return result;
+  }
 
-  });
-
+  return bidi;
 })();
 
 

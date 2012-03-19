@@ -61,7 +61,6 @@
         ${msg("button.fullpage")}
       </button>
 
-      <span id="info">--</span>
     </div>
     <div id="errorWrapper" hidden='true'>
       <div id="errorMessageLeft">
