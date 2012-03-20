@@ -55,10 +55,10 @@
 			        	</div>
 			        	<div class="control">
 			        		<span class="label">Transaction isolation:</span>
-			        		<select id="${el}-transactions" value="readwrite">
+			        		<select id="${el}-transactions">
 			        			<option value="none">none</option>
 			        			<option value="readonly">readonly</option>
-			        			<option value="readwrite">readwrite</option>
+			        			<option value="readwrite" selected="selected">readwrite</option>
 			        		</select>
 			        	</div>
 			        </div>

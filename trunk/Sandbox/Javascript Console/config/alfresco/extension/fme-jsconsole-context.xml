@@ -3,9 +3,8 @@
 <beans>
 
 	<bean id="webscript.de.fme.jsconsole.execute2.post" class="de.fme.jsconsole.ExecuteWebscript" parent="webscript">
-		<property name="scriptUtils">
-            <ref bean="utilsScript"/>
-        </property>        
+		<property name="scriptUtils" ref="utilsScript"/>
+		<property name="transactionService" ref="transactionService"/>
 	</bean>
 	
 </beans>

@@ -3,4 +3,5 @@
   <url>/de/fme/jsconsole/execute2</url>
   <authentication>admin</authentication>
   <format default="json">extension</format>
+  <transaction>none</transaction>
 </webscript>

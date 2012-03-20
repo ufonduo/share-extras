@@ -2,17 +2,18 @@
 <classpath>
 	<classpathentry kind="src" path="source/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/java/libs/alfresco-community-sdk-3.4.a/lib/server/alfresco-core-3.4.a.jar"/>
-	<classpathentry kind="lib" path="C:/java/libs/alfresco-community-sdk-3.4.a/lib/server/alfresco-data-model-3.4.a.jar"/>
-	<classpathentry kind="lib" path="C:/java/libs/alfresco-community-sdk-3.4.a/lib/server/alfresco-repository-3.4.a.jar" sourcepath="C:/java/libs/alfresco-community-sdk-3.4.a/src/alfresco-repository-src.zip"/>
-	<classpathentry kind="lib" path="C:/java/libs/alfresco-community-sdk-3.4.a/lib/server/dependencies/spring-surf/spring-webscripts-1.0.0.CI-SNAPSHOT.jar" sourcepath="C:/java/libs/se-surf/spring-webscripts"/>
-	<classpathentry kind="lib" path="C:/java/libs/alfresco-community-sdk-3.4.a/lib/server/dependencies/spring-surf/spring-webscripts-api-1.0.0.CI-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="C:/java/libs/alfresco-community-sdk-3.4.a/lib/server/dependencies/json.jar"/>
-	<classpathentry kind="lib" path="C:/java/libs/alfresco-community-sdk-3.4.a/lib/server/dependencies/spring-surf/spring-surf-core-1.0.0.CI-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="C:/java/libs/alfresco-community-sdk-3.4.a/lib/server/dependencies/optional/log4j-1.2.15.jar"/>
-	<classpathentry kind="lib" path="C:/java/libs/alfresco-community-sdk-3.4.a/lib/server/dependencies/j2ee/servlet.jar"/>
-	<classpathentry kind="lib" path="C:/java/libs/alfresco-community-sdk-3.4.a/lib/server/dependencies/commons/commons-logging-1.1.jar"/>
-	<classpathentry kind="lib" path="C:/java/libs/alfresco-community-sdk-3.4.a/lib/server/dependencies/commons/commons-lang-2.1.jar"/>
-	<classpathentry kind="lib" path="C:/java/libs/alfresco-community-sdk-3.4.a/lib/server/dependencies/rhino-js-1.6R7.jar"/>
+	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/alfresco-core-4.0.0.jar"/>
+	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/alfresco-data-model-4.0.0.jar"/>
+	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/alfresco-remote-api-4.0.0.jar"/>
+	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/dependencies/spring-surf/spring-surf-core-1.0.0.jar"/>
+	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/dependencies/spring-surf/spring-webscripts-1.0.0.jar"/>
+	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/dependencies/commons/commons-lang-2.6.jar"/>
+	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/dependencies/commons/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/dependencies/j2ee/servlet.jar"/>
+	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/dependencies/optional/log4j-1.2.15.jar"/>
+	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/dependencies/json.jar"/>
+	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/dependencies/rhino-js-1.6R7.jar"/>
+	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/dependencies/spring-surf/spring-webscripts-api-1.0.0.jar"/>
+	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/alfresco-repository-4.0.0.jar" sourcepath="/ALFRESCO_SDK_400/src/alfresco-repository-src.zip"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
