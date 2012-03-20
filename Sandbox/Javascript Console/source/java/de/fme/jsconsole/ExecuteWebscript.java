@@ -13,8 +13,13 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.alfresco.error.AlfrescoRuntimeException;
 import org.alfresco.repo.content.MimetypeMap;
 import org.alfresco.repo.jscript.ScriptUtils;
+import org.alfresco.repo.security.authentication.AuthenticationUtil;
+import org.alfresco.repo.transaction.RetryingTransactionHelper;
+import org.alfresco.repo.transaction.RetryingTransactionHelper.RetryingTransactionCallback;
+import org.alfresco.service.transaction.TransactionService;
 import org.alfresco.util.MD5;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -40,39 +45,38 @@ public class ExecuteWebscript extends AbstractWebScript {
 	
 	private ScriptUtils scriptUtils;
 	
+	private TransactionService transactionService;
+	
 	public void setScriptUtils(ScriptUtils scriptUtils) {
 		this.scriptUtils = scriptUtils;
 	}
 	
-
+	public void setTransactionService(TransactionService transactionService) {
+		this.transactionService = transactionService;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.springframework.extensions.webscripts.WebScript#execute(org.springframework.extensions.webscripts.WebScriptRequest, org.springframework.extensions.webscripts.WebScriptResponse)
+	 */
 	@Override
 	public void execute(WebScriptRequest request, WebScriptResponse response)
 			throws IOException {
 
 		JavascriptConsoleResult result = null;
 		
-		Content content = request.getContent();
-		
-		InputStreamReader br = new InputStreamReader(content.getInputStream(),
-				Charset.forName("UTF-8"));
-		JSONTokener jsonTokener = new JSONTokener(br);
-		try {
-			JSONObject jsonInput = new JSONObject(jsonTokener);
-			
-			String script = jsonInput.getString("script");
-			String template = jsonInput.getString("template");
-			String spaceNodeRef = jsonInput.getString("spaceNodeRef");
+		JavascriptConsoleRequest jsreq = parseJsonInput(request);
 
-			
-			String print = "\nfunction print(obj) { javascriptConsole.print(obj);}";
-			ScriptContent scriptContent = new StringScriptContent(script + print);
-			result = executeScriptContent(request, response, scriptContent, template, spaceNodeRef);
-			
-		} catch (JSONException e) {
-			throw new WebScriptException(Status.STATUS_INTERNAL_SERVER_ERROR,
-					"Error reading json request body.", e);
-		}
+		String print = "\nfunction print(obj) { javascriptConsole.print(obj);}";
+		ScriptContent scriptContent = new StringScriptContent(jsreq.script + print);
 		
+		result = runScriptWithTransactionAndAuthentication(request, response, jsreq, scriptContent);
+		
+		writeJsonOutput(response, result);
+
+	}
+
+	private void writeJsonOutput(WebScriptResponse response,
+			JavascriptConsoleResult result) throws IOException {
 		response.setContentEncoding("UTF-8");
 		response.setContentType(MimetypeMap.MIMETYPE_JSON);
 
@@ -90,9 +94,59 @@ public class ExecuteWebscript extends AbstractWebScript {
 			throw new WebScriptException(Status.STATUS_INTERNAL_SERVER_ERROR,
 					"Error writing json response.", e);
 		}
-
 	}
-	
+
+	private JavascriptConsoleRequest parseJsonInput(WebScriptRequest request) {
+		Content content = request.getContent();
+		
+		InputStreamReader br = new InputStreamReader(content.getInputStream(),
+				Charset.forName("UTF-8"));
+		JSONTokener jsonTokener = new JSONTokener(br);
+		try {
+			JSONObject jsonInput = new JSONObject(jsonTokener);
+			
+			String script = jsonInput.getString("script");
+			String template = jsonInput.getString("template");
+			String spaceNodeRef = jsonInput.getString("spaceNodeRef");
+			String transaction = jsonInput.getString("transaction");
+			String runas = jsonInput.getString("runas");
+
+			return new JavascriptConsoleRequest(script, template, spaceNodeRef, transaction, runas);
+			
+		} catch (JSONException e) {
+			throw new WebScriptException(Status.STATUS_INTERNAL_SERVER_ERROR,
+					"Error reading json request body.", e);
+		}
+	}
+
+	private JavascriptConsoleResult runScriptWithTransactionAndAuthentication(final WebScriptRequest request, final WebScriptResponse response,
+			final JavascriptConsoleRequest jsreq, final ScriptContent scriptContent) {
+
+		logger.debug("running script as user " + jsreq.runas);
+		return AuthenticationUtil.runAs(new AuthenticationUtil.RunAsWork<JavascriptConsoleResult>() {
+			public JavascriptConsoleResult doWork() {
+				
+				if (jsreq.useTransaction) {
+					logger.debug("Using transction to execute script: " + (jsreq.transactionReadOnly ? "readonly" : "readwrite"));
+				return transactionService.getRetryingTransactionHelper().doInTransaction(
+						new RetryingTransactionCallback<JavascriptConsoleResult>() {
+							public JavascriptConsoleResult execute() throws Exception {
+									return executeScriptContent(request, response, scriptContent, jsreq.template, jsreq.spaceNodeRef);
+							}
+						}, jsreq.transactionReadOnly );
+			}
+				else {
+					try {
+						logger.debug("Executing script script without transaction.");
+						return executeScriptContent(request, response, scriptContent, jsreq.template, jsreq.spaceNodeRef);
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
+				}
+			}
+		}, jsreq.runas);
+	}
+
 	private static class StringScriptContent implements ScriptContent {
 		private final String content;
 		public StringScriptContent(String content) {
@@ -215,7 +269,9 @@ public class ExecuteWebscript extends AbstractWebScript {
                         TemplateProcessor templateProcessor = getContainer().getTemplateProcessorRegistry().getTemplateProcessorByExtension("ftl");
                         StringWriter sw = new StringWriter();
                         templateProcessor.processString(template, templateModel, sw);
-                        logger.error(sw.toString());
+                        if (logger.isDebugEnabled()) {
+                            logger.debug("Template output:" + sw.toString());
+                        }
                         output.setRenderedTemplate(sw.toString());
                     }
                 }
