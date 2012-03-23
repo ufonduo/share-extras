@@ -15,5 +15,9 @@
 	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/dependencies/rhino-js-1.6R7.jar"/>
 	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/dependencies/spring-surf/spring-webscripts-api-1.0.0.jar"/>
 	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/alfresco-repository-4.0.0.jar" sourcepath="/ALFRESCO_SDK_400/src/alfresco-repository-src.zip"/>
+	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/dependencies/org.springframework.context-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/dependencies/org.springframework.core-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/dependencies/org.springframework.beans-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/dependencies/commons/commons-io-1.4.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
