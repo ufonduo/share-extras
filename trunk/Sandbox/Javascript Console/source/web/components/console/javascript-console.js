@@ -76,7 +76,9 @@ if (typeof Fme == "undefined" || !Fme)
         	 parent.widgets.templateOutput = Dom.get(parent.id + "-templateoutput");
         	 parent.widgets.config = {
         			 runas : Dom.get(parent.id + "-runas"),
-        			 transaction : Dom.get(parent.id + "-transactions")
+        			 transaction : Dom.get(parent.id + "-transactions"),
+        			 urlargs : Dom.get(parent.id + "-urlarguments"),
+        			 runlikecrazy : Dom.get(parent.id + "-runlikecrazy")
         	 };
     		 
              // Buttons
@@ -684,7 +686,8 @@ if (typeof Fme == "undefined" || !Fme)
      	   "template" : templateCode	,
            "spaceNodeRef" : this.widgets.nodeField.value,
            "transaction" : this.widgets.config.transaction.value ? this.widgets.config.transaction.value : "readwrite",
-           "runas" : this.widgets.config.runas.value ? this.widgets.config.runas.value : "admin"
+           "runas" : this.widgets.config.runas.value ? this.widgets.config.runas.value : "admin",
+           "urlargs" : this.widgets.config.urlargs.value ? this.widgets.config.urlargs.value : ""
    	  	};
 
    	  	// Disable the result textarea
@@ -719,6 +722,8 @@ if (typeof Fme == "undefined" || !Fme)
            	     
                  this.showResultTable(res.json.result);
                	 YAHOO.util.Dom.removeClass(this.widgets.scriptOutput, 'jserror'); 
+               	 
+               	 this.runLikeCrazy();
                },
                scope: this
             },
@@ -737,13 +742,24 @@ if (typeof Fme == "undefined" || !Fme)
                  this.widgets.scriptOutput.disabled = false;
            	     this.widgets.executeButton.disabled = false;
                	 Dom.addClass(this.widgets.scriptOutput, 'jserror');
-               	this.widgets.outputTabs.selectTab(0); // show console tab               	 
+               	 this.widgets.outputTabs.selectTab(0); // show console tab               	 
+              	 
+               	 this.runLikeCrazy();
                },
                scope: this
             }
          });
 	  },
 
+	  runLikeCrazy : function() {
+		 var me = this;
+		 if (this.widgets.config.runlikecrazy.value > 0) {
+			 window.setTimeout(function() {
+				 me.onExecuteClick();
+			 }, this.widgets.config.runlikecrazy.value);
+		 };
+	  },
+	  
 	  showLoadingAjaxSpinner : function(showSpinner) {
 		  var spinner = Dom.get(this.id + "-spinner");
 		  Dom.setStyle(spinner, "display", showSpinner ? "inline" : "none");

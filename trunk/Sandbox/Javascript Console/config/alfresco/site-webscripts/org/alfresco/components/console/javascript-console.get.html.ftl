@@ -61,7 +61,16 @@
 			        			<option value="readwrite" selected="selected">readwrite</option>
 			        		</select>
 			        	</div>
-			        </div>
+			        	<div class="control">
+			        		<span class="label">Run like crazy:</span>
+			        		<select id="${el}-runlikecrazy">
+			        			<option value="0" selected="selected">off (execute once)</option>
+			        			<option value="10000">continuously 10s delay</option>
+			        			<option value="1000">continuously 1s delay</option>
+			        			<option value="1">continuously no delay!</option>
+			        		</select>
+			        	</div>
+			        </div> 
 		        </div>
 		    </div>
 		</div>

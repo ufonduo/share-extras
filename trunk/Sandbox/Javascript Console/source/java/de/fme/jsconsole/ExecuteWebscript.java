@@ -11,25 +11,31 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import org.alfresco.error.AlfrescoRuntimeException;
 import org.alfresco.repo.content.MimetypeMap;
+import org.alfresco.repo.jscript.ScriptNode;
 import org.alfresco.repo.jscript.ScriptUtils;
 import org.alfresco.repo.security.authentication.AuthenticationUtil;
-import org.alfresco.repo.transaction.RetryingTransactionHelper;
+import org.alfresco.repo.security.permissions.AccessDeniedException;
 import org.alfresco.repo.transaction.RetryingTransactionHelper.RetryingTransactionCallback;
+import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.transaction.TransactionService;
 import org.alfresco.util.MD5;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.springframework.core.io.Resource;
 import org.springframework.extensions.surf.util.Content;
 import org.springframework.extensions.webscripts.AbstractWebScript;
 import org.springframework.extensions.webscripts.Cache;
+import org.springframework.extensions.webscripts.Container;
+import org.springframework.extensions.webscripts.Description;
 import org.springframework.extensions.webscripts.ScriptContent;
 import org.springframework.extensions.webscripts.ScriptProcessor;
 import org.springframework.extensions.webscripts.Status;
@@ -55,6 +61,29 @@ public class ExecuteWebscript extends AbstractWebScript {
 		this.transactionService = transactionService;
 	}
 	
+	private Resource baseIncludeScriptResource;
+
+	private String baseIncludeScript = "";
+	
+	public void setBaseIncludeScriptResource(Resource baseIncludeScriptResource) {
+		this.baseIncludeScriptResource = baseIncludeScriptResource;
+	}
+	
+	@Override
+	public void init(Container container, Description description) {
+		super.init(container, description);
+		try {
+			List<String> lines = (List<String>) IOUtils.readLines(baseIncludeScriptResource.getInputStream());
+			StringBuffer script = new StringBuffer();
+			for (String line : lines) {
+				script.append(line.replace("\n", ""));
+			}
+			baseIncludeScript = script.toString();
+		} catch (IOException e) {
+			logger.error("Could not read base import script.");
+		}
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.springframework.extensions.webscripts.WebScript#execute(org.springframework.extensions.webscripts.WebScriptRequest, org.springframework.extensions.webscripts.WebScriptResponse)
 	 */
@@ -62,61 +91,10 @@ public class ExecuteWebscript extends AbstractWebScript {
 	public void execute(WebScriptRequest request, WebScriptResponse response)
 			throws IOException {
 
-		JavascriptConsoleResult result = null;
-		
-		JavascriptConsoleRequest jsreq = parseJsonInput(request);
-
-		String print = "\nfunction print(obj) { javascriptConsole.print(obj);}";
-		ScriptContent scriptContent = new StringScriptContent(jsreq.script + print);
-		
-		result = runScriptWithTransactionAndAuthentication(request, response, jsreq, scriptContent);
-		
-		writeJsonOutput(response, result);
-
-	}
-
-	private void writeJsonOutput(WebScriptResponse response,
-			JavascriptConsoleResult result) throws IOException {
-		response.setContentEncoding("UTF-8");
-		response.setContentType(MimetypeMap.MIMETYPE_JSON);
-
-		try {
-			JSONObject jsonOutput = new JSONObject();
-			jsonOutput.put("renderedTemplate", result.getRenderedTemplate());
-			jsonOutput.put("printOutput", result.getPrintOutput());
-			jsonOutput.put("spaceNodeRef", result.getSpaceNodeRef());
-			jsonOutput.put("spacePath", result.getSpacePath());
-			jsonOutput.put("result", new JSONArray());
-
-			response.getWriter().write(jsonOutput.toString());
-
-		} catch (JSONException e) {
-			throw new WebScriptException(Status.STATUS_INTERNAL_SERVER_ERROR,
-					"Error writing json response.", e);
-		}
-	}
-
-	private JavascriptConsoleRequest parseJsonInput(WebScriptRequest request) {
-		Content content = request.getContent();
-		
-		InputStreamReader br = new InputStreamReader(content.getInputStream(),
-				Charset.forName("UTF-8"));
-		JSONTokener jsonTokener = new JSONTokener(br);
-		try {
-			JSONObject jsonInput = new JSONObject(jsonTokener);
-			
-			String script = jsonInput.getString("script");
-			String template = jsonInput.getString("template");
-			String spaceNodeRef = jsonInput.getString("spaceNodeRef");
-			String transaction = jsonInput.getString("transaction");
-			String runas = jsonInput.getString("runas");
-
-			return new JavascriptConsoleRequest(script, template, spaceNodeRef, transaction, runas);
-			
-		} catch (JSONException e) {
-			throw new WebScriptException(Status.STATUS_INTERNAL_SERVER_ERROR,
-					"Error reading json request body.", e);
-		}
+		JavascriptConsoleRequest jsreq = JavascriptConsoleRequest.readJson(request);
+		ScriptContent scriptContent = new StringScriptContent(baseIncludeScript + jsreq.script + "\njavascriptConsole.setSpace(space);");
+		JavascriptConsoleResult result = runScriptWithTransactionAndAuthentication(request, response, jsreq, scriptContent);
+		result.writeJson(response);
 	}
 
 	private JavascriptConsoleResult runScriptWithTransactionAndAuthentication(final WebScriptRequest request, final WebScriptResponse response,
@@ -131,14 +109,14 @@ public class ExecuteWebscript extends AbstractWebScript {
 				return transactionService.getRetryingTransactionHelper().doInTransaction(
 						new RetryingTransactionCallback<JavascriptConsoleResult>() {
 							public JavascriptConsoleResult execute() throws Exception {
-									return executeScriptContent(request, response, scriptContent, jsreq.template, jsreq.spaceNodeRef);
+									return executeScriptContent(request, response, scriptContent, jsreq.template, jsreq.spaceNodeRef, jsreq.urlargs);
 							}
 						}, jsreq.transactionReadOnly );
 			}
 				else {
 					try {
 						logger.debug("Executing script script without transaction.");
-						return executeScriptContent(request, response, scriptContent, jsreq.template, jsreq.spaceNodeRef);
+						return executeScriptContent(request, response, scriptContent, jsreq.template, jsreq.spaceNodeRef, jsreq.urlargs);
 					} catch (IOException e) {
 						throw new RuntimeException(e);
 					}
@@ -165,7 +143,7 @@ public class ExecuteWebscript extends AbstractWebScript {
 		}
 		@Override
 		public String getPathDescription() {
-			return "String based script";
+			return "Javascript Console Script";
 		}
 		@Override
 		public Reader getReader() {
@@ -180,12 +158,11 @@ public class ExecuteWebscript extends AbstractWebScript {
 			return true;
 		}
 	}
-  
-    
+	
     /* (non-Javadoc)
      * @see org.alfresco.web.scripts.WebScript#execute(org.alfresco.web.scripts.WebScriptRequest, org.alfresco.web.scripts.WebScriptResponse)
      */
-    final public JavascriptConsoleResult executeScriptContent(WebScriptRequest req, WebScriptResponse res, ScriptContent scriptContent, String template, String spaceNodeRef) throws IOException
+    final public JavascriptConsoleResult executeScriptContent(WebScriptRequest req, WebScriptResponse res, ScriptContent scriptContent, String template, String spaceNodeRef, Map<String, String> urlargs) throws IOException
     {
     	JavascriptConsoleResult output = new JavascriptConsoleResult();
     	
@@ -194,8 +171,6 @@ public class ExecuteWebscript extends AbstractWebScript {
 
         try
         {
-
-            
             // construct model for script / template
             Status status = new Status();
             Cache cache = new Cache(getDescription().getRequiredCache());
@@ -216,6 +191,8 @@ public class ExecuteWebscript extends AbstractWebScript {
                     
                     Map<String, Object> scriptModel = createScriptParameters(req, res, null, model);
                     
+                    augmentScriptModelArgs(scriptModel, urlargs);
+                    
                     // add return model allowing script to add items to template model
                     Map<String, Object> returnModel = new HashMap<String, Object>(8, 1.0f);
                     scriptModel.put("model", returnModel);
@@ -225,16 +202,32 @@ public class ExecuteWebscript extends AbstractWebScript {
                     scriptModel.put("logger", new JavascriptConsoleScriptLogger(javascriptConsole));
                     
                     if (StringUtils.isNotBlank(spaceNodeRef)) {
-                    	scriptModel.put("space", scriptUtils.getNodeFromString(spaceNodeRef));
+                    	javascriptConsole.setSpace(scriptUtils.getNodeFromString(spaceNodeRef));
                     }
                     else {
-                    	scriptModel.put("space", scriptModel.get("companyhome"));
+                    	Object ch = scriptModel.get("companyhome");
+                    	if (ch instanceof NodeRef) {
+                        	javascriptConsole.setSpace(scriptUtils.getNodeFromString(ch.toString()));
+                    	}
+                    	else {
+                        	javascriptConsole.setSpace((ScriptNode) ch);
+                    	}
+                    	
                     }
+                	scriptModel.put("space", javascriptConsole.getSpace());
 
                     ScriptProcessor scriptProcessor = getContainer().getScriptProcessorRegistry().getScriptProcessorByExtension("js");
                     scriptProcessor.executeScript(scriptContent, scriptModel);
                     
                     output.setPrintOutput(javascriptConsole.getPrintOutput());
+                    
+                    ScriptNode newSpace = javascriptConsole.getSpace();
+                    output.setSpaceNodeRef(newSpace.getNodeRef().toString());
+                    try {
+                        output.setSpacePath(newSpace.getDisplayPath() + "/" + newSpace.getName());
+                    } catch (AccessDeniedException ade) {
+                    	output.setSpacePath("/");
+                    }
                     
                     mergeScriptModelIntoTemplateModel(scriptContent, returnModel, model);
         
@@ -296,7 +289,12 @@ public class ExecuteWebscript extends AbstractWebScript {
         return output;
     }
     
-    /**
+    private void augmentScriptModelArgs(Map<String, Object> scriptModel, Map<String, String> additionalUrlArgs) {
+		Map<String, String> args = (Map<String, String>) scriptModel.get("args");
+		args.putAll(additionalUrlArgs);
+	}
+
+	/**
      * Merge script generated model into template-ready model
      * 
      * @param scriptContent    script content
@@ -424,7 +422,4 @@ public class ExecuteWebscript extends AbstractWebScript {
         // create model for template rendering
         return createTemplateParameters(req, res, model);
     }
- 	
-	
-	
 }
