@@ -5,7 +5,8 @@
 	<bean id="webscript.de.fme.jsconsole.execute2.post" class="de.fme.jsconsole.ExecuteWebscript" parent="webscript">
 		<property name="scriptUtils" ref="utilsScript"/>
 		<property name="transactionService" ref="transactionService"/>
-		<property name="baseIncludeScriptResource" value="classpath:de/fme/jsconsole/jsconsole-base-include.js" />
+		<property name="preRollScriptResource" value="classpath:de/fme/jsconsole/jsconsole-pre-roll-script.js" />
+		<property name="postRollScriptResource" value="classpath:de/fme/jsconsole/jsconsole-post-roll-script.js" />
 	</bean>
 	
 </beans>

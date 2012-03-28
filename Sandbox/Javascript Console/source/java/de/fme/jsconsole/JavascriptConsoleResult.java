@@ -14,13 +14,13 @@ import org.springframework.extensions.webscripts.WebScriptResponse;
 
 public class JavascriptConsoleResult {
 
-	String renderedTemplate = "";
+	private String renderedTemplate = "";
 	
-	List<String> printOutput = new ArrayList<String>();
+	private List<String> printOutput = new ArrayList<String>();
 	
-	String spaceNodeRef = "";
+	private String spaceNodeRef = "";
 	
-	String spacePath = "";
+	private String spacePath = "";
 
 	public void setPrintOutput(List<String> printOutput) {
 		this.printOutput = printOutput;

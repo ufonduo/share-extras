@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="source/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/alfresco-core-4.0.0.jar"/>
+	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/alfresco-core-4.0.0.jar" sourcepath="/ALFRESCO_SDK_400/src/alfresco-core-src.zip"/>
 	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/alfresco-data-model-4.0.0.jar"/>
 	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/alfresco-remote-api-4.0.0.jar"/>
 	<classpathentry kind="var" path="ALFRESCO_SDK_400/lib/server/dependencies/spring-surf/spring-surf-core-1.0.0.jar"/>

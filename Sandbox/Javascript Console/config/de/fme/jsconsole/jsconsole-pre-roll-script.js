@@ -38,5 +38,5 @@ logger = {
 };
 
 function print(obj) { 
-	javascriptConsole.print(obj);
+	jsconsole.print(obj);
 };

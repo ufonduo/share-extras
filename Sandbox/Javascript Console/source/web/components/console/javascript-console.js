@@ -94,8 +94,8 @@ if (typeof Fme == "undefined" || !Fme)
    YAHOO.extend(Fme.JavascriptConsole, Alfresco.ConsoleTool,
    {
 	   clearOutput : function ACJC_clearOutput() {
-	       this.widgets.scriptOutput.innerHTML="";
-	       this.widgets.templateOutput.innerHTML="";
+	       this.widgets.scriptOutput.innerHTML = "";
+	       this.widgets.templateOutput.innerHTML = "";
 	   },
 
 	   appendLineArrayToOutput: function ACJC_appendLineArrayToOutput(lineArray) {
@@ -278,8 +278,29 @@ if (typeof Fme == "undefined" || !Fme)
            		 window.localStorage["javascript.console.script"] = self.widgets.scriptInput.value;
            		 self.widgets.codeMirrorTemplate.save();
            		 window.localStorage["javascript.console.template"] = self.widgets.templateInput.value;
+
+           		 window.localStorage["javascript.console.config.runas"] = self.widgets.config.runas.value;
+           		 window.localStorage["javascript.console.config.transactions"] = self.widgets.config.transactions.value;
+           		 window.localStorage["javascript.console.config.urlarguments"] = self.widgets.config.urlarguments.value;
+           		 window.localStorage["javascript.console.config.runlikecrazy"] = self.widgets.config.runlikecrazy.value;
              };
 
+             if (window.localStorage["javascript.console.config.runas"]) {
+            	 self.widgets.config.runas.value = window.localStorage["javascript.console.config.runas"];
+             }
+             
+             if (window.localStorage["javascript.console.config.transactions"]) {
+            	 self.widgets.config.transactions.value = window.localStorage["javascript.console.config.transactions"];
+             }
+
+             if (window.localStorage["javascript.console.config.urlarguments"]) {
+            	 self.widgets.config.urlarguments.value = window.localStorage["javascript.console.config.urlarguments"];
+             }
+
+             if (window.localStorage["javascript.console.config.runlikecrazy"]) {
+            	 self.widgets.config.runlikecrazy.value = window.localStorage["javascript.console.config.runlikecrazy"];
+             }
+             
              if (window.localStorage["javascript.console.script"]) {
             	 this.widgets.codeMirrorScript.setValue(window.localStorage["javascript.console.script"]);
              }
