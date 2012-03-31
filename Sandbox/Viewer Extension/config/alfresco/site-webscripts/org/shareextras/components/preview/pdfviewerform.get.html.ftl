@@ -101,6 +101,9 @@
       </div>
     </div>
 
-    <div id="loading">${msg("loading")}... 0%</div>
+    <div id="loadingBox">
+        <div id="loading">${msg("loading")}... 0%</div>
+        <div id="loadingBar"><div class="progress"></div></div>
+    </div>
     <div id="viewer"></div>
     
