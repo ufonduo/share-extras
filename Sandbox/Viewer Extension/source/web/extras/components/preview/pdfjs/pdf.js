@@ -13,7 +13,7 @@ var PDFJS = {};
   // Use strict in our context only - users might not want it
   'use strict';
 
-  PDFJS.build = '0cf4388';
+  PDFJS.build = '512997a';
 
   // Files are inserted below - see Makefile
   /* PDFJSSCRIPT_INCLUDE_ALL */
@@ -2113,28 +2113,30 @@ var CanvasGraphics = (function CanvasGraphicsClosure() {
             continue;
           }
 
-          var char = glyph.fontChar;
+          var character = glyph.fontChar;
           var charWidth = glyph.width * fontSize * 0.001 +
               Util.sign(current.fontMatrix[0]) * charSpacing;
 
-          var scaledX = x / fontSizeScale;
-          switch (textRenderingMode) {
-            default: // other unsupported rendering modes
-            case TextRenderingMode.FILL:
-            case TextRenderingMode.FILL_ADD_TO_PATH:
-              ctx.fillText(char, scaledX, 0);
-              break;
-            case TextRenderingMode.STROKE:
-            case TextRenderingMode.STROKE_ADD_TO_PATH:
-              ctx.strokeText(char, scaledX, 0);
-              break;
-            case TextRenderingMode.FILL_STROKE:
-            case TextRenderingMode.FILL_STROKE_ADD_TO_PATH:
-              ctx.fillText(char, scaledX, 0);
-              ctx.strokeText(char, scaledX, 0);
-              break;
-            case TextRenderingMode.INVISIBLE:
-              break;
+          if (!glyph.disabled) {
+            var scaledX = x / fontSizeScale;
+            switch (textRenderingMode) {
+              default: // other unsupported rendering modes
+              case TextRenderingMode.FILL:
+              case TextRenderingMode.FILL_ADD_TO_PATH:
+                ctx.fillText(character, scaledX, 0);
+                break;
+              case TextRenderingMode.STROKE:
+              case TextRenderingMode.STROKE_ADD_TO_PATH:
+                ctx.strokeText(character, scaledX, 0);
+                break;
+              case TextRenderingMode.FILL_STROKE:
+              case TextRenderingMode.FILL_STROKE_ADD_TO_PATH:
+                ctx.fillText(character, scaledX, 0);
+                ctx.strokeText(character, scaledX, 0);
+                break;
+              case TextRenderingMode.INVISIBLE:
+                break;
+            }
           }
 
           x += charWidth;
@@ -12991,9 +12993,9 @@ var PartialEvaluator = (function PartialEvaluatorClosure() {
 
         var cmap = cmapObj.getBytes(cmapObj.length);
         for (var i = 0, ii = cmap.length; i < ii; i++) {
-          var byte = cmap[i];
-          if (byte == 0x20 || byte == 0x0D || byte == 0x0A ||
-              byte == 0x3C || byte == 0x5B || byte == 0x5D) {
+          var octet = cmap[i];
+          if (octet == 0x20 || octet == 0x0D || octet == 0x0A ||
+              octet == 0x3C || octet == 0x5B || octet == 0x5D) {
             switch (token) {
               case 'usecmap':
                 error('usecmap is not implemented');
@@ -13050,7 +13052,7 @@ var PartialEvaluator = (function PartialEvaluatorClosure() {
                 tokens.push(token);
                 token = '';
             }
-            switch (byte) {
+            switch (octet) {
               case 0x5B:
                 // begin list parsing
                 tokens.push(beginArrayToken);
@@ -13064,7 +13066,7 @@ var PartialEvaluator = (function PartialEvaluatorClosure() {
                 tokens.push(items);
                 break;
             }
-          } else if (byte == 0x3E) {
+          } else if (octet == 0x3E) {
             if (token.length) {
               if (token.length <= 4) {
                 // parsing hex number
@@ -13090,7 +13092,7 @@ var PartialEvaluator = (function PartialEvaluatorClosure() {
               }
             }
           } else {
-            token += String.fromCharCode(byte);
+            token += String.fromCharCode(octet);
           }
         }
       }
@@ -15184,8 +15186,9 @@ var Font = (function FontClosure() {
         readGlyphNameMap(post, properties);
       }
 
-      // Replace the old CMAP table with a shiny new one
+      var glyphs, ids;
       if (properties.type == 'CIDFontType2') {
+        // Replace the old CMAP table with a shiny new one
         // Type2 composite fonts map characters directly to glyphs so the cmap
         // table must be replaced.
         // canvas fillText will reencode some characters even if the font has a
@@ -15217,7 +15220,9 @@ var Font = (function FontClosure() {
           }
         }
 
-        var glyphs = [], ids = [];
+        glyphs = [];
+        ids = [];
+
         var usedUnicodes = [];
         var unassignedUnicodeItems = [];
         for (var i = 1; i < numGlyphs; i++) {
@@ -15248,11 +15253,12 @@ var Font = (function FontClosure() {
           glyphs.push({ unicode: unicode, code: cid });
           ids.push(i);
         }
-        cmap.data = createCMapTable(glyphs, ids);
       } else {
         var cmapTable = readCMapTable(cmap, font);
-        var glyphs = cmapTable.glyphs;
-        var ids = cmapTable.ids;
+
+        glyphs = cmapTable.glyphs;
+        ids = cmapTable.ids;
+
         var hasShortCmap = !!cmapTable.hasShortCmap;
         var toFontChar = this.toFontChar;
 
@@ -15418,9 +15424,15 @@ var Font = (function FontClosure() {
 
         createGlyphNameMap(glyphs, ids, properties);
         this.glyphNameMap = properties.glyphNameMap;
-
-        cmap.data = createCMapTable(glyphs, ids);
       }
+
+      // Converting glyphs and ids into font's cmap table
+      cmap.data = createCMapTable(glyphs, ids);
+      var unicodeIsEnabled = [];
+      for (var i = 0, ii = glyphs.length; i < ii; i++) {
+        unicodeIsEnabled[glyphs[i].unicode] = true;
+      }
+      this.unicodeIsEnabled = unicodeIsEnabled;
 
       // Rewrite the 'post' table if needed
       if (requiredTables.indexOf('post') != -1) {
@@ -15747,7 +15759,7 @@ var Font = (function FontClosure() {
     },
 
     charToGlyph: function fonts_charToGlyph(charcode) {
-      var fontCharCode, width, operatorList;
+      var fontCharCode, width, operatorList, disabled;
 
       var width = this.widths[charcode];
 
@@ -15820,11 +15832,14 @@ var Font = (function FontClosure() {
         unicodeChars = String.fromCharCode(unicodeChars);
 
       width = (isNum(width) ? width : this.defaultWidth) * this.widthMultiplier;
+      disabled = this.unicodeIsEnabled ?
+        !this.unicodeIsEnabled[fontCharCode] : false;
 
       return {
         fontChar: String.fromCharCode(fontCharCode),
         unicode: unicodeChars,
         width: width,
+        disabled: disabled,
         operatorList: operatorList
       };
     },
@@ -16204,7 +16219,7 @@ var Type1Parser = function type1Parser() {
       subrs: [],
       charstrings: [],
       properties: {
-        'private': {
+        'privateData': {
           'lenIV': 4
         }
       }
@@ -16233,7 +16248,7 @@ var Type1Parser = function type1Parser() {
           (token == 'RD' || token == '-|')) {
         i++;
         var data = eexec.slice(i, i + length);
-        var lenIV = program.properties.private['lenIV'];
+        var lenIV = program.properties.privateData['lenIV'];
         var encoded = decrypt(data, kCharStringsEncryptionKey, lenIV);
         var str = decodeCharString(encoded);
 
@@ -16273,7 +16288,7 @@ var Type1Parser = function type1Parser() {
                 var length = parseInt(getToken(), 10);
                 getToken(); // read in 'RD'
                 var data = eexec.slice(i + 1, i + 1 + length);
-                var lenIV = program.properties.private['lenIV'];
+                var lenIV = program.properties.privateData['lenIV'];
                 var encoded = decrypt(data, kCharStringsEncryptionKey, lenIV);
                 var str = decodeCharString(encoded);
                 i = i + 1 + length;
@@ -16289,12 +16304,12 @@ var Type1Parser = function type1Parser() {
             case '/FamilyOtherBlues':
             case '/StemSnapH':
             case '/StemSnapV':
-              program.properties.private[token.substring(1)] =
+              program.properties.privateData[token.substring(1)] =
                 readNumberArray(eexecStr, i + 1);
               break;
             case '/StdHW':
             case '/StdVW':
-              program.properties.private[token.substring(1)] =
+              program.properties.privateData[token.substring(1)] =
                 readNumberArray(eexecStr, i + 2)[0];
               break;
             case '/BlueShift':
@@ -16303,7 +16318,7 @@ var Type1Parser = function type1Parser() {
             case '/BlueScale':
             case '/LanguageGroup':
             case '/ExpansionFactor':
-              program.properties.private[token.substring(1)] =
+              program.properties.privateData[token.substring(1)] =
                 readNumber(eexecStr, i + 1);
               break;
           }
@@ -16327,14 +16342,14 @@ var Type1Parser = function type1Parser() {
     var count = headerString.length;
     for (var i = 0; i < count; i++) {
       var getToken = function getToken() {
-        var char = headerString[i];
-        while (i < count && (isSeparator(char) || char == '/'))
-          char = headerString[++i];
+        var character = headerString[i];
+        while (i < count && (isSeparator(character) || character == '/'))
+          character = headerString[++i];
 
         var token = '';
-        while (i < count && !(isSeparator(char) || char == '/')) {
-          token += char;
-          char = headerString[++i];
+        while (i < count && !(isSeparator(character) || character == '/')) {
+          token += character;
+          character = headerString[++i];
         }
 
         return token;
@@ -16700,7 +16715,7 @@ Type1Font.prototype = {
           dict += self.encodeNumber(offset) + '\x11'; // Charstrings
 
           offset = offset + fields.charstrings.length;
-          dict += self.encodeNumber(fields.private.length);
+          dict += self.encodeNumber(fields.privateData.length);
           dict += self.encodeNumber(offset) + '\x12'; // Private
 
           return header + String.fromCharCode(dict.length + 1) + dict;
@@ -16741,7 +16756,7 @@ Type1Font.prototype = {
       'charstrings': this.createCFFIndexHeader([[0x8B, 0x0E]].concat(glyphs),
                                                true),
 
-      'private': (function cffWrapPrivate(self) {
+      'privateData': (function cffWrapPrivate(self) {
         var data =
             '\x8b\x14' + // defaultWidth
             '\x8b\x15';  // nominalWidth
@@ -16759,9 +16774,9 @@ Type1Font.prototype = {
           ExpansionFactor: '\x0c\x18'
         };
         for (var field in fieldMap) {
-          if (!properties.private.hasOwnProperty(field))
+          if (!properties.privateData.hasOwnProperty(field))
             continue;
-          var value = properties.private[field];
+          var value = properties.privateData[field];
 
           if (isArray(value)) {
             data += self.encodeNumber(value[0]);
@@ -17718,16 +17733,18 @@ var CFFCompiler = (function CFFCompilerClosure() {
       output.add(charStrings);
 
       if (cff.isCIDFont) {
+        // For some reason FDSelect must be in front of FDArray on windows. OSX
+        // and linux don't seem to care.
+        topDictTracker.setEntryLocation('FDSelect', [output.length], output);
+        var fdSelect = this.compileFDSelect(cff.fdSelect.raw);
+        output.add(fdSelect);
+
         var compiled = this.compileTopDicts(cff.fdArray, output.length);
         topDictTracker.setEntryLocation('FDArray', [output.length], output);
         output.add(compiled.output);
         var fontDictTrackers = compiled.trackers;
 
         this.compilePrivateDicts(cff.fdArray, fontDictTrackers, output);
-
-        topDictTracker.setEntryLocation('FDSelect', [output.length], output);
-        var fdSelect = this.compileFDSelect(cff.fdSelect.raw);
-        output.add(fdSelect);
       }
 
       this.compilePrivateDicts([cff.topDict], [topDictTracker], output);
