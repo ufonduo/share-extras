@@ -147,14 +147,15 @@
 
       <yuicompress fromdir="${res.dir}" todir="${build.jar.dir}/META-INF" excludes="**/*-min.js" warn="${yuicompress.warn}">
           <include name="extras/components/**/*.js" />
-      	 <exclude name="extras/components/**/pdf.js" />
+      	 <!-- <exclude name="extras/components/**/pdf.js" /> -->
       </yuicompress>
 
     	 <!-- Minify JS -->
+    	<!--
         <jsmin suffix="true" suffixvalue="-min" >
         	<fileset dir="${build.jar.dir}/META-INF/" includes="**/pdf.js" excludes="**/*-min.js"/>
         </jsmin>
-
+-->
 
     </target>
    
@@ -198,13 +199,15 @@
 
       <yuicompress fromdir="${res.dir}" todir="${build.zip.dir}/${build.res.dir}" excludes="**/*-min.js" warn="${yuicompress.warn}">
           <include name="extras/components/**/*.js" />
-      	 <exclude name="extras/components/**/pdf.js" />
+      	 <!-- <exclude name="extras/components/**/pdf.js" /> -->
       </yuicompress>
 
     	 <!-- Minify JS -->
+    	<!--
         <jsmin suffix="true" suffixvalue="-min" >
         	<fileset dir="${build.zip.dir}/webapps/share" includes="**/pdf.js" excludes="**/*-min.js"/>
         </jsmin>
+        -->
     </target>
 
     <target name="build-zip-prepare">
