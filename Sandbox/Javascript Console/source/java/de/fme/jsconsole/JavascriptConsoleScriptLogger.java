@@ -36,6 +36,7 @@ import org.springframework.extensions.webscripts.annotation.ScriptParameter;
  * 
  * @author Kevin Roast
  * @author davidc
+ * @author fmaul
  */
 @ScriptClass 
 (

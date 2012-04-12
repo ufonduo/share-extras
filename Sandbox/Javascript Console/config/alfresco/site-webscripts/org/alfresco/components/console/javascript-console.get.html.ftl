@@ -30,9 +30,9 @@
 		</div>
 		<div id="${el}-inputTabs" class="yui-navset">
 		    <ul class="yui-nav">
-		        <li class="selected"><a href="#itab1"><em>Javascript input</em></a></li>
-		        <li><a href="#itab2"><em>Freemarker input</em></a></li>
-		        <li><a href="#itab3"><em>Script execution parameters</em></a></li>
+		        <li class="selected"><a href="#itab1"><em>${msg("tab.label.javascript.input")}</em></a></li>
+		        <li><a href="#itab2"><em>${msg("tab.label.freemarker.input")}</em></a></li>
+		        <li><a href="#itab3"><em>${msg("tab.label.script.execution.parameters")}</em></a></li>
 		    </ul>            
 		    <div id="${el}-inputContentArea" class="yui-content">
 		        <div>
@@ -81,18 +81,22 @@
 		</div>
 		<div id="${el}-outputTabs" class="yui-navset">
 		    <ul class="yui-nav">
-		        <li class="selected"><a href="#otab1"><em>Console output</em></a></li>
-		        <li><a href="#otab2"><em>Freemarker output</em></a></li>
-		        <li><a href="#otab3"><em>Datatable output</em></a></li>
+		        <li class="selected"><a href="#otab1"><em>${msg("tab.label.console.output")}</em></a></li>
+		        <li><a href="#otab2"><em>${msg("tab.label.freemarker.html.output")}</em></a></li>
+		        <li><a href="#otab2"><em>${msg("tab.label.freemarker.text.output")}</em></a></li>
+		        <#--<li><a href="#otab3"><em>${msg("tab.label.datatable.output")}</em></a></li>-->
 		    </ul>            
 		    <div class="yui-content">
 		        <div>
 				    <p id="${el}-jsoutput" class="jsbox"></p>
 				</div>
 		        <div>		
-				    <div id="${el}-templateoutput" class="templateOutputBox"></div>
+				    <div id="${el}-templateoutputhtml" class="templateOutputBox"></div>
 				</div>
-		    	<div>
+		        <div>		
+				    <div id="${el}-templateoutputtext" class="templateOutputBox"></div>
+				</div>
+		    	<div style="display:none;">
 	  	        	<div id="${el}-datatable" style="display:none;"></div>
   		        	<div class="exportButton">
   	    	    		<button id="${el}-exportResults-button" tabindex="0">${msg("button.export.results")}</button>
