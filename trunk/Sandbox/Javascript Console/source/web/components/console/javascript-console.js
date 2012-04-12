@@ -73,7 +73,8 @@ if (typeof Fme == "undefined" || !Fme)
         	 parent.widgets.scriptInput = Dom.get(parent.id + "-jsinput");
         	 parent.widgets.scriptOutput = Dom.get(parent.id + "-jsoutput");
         	 parent.widgets.templateInput = Dom.get(parent.id + "-templateinput");
-        	 parent.widgets.templateOutput = Dom.get(parent.id + "-templateoutput");
+        	 parent.widgets.templateOutputHtml = Dom.get(parent.id + "-templateoutputhtml");
+        	 parent.widgets.templateOutputText = Dom.get(parent.id + "-templateoutputtext");
         	 parent.widgets.config = {
         			 runas : Dom.get(parent.id + "-runas"),
         			 transaction : Dom.get(parent.id + "-transactions"),
@@ -95,7 +96,8 @@ if (typeof Fme == "undefined" || !Fme)
    {
 	   clearOutput : function ACJC_clearOutput() {
 	       this.widgets.scriptOutput.innerHTML = "";
-	       this.widgets.templateOutput.innerHTML = "";
+	       this.widgets.templateOutputHtml.innerHTML = "";
+	       this.widgets.templateOutputText.innerHTML = "";
 	   },
 
 	   appendLineArrayToOutput: function ACJC_appendLineArrayToOutput(lineArray) {
@@ -743,14 +745,16 @@ if (typeof Fme == "undefined" || !Fme)
             	 this.printExecutionStats();
             	 this.clearOutput();
             	 this.appendLineArrayToOutput(res.json.printOutput);
-            	 this.widgets.templateOutput.innerHTML = res.json.renderedTemplate;
+            	 this.widgets.templateOutputHtml.innerHTML = res.json.renderedTemplate;
+            	 this.widgets.templateOutputText.innerHTML = YAHOO.lang.escapeHTML(res.json.renderedTemplate);
             		 
                  if (res.json.spaceNodeRef) {
                 	 this.widgets.nodeField.value = res.json.spaceNodeRef;
                      this.widgets.pathField.innerHTML = res.json.spacePath;
                  }                 
                  this.widgets.scriptOutput.disabled = false;
-                 this.widgets.templateOutput.disabled = false;
+                 this.widgets.templateOutputHtml.disabled = false;
+                 this.widgets.templateOutputText.disabled = false;
            	     this.widgets.executeButton.disabled = false;
            	     
                  this.showResultTable(res.json.result);
