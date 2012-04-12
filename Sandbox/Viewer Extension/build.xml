@@ -76,8 +76,8 @@
 	
 	<path id="yuicompressor.classpath">
        <fileset dir="lib">
-             <include name="yuicompressor-2.4.2.jar"/>
-             <include name="yui-compressor-ant-task-0.5.jar"/>
+             <include name="yuicompressor-2.4.7.jar"/>
+             <include name="yui-compressor-ant-task-0.5.7.jar"/>
        </fileset>
    </path>
    
@@ -147,15 +147,18 @@
 
       <yuicompress fromdir="${res.dir}" todir="${build.jar.dir}/META-INF" excludes="**/*-min.js" warn="${yuicompress.warn}">
           <include name="extras/components/**/*.js" />
-      	 <!-- <exclude name="extras/components/**/pdf.js" /> -->
+      	 <exclude name="extras/components/preview/pdfjs/*" />
       </yuicompress>
 
+    	<!-- There is a bug in yuicompress that breaks get in prototypes
+    	http://yuilibrary.com/projects/yuicompressor/ticket/2528049
+    	Minify JS works, use it for all pdf.js files -->
+
     	 <!-- Minify JS -->
-    	<!--
+
         <jsmin suffix="true" suffixvalue="-min" >
-        	<fileset dir="${build.jar.dir}/META-INF/" includes="**/pdf.js" excludes="**/*-min.js"/>
+        		<fileset dir="${build.jar.dir}/META-INF/" includes="extras/components/preview/pdfjs/*.js" excludes="**/*-min.js"/>
         </jsmin>
--->
 
     </target>
    
@@ -197,17 +200,21 @@
             <fileset dir="${res.dir}" includes="${build.res.includes}" excludes="${build.res.excludes}" />
         </copy>
 
-      <yuicompress fromdir="${res.dir}" todir="${build.zip.dir}/${build.res.dir}" excludes="**/*-min.js" warn="${yuicompress.warn}">
+      <yuicompress fromdir="${res.dir}" todir="${build.zip.dir}/${build.res.dir}" excludes="**/*-min.js" warn="${yuicompress.warn}" >
           <include name="extras/components/**/*.js" />
-      	 <!-- <exclude name="extras/components/**/pdf.js" /> -->
+      	 <exclude name="extras/components/preview/pdfjs/*" />
       </yuicompress>
 
+    	<!-- There is a bug in yuicompress that breaks get in prototypes
+    	http://yuilibrary.com/projects/yuicompressor/ticket/2528049
+    	Minify JS works, use it for all pdf.js files -->
+
     	 <!-- Minify JS -->
-    	<!--
+
         <jsmin suffix="true" suffixvalue="-min" >
-        	<fileset dir="${build.zip.dir}/webapps/share" includes="**/pdf.js" excludes="**/*-min.js"/>
+        		<fileset dir="${build.zip.dir}/${build.res.dir}" includes="extras/components/preview/pdfjs/*.js" excludes="**/*-min.js"/>
         </jsmin>
-        -->
+
     </target>
 
     <target name="build-zip-prepare">
