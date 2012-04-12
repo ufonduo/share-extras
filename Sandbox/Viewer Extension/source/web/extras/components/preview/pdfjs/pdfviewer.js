@@ -578,11 +578,11 @@ var PDFView = {
         pdfTitle = metadata.get('dc:title');
     }
 
-    if (!pdfTitle && info && info.has('Title'))
-      pdfTitle = info.get('Title');
+    if (!pdfTitle && info && info['Title'])
+      pdfTitle = info['Title'];
 
     if (pdfTitle)
-      document.title = pdfTitle;
+      document.title = pdfTitle + ' - ' + document.title;
   },
 
   setHash: function pdfViewSetHash(hash) {
