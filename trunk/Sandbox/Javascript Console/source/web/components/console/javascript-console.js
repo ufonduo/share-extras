@@ -264,6 +264,18 @@ if (typeof Fme == "undefined" || !Fme)
          this.widgets.inputTabs = new YAHOO.widget.TabView(this.id + "-inputTabs");
          this.widgets.outputTabs = new YAHOO.widget.TabView(this.id + "-outputTabs");
          
+         new YAHOO.widget.Tooltip("tooltip-urlargs", { 
+        	    context: this.widgets.config.urlargs, 
+        	    text: "tooltip.urlargs",
+        	    showDelay: 200
+        	});
+
+         new YAHOO.widget.Tooltip("tooltip-runas", { 
+     	    context: this.widgets.config.runas, 
+     	    text: "tooltip.runas",
+     	    showDelay: 200
+     	});
+         
          var tab0 = this.widgets.inputTabs.getTab(1); // 2nd tab
          tab0.addListener('click', function handleClick(e) { 
         	 self.widgets.codeMirrorTemplate.refresh();
