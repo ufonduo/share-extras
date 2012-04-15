@@ -5,6 +5,7 @@
                             ***********************************
     
     Author: Will Abson
+    Version: 1.5.1
     
     Provides a set of targets for building extensions to Alfresco Share in ZIP, AMP and JAR archive 
     formats. Since Alfresco 3.3, JAR is the recommended package structure for all simple extensions.
@@ -23,16 +24,16 @@
     project directory. These may be removed at any time using the 'clean' target.
 
 -->
-<project basedir="." default="dist-jar" name="Viewer Extension Build Script">
+<project basedir="." default="dist-jar" name="Share Extras Build Script">
 
    <!-- Allow override properties -->
     <property file="build.properties" />
     <property file="${user.home}/build.properties" />
    
    <!-- Property default values. May be overridden using above files or via command-line args -->
-    <property name="jar.name" value="shareextras-viewer-extension.jar" />
-    <property name="zip.name" value="shareextras-viewer-extension.zip" />
-    <property name="amp.name" value="shareextras-viewer-extension.amp" />
+    <property name="jar.name" value="share-extension.jar" />
+    <property name="zip.name" value="share-extension.zip" />
+    <property name="amp.name" value="share-extension.amp" />
     <property name="config.includes" value="**/*.*" />
     <property name="config.excludes" value="" />
     <property name="build.res.includes" value="**/*.*" />
@@ -40,29 +41,40 @@
     <property name="build.res.dir" value="webapps/share" />
     <property name="build.classes.dir" value="shared/classes" />
     <property name="build.lib.dir" value="shared/lib" />
-    <property name="post.verbose" value="false" />
+    <property name="yuicompress.warn" value="false" />
+    <!-- Tomcat properties to reload web scripts or the manager webapp -->
+    <property name="tomcat.url" value="http://localhost:8080" />
+    <property name="tomcat.repo.url" value="${tomcat.url}" />
+    <property name="tomcat.share.url" value="${tomcat.url}" />
+    <!-- Tomcat properties to reload web scripts -->
     <property name="webapp.alfresco.path" value="/alfresco" />
     <property name="webapp.share.path" value="/share" />
+    <property name="post.verbose" value="false" />
+    <property name="repo.admin.username" value="admin" />
+    <property name="repo.admin.password" value="admin" />
+    <property name="repo.scripts.index" value="${tomcat.repo.url}${webapp.alfresco.path}/service/index" />
+    <property name="share.scripts.index" value="${tomcat.share.url}${webapp.share.path}/page/index" />
     <!-- Properties to access the Tomcat Manager application -->
-    <property name="tomcat.url" value="http://localhost:8080" />
     <property name="webapp.manager.url" value="${tomcat.url}/manager" />
     <property name="webapp.manager.username" value="admin" />
     <property name="webapp.manager.password" value="" />
-    <property name="yuicompress.warn" value="false" />
+    <!-- Paths to local Tomcat instances -->
+    <property name="tomcat.repo.home" value="${tomcat.home}" />
+    <property name="tomcat.share.home" value="${tomcat.home}" />
    
-   <!-- Additional property values. Generally should not be overridden -->
+    <!-- Additional property values. Generally should not be overridden -->
     <property name="config.dir" value="${basedir}/config" />
     <property name="res.dir" value="${basedir}/source/web" />
     <property name="build.dir" value="${basedir}/build" />
     <property name="build.jar.dir" value="${build.dir}/jar" />
     <property name="build.zip.dir" value="${build.dir}/war" />
     <property name="build.amp.dir" value="${build.dir}/amp" />
-    <property name="dist.dir" value="${basedir}/dist" />
+    <property name="dist.dir" value="${build.dir}/dist" />
     <property name="amp.file.properties" value="module.properties" />
     <property name="amp.file.mappings" value="file-mapping.properties" />
     
     <!-- Define optional tasks -->
-	<!--
+    <!--
     <taskdef name="reload"  classname="org.apache.catalina.ant.ReloadTask" />
     <taskdef name="post"    classname="net.sf.antcontrib.net.PostTask" />
     -->
@@ -70,25 +82,38 @@
     <!-- Alias targets -->
     <target name="build-zip" depends="build-zip-tomcat" />
     <target name="dist-zip" depends="dist-zip-tomcat" />
+
+    <!-- Additional classpath and task definitions -->
+
+    <path id="yuicompressor.classpath">
+        <fileset dir="lib">
+            <include name="yuicompressor-2.4.2.jar"/>
+            <include name="yui-compressor-ant-task-0.5.jar"/>
+        </fileset>
+    </path>
    
-	<!-- yuicompress doesn't work with pdf.js https://github.com/mozilla/pdf.js/issues/710 -->
-	<!-- Using jsmin instead, not as efficient, but works -->
-	
-	<path id="yuicompressor.classpath">
-       <fileset dir="lib">
-             <include name="yuicompressor-2.4.7.jar"/>
-             <include name="yui-compressor-ant-task-0.5.7.jar"/>
-       </fileset>
-   </path>
+    <taskdef name="yuicompress" classname="net.noha.tools.ant.yuicompressor.tasks.YuiCompressorTask">
+        <classpath>
+            <path refid="yuicompressor.classpath" />
+        </classpath>
+    </taskdef>
+
+    <path id="ml-ant-http.classpath">
+        <fileset dir="lib">
+            <include name="ml-ant-http-1.1.1.jar" />
+        </fileset>
+    </path>
    
-	<taskdef name="yuicompress" classname="net.noha.tools.ant.yuicompressor.tasks.YuiCompressorTask">
-         <classpath>
-            <path refid="yuicompressor.classpath"/>
-         </classpath>
-   </taskdef>
-   
-	<taskdef name="jsmin" classname="net.matthaynes.jsmin.JSMin_Task" classpath="${basedir}/lib/jsmin.0.2.4.jar"/>
-	
+    <taskdef name="http" classname="org.missinglink.ant.task.http.HttpClientTask">
+        <classpath>
+            <path refid="ml-ant-http.classpath" />
+        </classpath>
+    </taskdef>
+    
+    
+    <!-- Main build target definitions -->
+    
+    
    <!-- Clean out the build and distribution directories -->
    <target name="clean" description="Clean out all build directories">
       <delete dir="${build.dir}" />
@@ -127,6 +152,7 @@
                 <!-- Surf config -->
                 <exclude name="alfresco/share*-config.xml" />
                 <exclude name="alfresco/web-extension/share-config-custom.xml" />
+                <exclude name="share-config-custom.xml" />
                 <!-- Global excludes -->
                 <exclude name="${config.excludes}" />
             </fileset>
@@ -144,22 +170,15 @@
             </fileset>
             <globmapper from="alfresco/web-extension/*.xml" to="*.xml" handledirsep="true" />
         </copy>
-
-      <yuicompress fromdir="${res.dir}" todir="${build.jar.dir}/META-INF" excludes="**/*-min.js" warn="${yuicompress.warn}">
-          <include name="extras/components/**/*.js" />
-      	 <exclude name="extras/components/preview/pdfjs/*" />
-      </yuicompress>
-
-    	<!-- There is a bug in yuicompress that breaks get in prototypes
-    	http://yuilibrary.com/projects/yuicompressor/ticket/2528049
-    	Minify JS works, use it for all pdf.js files -->
-
-    	 <!-- Minify JS -->
-
-        <jsmin suffix="true" suffixvalue="-min" >
-        		<fileset dir="${build.jar.dir}/META-INF/" includes="extras/components/preview/pdfjs/*.js" excludes="**/*-min.js"/>
-        </jsmin>
-
+        <copy todir="${build.jar.dir}/META-INF" includeEmptyDirs="false">
+            <fileset dir="${config.dir}">
+                <filename name="share-config-custom.xml" />
+            </fileset>
+        </copy>
+        <!-- Minify JS -->
+        <yuicompress fromdir="${res.dir}" todir="${build.jar.dir}/META-INF" excludes="**/*-min.js" warn="${yuicompress.warn}">
+            <include name="**/*.js" />
+        </yuicompress>
     </target>
    
    <!-- Build the JAR file -->
@@ -199,22 +218,10 @@
         <copy todir="${build.zip.dir}/${build.res.dir}">
             <fileset dir="${res.dir}" includes="${build.res.includes}" excludes="${build.res.excludes}" />
         </copy>
-
-      <yuicompress fromdir="${res.dir}" todir="${build.zip.dir}/${build.res.dir}" excludes="**/*-min.js" warn="${yuicompress.warn}" >
-          <include name="extras/components/**/*.js" />
-      	 <exclude name="extras/components/preview/pdfjs/*" />
-      </yuicompress>
-
-    	<!-- There is a bug in yuicompress that breaks get in prototypes
-    	http://yuilibrary.com/projects/yuicompressor/ticket/2528049
-    	Minify JS works, use it for all pdf.js files -->
-
-    	 <!-- Minify JS -->
-
-        <jsmin suffix="true" suffixvalue="-min" >
-        		<fileset dir="${build.zip.dir}/${build.res.dir}" includes="extras/components/preview/pdfjs/*.js" excludes="**/*-min.js"/>
-        </jsmin>
-
+        <!-- Minify JS -->
+        <yuicompress fromdir="${res.dir}" todir="${build.zip.dir}/${build.res.dir}" excludes="**/*-min.js" warn="${yuicompress.warn}">
+            <include name="**/*.js" />
+        </yuicompress>
     </target>
 
     <target name="build-zip-prepare">
@@ -278,7 +285,6 @@
        <!-- Minify JS -->
        <yuicompress fromdir="${res.dir}" todir="${build.amp.dir}/web" excludes="**/*-min.js" warn="${yuicompress.warn}">
           <include name="**/*.js" />
-       	  <exclude name="**/modules/editors/ckeditor/**" />
        </yuicompress>
     </target>
     
@@ -289,55 +295,100 @@
         </zip>
     </target>
     
+    <!-- Shared path definition used to copy files into the local Tomcat instance(s) -->
+    <patternset id="hotcopy-tomcat-zip-patternset">
+        <!-- Spring config -->
+        <exclude name="**/classes/web-application-config.xml" />
+        <exclude name="**/classes/surf-config.xml" />
+        <exclude name="**/classes/alfresco/slingshot-application-context.xml" />
+        <exclude name="**/classes/alfresco/web-extension/custom-slingshot-application-context.xml" />
+        <!-- Surf config -->
+        <exclude name="**/classes/alfresco/share*-config.xml" />
+        <exclude name="**/classes/alfresco/web-extension/share-config-custom.xml" />
+    </patternset>
+
     <!--
         Hot copy individual files into a local Tomcat instance.
         
         In version 3.3 and above the JAR file mechanism is recommended for distributing your 
         customisations, but this target can still be used during development as it allows you to
-        reload changes .
-    -->
+        reload changes without restarting Tomcat.
+    -->  
     <target name="hotcopy-tomcat-zip" depends="build-zip-tomcat" description="Hot copy individual files into a local Tomcat instance">
-        <copy todir="${tomcat.home}" includeEmptyDirs="false">
-            <fileset dir="${build.zip.dir}" />
+        <echo message="Copying repository files" />
+        <copy todir="${tomcat.repo.home}" includeEmptyDirs="false">
+            <fileset dir="${build.zip.dir}">
+                <patternset refid="hotcopy-tomcat-zip-patternset" />
+                <!-- Exclude static resources -->
+                <exclude name="${build.res.dir}/**" />
+                <!-- Exclude web-tier config -->
+                <exclude name="**/classes/alfresco/site-webscripts/**" />
+                <exclude name="**/classes/alfresco/site-data/**" />
+                <exclude name="**/classes/alfresco/web-extension/**" />
+                <exclude name="**/classes/org/springframework/extensions/surf/**" />
+            </fileset>
         </copy>
+        <echo message="Copying Share files" />
+        <copy todir="${tomcat.share.home}" includeEmptyDirs="false">
+            <fileset dir="${build.zip.dir}">
+                <patternset refid="hotcopy-tomcat-zip-patternset" />
+                <!-- Exclude repo-tier web scripts config -->
+                <exclude name="**/classes/alfresco/extension/**" />
+                <exclude name="**/classes/alfresco/templates/webscripts/**" />
+            </fileset>
+         </copy>
     </target>
 
     <!--
         Hot copy JAR file into a local Tomcat instance.
-        
-        In version 3.3 and above the JAR file mechanism is recommended for distributing your 
-        customisations, but this target can still be used during development as it allows you to
-        reload changes .
     -->
     <target name="hotcopy-tomcat-jar" depends="dist-jar" description="Hot copy JAR file into a local Tomcat instance">
-        <mkdir dir="${tomcat.home}/${build.lib.dir}" />
-        <copy todir="${tomcat.home}/${build.lib.dir}">
+        <mkdir dir="${tomcat.repo.home}/${build.lib.dir}" />
+        <mkdir dir="${tomcat.share.home}/${build.lib.dir}" />
+        <copy todir="${tomcat.repo.home}/${build.lib.dir}">
+            <fileset file="${dist.dir}/${jar.name}" />
+        </copy>
+        <copy todir="${tomcat.share.home}/${build.lib.dir}">
             <fileset file="${dist.dir}/${jar.name}" />
         </copy>
     </target>
     
     <!--
-        Uncomment to enable web script reloading from Ant. These tasks use the HTTP Post task from 
-        http://ant-contrib.sourceforge.net/.
-        
-        To use these tasks you will need to add ant-contrib.jar to your Ant libs, uncomment the task
-        definitions at the start of this file and override the org/alfresco/index.post.js web script 
-        descriptor to set the authentication to 'none' (since the post task cannot handle HTTP 
-        authentication).
+        Web script reloading from Ant. These tasks use the HTTP task from 
+        http://code.google.com/p/missing-link/.
     -->
-	<!--
-    <target name="reload-webscripts-repo" depends="" description="Reload repository-tier webscripts">
-        <post to="${tomcat.url}${webapp.alfresco.path}/service/index" failonerror="true" verbose="${post.verbose}">
-            <prop name="reset" value="on" />
-        </post>
+    <target name="reload-webscripts-repo" depends="" description="Reload repository webscripts">
+        <http url="${repo.scripts.index}"
+               method="POST"
+               printrequest="false"
+               printrequestheaders="false"
+               printresponse="false"
+               printresponseheaders="false"
+               expected="200"
+               failonunexpected="true">
+            <credentials username="${repo.admin.username}" password="${repo.admin.password}" />
+            <query>
+                <parameter name="reset" value="on" />
+            </query>
+        </http>
     </target>
     
-    <target name="reload-webscripts-webtier" depends="" description="Reload web-tier webscripts">
-        <post to="${tomcat.url}${webapp.share.path}/service/index" failonerror="true" verbose="${post.verbose}">
-            <prop name="reset" value="on" />
-        </post>
+    <target name="reload-webscripts-share" depends="" description="Reload Share webscripts">
+        <http url="${share.scripts.index}"
+               method="POST"
+               printrequest="false"
+               printrequestheaders="false"
+               printresponse="false"
+               printresponseheaders="false"
+               expected="200"
+               failonunexpected="true">
+            <credentials username="${repo.admin.username}" password="${repo.admin.password}" />
+            <query>
+                <parameter name="reset" value="on" />
+            </query>
+        </http>
     </target>
-    -->
+    
     <!--
         Uncomment to enable web application reloading from Ant. These tasks use the optional Tomcat
         ant tasks from catalina-ant.jar distributed with Tomcat.
