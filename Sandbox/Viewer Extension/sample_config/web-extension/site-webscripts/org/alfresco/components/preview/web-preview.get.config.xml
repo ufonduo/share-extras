@@ -87,27 +87,30 @@
       </condition>
 	
 <!-- Share Extras Viewer Start Add -->
-	  <condition mimeType="text/plain">
-         <plugin>IframeView</plugin>
+	  	<condition mimeType="text/plain">
+      	<plugin>IframeView</plugin>
       </condition>
 
-	  <condition mimeType="application/pdf">
-         <plugin>PdfViewer</plugin>
+		<!-- PdfJS viewer for PDF -->
+	  	<condition mimeType="application/pdf">
+         <plugin>PdfJs</plugin>
       </condition>
 
-<!-- Example config to force a plugin and skip browser test if plugin is available -->
-<!-- Valid options are for forceplugin are pdfjs and plugin -->
-<!--       
-	  <condition mimeType="application/pdf">
-         <plugin forceplugin="pdfjs" skipbrowsertest="false">PdfViewer</plugin>
-      </condition>
--->
-
-<!-- Remove condition below if you only want to use it for pdf files -->
+		<!-- PdfJS viewer for documents that can be converted to pdf -->
       <condition thumbnail="pdf">
-         <plugin src="pdf">PdfViewer</plugin>
+         <plugin src="pdf">PdfJs</plugin>
       </condition>
-
+        
+      <!-- Fallback to PdfPlugin if PdfJs is not supported -->
+      <!-- Move in front of PdfJs to use this first hand -->
+      <condition mimeType="application/pdf">
+         <plugin>PdfPlugin</plugin>
+      </condition>
+          
+      <condition thumbnail="pdf">
+         <plugin src="pdf">PdfPlugin</plugin>
+      </condition>
+      
 <!-- Share Extras Viewer End Add -->
 	        
       <!-- Documents that has been converted to .swf -->
