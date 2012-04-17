@@ -6,9 +6,19 @@
             the two extra web previewer plugins
         -->
         <module>
+            <id>Media Preview Common</id>
+            <customizations>
+                <customization>
+                    <targetPackageRoot>org.alfresco.components.preview</targetPackageRoot>              
+                    <sourcePackageRoot>org.sharextras.customization.media-previews.common</sourcePackageRoot>
+                </customization>
+            </customizations>
+            <auto-deploy>true</auto-deploy>
+        </module>
+        
+        <module>
             <id>Iframe Viewer</id>
             <customizations>
-                <!-- Enable FLVPlayer.js plugin in web-previewer, plus additional messages -->
                 <customization>
                     <targetPackageRoot>org.alfresco.components.preview</targetPackageRoot>              
                     <sourcePackageRoot>org.sharextras.customization.media-previews.iframeviewer</sourcePackageRoot>
@@ -18,16 +28,26 @@
         </module>
         
         <module>
-            <id>PDF Viewer</id>
+            <id>PdfJs Viewer</id>
             <customizations>
-                <!-- Enable MP3Player.js plugin in Document Viewer dashlet -->
                 <customization>
                     <targetPackageRoot>org.alfresco.components.preview</targetPackageRoot>
-                    <sourcePackageRoot>org.sharextras.customization.media-previews.pdfviewer</sourcePackageRoot>
+                    <sourcePackageRoot>org.sharextras.customization.media-previews.pdfjs</sourcePackageRoot>
                 </customization>
             </customizations>
             <auto-deploy>true</auto-deploy>
         </module>
         
+        <module>
+            <id>PdfPlugin Viewer</id>
+            <customizations>
+                <customization>
+                    <targetPackageRoot>org.alfresco.components.preview</targetPackageRoot>
+                    <sourcePackageRoot>org.sharextras.customization.media-previews.pdfplugin</sourcePackageRoot>
+                </customization>
+            </customizations>
+            <auto-deploy>true</auto-deploy>
+        </module>
+               
     </modules>
 </extension>

@@ -77,7 +77,7 @@ Alfresco.WebPreview.prototype.Plugins.IframeView.prototype = {
 
 		previewHeight = this.wp.setupPreviewSize();
 
-		displaysrc = '<div id="iframe-view-controls"><div class="iframe-viewer-button">';
+		displaysrc = '<div class="iframe-view-controls"><div class="iframe-viewer-button">';
 		displaysrc += '<a title="View In Browser" class="simple-link" href="' + src;
 		displaysrc += '" target="_blank" style="background-image:url(' + Alfresco.constants.URL_RESCONTEXT
 				+ 'components/documentlibrary/actions/document-view-content-16.png)">';
