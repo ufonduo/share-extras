@@ -23,18 +23,18 @@
  * Supports the following mime types: "application/pdf".
  * 
  * @namespace Alfresco.WebPreview.prototype.Plugins
- * @class Alfresco.WebPreview.prototype.Plugins.PdfPlugin
+ * @class Alfresco.WebPreview.prototype.Plugins.Embed
  * @author Peter Lšfgren Loftux AB
  */
 
-Alfresco.WebPreview.prototype.Plugins.PdfPlugin = function(wp, attributes)
+Alfresco.WebPreview.prototype.Plugins.Embed = function(wp, attributes)
 {
 	this.wp = wp;
 	this.attributes = YAHOO.lang.merge(Alfresco.util.deepCopy(this.attributes), attributes);
 	return this;
 };
 
-Alfresco.WebPreview.prototype.Plugins.PdfPlugin.prototype = {
+Alfresco.WebPreview.prototype.Plugins.Embed.prototype = {
 	/**
 	 * Attributes
 	 */
@@ -44,7 +44,7 @@ Alfresco.WebPreview.prototype.Plugins.PdfPlugin.prototype = {
 		 * Decides if the node's content or one of its thumbnails shall be
 		 * displayed. Leave it as it is if the node's content shall be used. Set
 		 * to a custom thumbnail definition name if the node's thumbnail contains
-		 * the PdfPlugin to display.
+		 * the thumbnail to display.
 		 * 
 		 * @property src
 		 * @type String
@@ -61,16 +61,26 @@ Alfresco.WebPreview.prototype.Plugins.PdfPlugin.prototype = {
 		 * @default AcroPDF.PDF,PDF.PdfCtrl,FOXITREADEROCX.FoxitReaderOCXCtrl.1
 		 */
 		IEactiveX : 'AcroPDF.PDF,PDF.PdfCtrl,FOXITREADEROCX.FoxitReaderOCXCtrl.1',
+		
+		/**
+		 * Test if there is an available plugin for this mimetype.
+		 * Used for all non IE browsers.
+		 * 
+		 * @property PluginMimetype
+		 * @type String
+		 * @default 'application/pdf'
+		 */
+		PluginMimetype : 'application/pdf',
 
 		/**
-		 * Skipbrowser test, mostly for developer to force test loading Valid
-		 * options "true" "false" as String
+		 * Skip testing for plugin. Use for mime types that do not need a plugin,
+		 * for example text/plain that browser can embed natively.
 		 * 
-		 * @property skipbrowsertest
+		 * @property skipplugintest
 		 * @type String
 		 * @default "false"
 		 */
-		skipbrowsertest : "false"
+		skipplugintest : "false"
 	},
 
 	/**
@@ -82,47 +92,35 @@ Alfresco.WebPreview.prototype.Plugins.PdfPlugin.prototype = {
 	 *         string.
 	 * @public
 	 */
-	report : function PdfPlugin_report()
+	report : function Embed_report()
 	{
 
-		var pdfplugininstalled = false, skipbrowsertest = (this.attributes.skipbrowsertest && this.attributes.skipbrowsertest === "true") ? true : false;;
+		var plugininstalled = false, skipplugintest = (this.attributes.skipplugintest && this.attributes.skipplugintest === "true") ? true : false;;
 
-		if (skipbrowsertest === false)
+		if (skipplugintest === false)
 		{
 
 			// IE needs special way of testing for
 			if (YAHOO.env.ua.ie > 0)
 			{
-				pdfplugininstalled = this._detectPdfPluginIE();
+				plugininstalled = this._detectPluginIE();
 			} else
 			{
-				if (Alfresco.util.isBrowserPluginInstalled("application/pdf"))
+				if (Alfresco.util.isBrowserPluginInstalled(this.attributes.PluginMimetype))
 				{
-					pdfplugininstalled = true;
-				}
-				// Since there is no reliable method, try several ways to detect
-				if (pdfplugininstalled === false)
-				{
-					for ( var i = 0, mimeLength = navigator.mimeTypes.length; i < mimeLength; i++)
-					{
-						if (navigator.mimeTypes[i].suffixes.toLowerCase() === "pdf")
-						{
-							pdfplugininstalled = true;
-							break;
-						}
-					}
+					plugininstalled = true;
 				}
 			}
 
 		} else
 		{
-			pdfplugininstalled = true;
+			plugininstalled = true;
 		}
 
 		// If neither is supported, then report this, and bail out as viewer
-		if (pdfplugininstalled === false && skipbrowsertest === false)
+		if (plugininstalled === false && skipplugintest === false)
 		{
-			return this.wp.msg("label.browserReport", "Missing Plugin/pdf");
+			return this.wp.msg("label.browserReport", "Missing Plugin ");
 		}
 	},
 
@@ -132,7 +130,7 @@ Alfresco.WebPreview.prototype.Plugins.PdfPlugin.prototype = {
 	 * @method display
 	 * @public
 	 */
-	display : function PdfPlugin_display()
+	display : function Embed_display()
 	{
 		var url = this.attributes.src ? this.wp.getThumbnailUrl(this.attributes.src) : this.wp.getContentUrl(), displaysource, previewHeight;
 
@@ -144,7 +142,7 @@ Alfresco.WebPreview.prototype.Plugins.PdfPlugin.prototype = {
 				+ 'components/documentlibrary/actions/document-view-content-16.png)">';
 		displaysource += '<span>' + Alfresco.util.message("actions.document.view") + ' </span></a></div></div>'
 		// Set the iframe
-		displaysource += '<iframe id="PdfPlugin" name="PdfPlugin" src="' + url
+		displaysource += '<iframe id="Embed" name="Embed" src="' + url
 				+ '" scrolling="yes" marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0"  style="height:' + (previewHeight - 10).toString()
 				+ 'px;"></iframe>';
 
@@ -158,12 +156,12 @@ Alfresco.WebPreview.prototype.Plugins.PdfPlugin.prototype = {
 	 * @method _detectPdfPluginIE
 	 * @private
 	 */
-	_detectPdfPluginIE : function PdfPlugin_detectPDFPluginIE()
+	_detectPluginIE : function Embed_detectPluginIE()
 	{
 
 		if (window.ActiveXObject)
 		{
-			var control = null, activeXIE = this.attributes.IEactiveX.split(','), pdfplugininstalled = false;
+			var control = null, activeXIE = this.attributes.IEactiveX.split(','), plugininstalled = false;
 
 			// Loop the ActiveX id collection
 			for ( var i = 0, activeXIELength = activeXIE.length; i < activeXIELength; i++)
@@ -179,11 +177,11 @@ Alfresco.WebPreview.prototype.Plugins.PdfPlugin.prototype = {
 
 				if (control)
 				{
-					pdfplugininstalled = true;
+					plugininstalled = true;
 					break;
 				}
 			}
-			return pdfplugininstalled;
+			return plugininstalled;
 		}
 
 		return false;
