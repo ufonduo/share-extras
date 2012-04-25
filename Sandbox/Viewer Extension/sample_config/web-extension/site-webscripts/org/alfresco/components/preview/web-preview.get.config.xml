@@ -87,8 +87,9 @@
       </condition>
 	
 <!-- Share Extras Viewer Start Add -->
+	  	<!-- Embed text files directly in browser -->
 	  	<condition mimeType="text/plain">
-      	<plugin>IframeView</plugin>
+      	<plugin skipplugintest="true">Embed</plugin>
       </condition>
 
 		<!-- PdfJS viewer for PDF -->
@@ -104,11 +105,11 @@
       <!-- Fallback to PdfPlugin if PdfJs is not supported -->
       <!-- Move in front of PdfJs to use this first hand -->
       <condition mimeType="application/pdf">
-         <plugin>PdfPlugin</plugin>
+         <plugin>Embed</plugin>
       </condition>
           
       <condition thumbnail="pdf">
-         <plugin src="pdf">PdfPlugin</plugin>
+         <plugin src="pdf">Embed</plugin>
       </condition>
       
 <!-- Share Extras Viewer End Add -->
