@@ -5,6 +5,10 @@ This project defines a common source directory layout, [http://www.eclipse.org/ 
 
 The sample project is intended to help you build your own Share customisations, using standard tools such as Eclipse and Ant.
 
+==Download==
+
+[http://code.google.com/p/share-extras/downloads/list?can=2&q=sample-dashlet Download Sample Dashlet Sample Project]
+
 ==Creating Your Own Projects==
 
 To use the sample project, download the `sample-dashlet.zip` file from the [http://code.google.com/p/share-extras/downloads/list Downloads] area, and use this to start a new project using Eclipse's Import wizard (click _File_ > _New_ and then select _General_ > _Existing Projects into Workspace_).
