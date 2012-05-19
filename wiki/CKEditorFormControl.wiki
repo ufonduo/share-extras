@@ -24,7 +24,7 @@ The CKEditor form control is packaged as a single JAR file for easy installation
 
 To install the control
   * Drop the `ckeditor-form-control.jar` file into the `tomcat/shared/lib` folder within your Alfresco installation
-  *  Update your form configuration files. You can use the ckeditor-config-custom.xml file by removing sample extension and place it in tomcat/shared/classes/alfresco/web-extension. This may override other changes you have made for forms. so use with caution.
+  *  Update your form configuration files. You can use the ckeditor-config-custom.xml ([http://share-extras.googlecode.com/svn/trunk/CKEditor%20Form%20Control/ckeditor-config-custom.xml.sample download]) file by removing sample extension and place it in tomcat/shared/classes/alfresco/web-extension. This may override other changes you have made for forms. so use with caution.
   * Restart the application server.
 
 ==Forms configuration==
