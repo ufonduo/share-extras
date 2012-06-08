@@ -372,6 +372,9 @@ parking lot || car park ||  ||
 pediatric || paediatric ||  || 
 period || full stop || Y || 
 persnickety || pernickety ||  || 
+personalize || personalise ||  || 
+personalized || personalised ||  || 
+personalizing || personalising ||  || 
 picometer || picometre ||  || 
 plow || plough ||  || 
 pop || dad || Y || 
@@ -442,6 +445,9 @@ sneakers || trainers ||  ||
 snicker || snigger ||  || 
 soapbox || podium ||  || 
 soccer || football ||  || 
+socialize || socialise ||  || 
+socialized || socialised ||  || 
+socializing || socialising ||  || 
 soda || soft drink || Y || 
 solitaire || patience || Y || the card game
 southward || southwards || Y || use 'southward' only as an adjective
