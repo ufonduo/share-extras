@@ -29,41 +29,45 @@
     * @method onActionSampleScript
     * @param file {object} Object literal representing one or more file(s) or folder(s) to be actioned
     */
-   Alfresco.doclib.Actions.prototype[FN_NAME] = function DL_onActionSampleScript(file)
+   YAHOO.Bubbling.fire("registerAction",
    {
-      var nodeRef = new Alfresco.util.NodeRef(file.nodeRef);
-      
-      this.modules.actions.genericAction(
+      actionName: FN_NAME,
+      fn: function DL_onActionGeotag(file)
       {
-         success:
-         {
-            event:
-            {
-               name: "metadataRefresh"
-            },
-            message: this.msg("message." + MSG_BASE + ".success", file.displayName)
-         },
-         failure:
-         {
-            message: this.msg("message." + MSG_BASE + ".failure", file.displayName)
-         },
-         webscript:
-         {
-            name: "sample-script/node/{nodeRef}",
-            method: Alfresco.util.Ajax.POST,
-            params:
-            {
-               nodeRef: nodeRef.uri
-            }
-         },
-         config:
-         {
-            requestContentType: Alfresco.util.Ajax.JSON,
-            dataObj:
-            {
-               scriptName: JSCRIPT_NAME
-            }
-         }
-      });
-   };
+          var nodeRef = new Alfresco.util.NodeRef(file.nodeRef);
+          
+          this.modules.actions.genericAction(
+          {
+             success:
+             {
+                event:
+                {
+                   name: "metadataRefresh"
+                },
+                message: this.msg("message." + MSG_BASE + ".success", file.displayName)
+             },
+             failure:
+             {
+                message: this.msg("message." + MSG_BASE + ".failure", file.displayName)
+             },
+             webscript:
+             {
+                name: "sample-script/node/{nodeRef}",
+                method: Alfresco.util.Ajax.POST,
+                params:
+                {
+                   nodeRef: nodeRef.uri
+                }
+             },
+             config:
+             {
+                requestContentType: Alfresco.util.Ajax.JSON,
+                dataObj:
+                {
+                   scriptName: JSCRIPT_NAME
+                }
+             }
+          });
+       }
+   });
 })();
