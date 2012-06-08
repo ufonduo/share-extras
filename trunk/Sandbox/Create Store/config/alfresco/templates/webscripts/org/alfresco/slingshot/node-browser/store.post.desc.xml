@@ -1,0 +1,7 @@
+<webscript>
+   <shortname>Node store post</shortname>
+   <description>Create a new node store in the repository</description>
+   <url>/slingshot/node/store/{protocol}/{identifier}</url>
+   <format default="json">argument</format>
+   <authentication>admin</authentication>
+</webscript>
