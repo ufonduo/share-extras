@@ -7,7 +7,7 @@ This project defines a Javascript Console component for the Alfresco Share's
 Administration Console, that enables the execution of arbitrary javascript code 
 in the repository. 
 
-http://share-extras.googlecode.com/svn/trunk/Sandbox/Javascript%20Console/javascript-console.png
+http://share-extras.googlecode.com/svn/trunk/Javascript%20Console/javascript-console-share/screenshots/jsconsole-01.png
 
 This videos shows the Javascript Console in use:
 
