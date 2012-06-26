@@ -22,13 +22,17 @@ When you have chosen the correct folder (3.4.x or 4.0.x) for your Alfresco versi
 you'll find two jar files within that folder. The javascript-console-repo.jar needs
 to be copied into the Alfresco repository:
 
-  tomcat/webapps/alfresco/WEB-INF/lib/
+{{{
+tomcat/webapps/alfresco/WEB-INF/lib/
+}}}
   
 The other file javascript-console-share.jar needs to be copied to the 
 corresponding folder in the Share webapp:
 
-  tomcat/webapps/share/WEB-INF/lib/
-  
+{{{
+tomcat/webapps/share/WEB-INF/lib/
+}}}
+
 If you prefer the AMP deployment method you also find amp files in the respective
 folder that you can install with the apply_amps.sh or apply_amps.bat utilities. Be
 aware that you need to install both amps files: the repo-amp and the share-amp.
@@ -62,7 +66,9 @@ depending on which part you want to change, build or deploy.
 To build the individual JAR files, run the following command from the base 
 project directory.
 
-    ant -Dalfresco.sdk.dir=c:\dev\sdks\alfresco-enterprise-sdk-4.0.0 clean dist-jar
+{{{
+ant -Dalfresco.sdk.dir=c:\dev\sdks\alfresco-enterprise-sdk-4.0.0 clean dist-jar
+}}}
 
 The command should build a JAR file named javascript-console-repo.jar or
 javascript-console-share.jar in the 'dist' directory within your project.
@@ -75,11 +81,12 @@ To deploy the extension files into a local Tomcat instance for testing, you can
 use the hotcopy-tomcat-jar task. You will need to set the tomcat.home
 property in Ant.
 
-    ant -Dtomcat.home=C:/Alfresco/tomcat clean hotcopy-tomcat-jar
+{{{
+ant -Dtomcat.home=C:/Alfresco/tomcat clean hotcopy-tomcat-jar
+}}}
     
 Once you have run this you will need to restart Tomcat so that the classpath 
 resources in the JAR file are picked up.
-
 
 = Usage =
 
