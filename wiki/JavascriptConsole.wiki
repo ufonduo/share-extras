@@ -3,7 +3,9 @@
 
 =Introduction=
 
-This project defines a Share administration console component to execute custom javascript code against the Alresco repository. It can be used for prototyping webscripts or to run administrative scripts.
+This project defines a Javascript Console component for the Alfresco Share's 
+Administration Console, that enables the execution of arbitrary javascript code 
+in the repository. 
 
 http://share-extras.googlecode.com/svn/trunk/Sandbox/Javascript%20Console/javascript-console.png
 
@@ -13,42 +15,71 @@ This videos shows the Javascript Console in use:
 
 =Installation=
 
-The component is packaged as a single JAR file for easy installation into Alfresco Share.
+The component has been developed to install on top of an existing Alfresco
+3.4 or 4.0 installation. There are two different version in a zip archive, one for Alfresco 3.4.x and one for or 4.0.x.
 
-To install the component, simply drop the `javascript-console.jar` file into the `tomcat/shared/lib` folder within your Alfresco installation, and restart the application server. You might need to create this folder if it does not already exist.
+When you have chosen the correct folder (3.4.x or 4.0.x) for your Alfresco version
+you'll find two jar files within that folder. The javascript-console-repo.jar needs
+to be copied into the Alfresco repository:
+
+  tomcat/webapps/alfresco/WEB-INF/lib/
+  
+The other file javascript-console-share.jar needs to be copied to the 
+corresponding folder in the Share webapp:
+
+  tomcat/webapps/share/WEB-INF/lib/
+  
+If you prefer the AMP deployment method you also find amp files in the respective
+folder that you can install with the apply_amps.sh or apply_amps.bat utilities. Be
+aware that you need to install both amps files: the repo-amp and the share-amp.
+
+The deployment location has changed recently (with Javascript Console 0.5)
+because the Javascript Console now uses Java classes that have to be deployed 
+to these locations and can NOT reside in tomcat/shared/lib anymore.
 
 =Building from Source=
 
 Check out the project if you have not already done so
 
 {{{
-svn checkout http://share-extras.googlecode.com/svn/trunk/Sandbox/Javascript%20Console/
+svn checkout http://share-extras.googlecode.com/svn/trunk/Javascript%20Console/
 }}}
 
 Change into the new directory
 
 {{{
-cd "Javascript Console"
+cd "Javascript Console/javascript-console-repo"
 }}}
 
-An Ant build script is provided to build a JAR file containing the custom files, which can then be installed into the `tomcat/shared/lib` folder of your Alfresco installation.
-
-To build the JAR file, run the following command from the base project directory.
+or 
 
 {{{
-ant clean dist-jar
+cd "Javascript Console/javascript-console-share"
 }}}
 
-The command should build a JAR file named `javascript-console.jar` in the `dist` directory within your project, which you can then copy into the `tomcat/shared/lib` folder of your Alfresco installation.
+depending on which part you want to change, build or deploy.
 
-Alternatively, you can use the build script to _hot deploy_ the JAR file directly into a local Tomcat instance for testing. You will need to use the `hotcopy-tomcat-jar task` and set the `tomcat.home`
+To build the individual JAR files, run the following command from the base 
+project directory.
+
+    ant -Dalfresco.sdk.dir=c:\dev\sdks\alfresco-enterprise-sdk-4.0.0 clean dist-jar
+
+The command should build a JAR file named javascript-console-repo.jar or
+javascript-console-share.jar in the 'dist' directory within your project.
+
+There also is the javascript-console-dist project which builds both jar files 
+and creates a patched version for Alfresco 3.4.x which does not support all the 
+features of the version for 4.0.x. This project creates the AMP files as well.
+
+To deploy the extension files into a local Tomcat instance for testing, you can 
+use the hotcopy-tomcat-jar task. You will need to set the tomcat.home
 property in Ant.
 
-{{{
-ant -Dtomcat.home=C:/Alfresco/tomcat clean dist-jar hotcopy-tomcat-jar
-}}}
+    ant -Dtomcat.home=C:/Alfresco/tomcat clean hotcopy-tomcat-jar
+    
+Once you have run this you will need to restart Tomcat so that the classpath 
+resources in the JAR file are picked up.
 
-After you have deployed the JAR file you will need to restart Tomcat to ensure it picks up the changes.
 
 = Usage =
 
