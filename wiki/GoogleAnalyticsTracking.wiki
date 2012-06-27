@@ -69,7 +69,7 @@ To configure site-based tracking
   # Log in to Alfresco Share and using the _Repository Browser_, navigate to the _Sites_ folder
   # Locate the container for the site you wish to configure tracking for, then click *View Details* to bring up the detail page for the container
   # In the _Folder Actions_ section of the detail page, click the *Manage Aspects* dialogue and use this to add the _Trackable Container_ aspect
-  # Now click the *Edit Metadata* action to edit the tracking parameters, ensuring that the _Tracking Enabled_ property is set to true and that _Tracking UID_ is set to the value of your GA site ID
+  # Now click the *Edit Properties* action to edit the tracking parameters, ensuring that the _Tracking Enabled_ property is set to true and that _Tracking UID_ is set to the value of your GA site ID
 
 Alternatively, enable global tracking of Share usage by copying the file `alfresco/site-webscripts/org/alfresco/components/tracking/footer.get.config.xml` to the `tomcat/shared/classes/alfresco/web-extension/site-webscripts/org/alfresco/components/tracking` directory. In the newly created file, set `<global>true</global>` and enter your GA site ID in the `<trackingId></trackingId>` element. You will need to reload Share's web scripts or restart the application server for these settings to take effect.
 
