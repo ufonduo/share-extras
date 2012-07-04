@@ -11,7 +11,7 @@ complement the out-of-the box set supplied with Share. It was previously named
 Details Page. In addition, the add-on supplies a custom dashlet which can be
 used to display any chosen document or content item on a site dashboard.</p>
 
-<p>The following viewers are supplied in the v2.x add-on</p>
+<p>The following viewers are supplied in the v2.x add-on for use on Alfresco 4</p>
 
 <ul>
 <li><p><strong>PdfJs</strong> displays documents, presentations and any other file capable of being 
