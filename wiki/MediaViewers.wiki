@@ -54,7 +54,7 @@ download the latest JAR file from the supporting <a href="https://github.com/wab
 install it in the same way as the main media-viewers JAR file.</p></li>
 </ul>
 
-<p>The v0.x/1.x add-on supplies only the FLVPlayer and MP3Player add-ons.</p>
+<p>The v0.x/1.x add-on supplies only the FLVPlayer and MP3Player add-ons and works on Alfresco 3.3/3.4.</p>
 
 <p>In addition to the Share component extensions the add-on supplies repository extension configuration
 for defining 'thumbnailed' content in PDF, H264/FLV and MP3 formats, a full-size image thumbnail for 
