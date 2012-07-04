@@ -1,4 +1,5 @@
 #summary Media Viewers add-on for Alfresco Share provides enhanced document previews for a range of different document and media types
+#labels Addon-Dashlet,Addon-PageComponent,AlfrescoVersion-3.x,AlfrescoVersion-4.x
 
 <p>Authors: Will Abson (Alfresco), Peter Löfgren (Loftux AB)</p>
 
