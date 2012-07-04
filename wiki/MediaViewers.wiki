@@ -60,7 +60,7 @@ install it in the same way as the main media-viewers JAR file.</p></li>
 for defining 'thumbnailed' content in PDF, H264/FLV and MP3 formats, a full-size image thumbnail for 
 video files in JPEG format, and a transformer based on FFmpeg for generating the audio and video formats.</p>
 
-<h2>Download</h2>
+==Download==
 
 <p>For Alfresco 4.x, download the 2.0 version of Media Viewers.</p>
 
