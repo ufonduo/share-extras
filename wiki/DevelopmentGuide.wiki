@@ -5,4 +5,4 @@ The information in this section should help you in getting started with developi
 
   * [DevelopmentEnvironment Development Environment]
   * [JSDoc Generating JSDoc]
-  * License_Template
+  * LicenseTemplate
