@@ -72,7 +72,7 @@ video files in JPEG format, and a transformer based on FFmpeg for generating the
 
 <h2>Installation</h2>
 
-<p>Copy the JAR file into the <tt>tomcat/shared/lib</tt> folder of your Alfresco installation. If you are hosting
+<p>Copy the JAR file into the <tt>tomcat/shared/lib</tt> folder of your Alfresco installation (create the `lib` directory if it does not exist). If you are hosting
 the repository and Share in different Tomcat containers then you should install it in both.</p>
 
 <p>See <em>Configuration</em> below, for instructions on how to enable the viewers in Share.</p>
