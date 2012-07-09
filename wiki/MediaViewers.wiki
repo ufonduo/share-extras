@@ -429,7 +429,7 @@ Alfresco 3.</p>
 </config>
 }}}
 
-<p>Lastly you must enable the relevant modules in the Share Module Deployment console, after Alfresco
+<p>Lastly you must enable the relevant modules in the Share [ModuleDeployment Module Deployment console], after Alfresco
 has started up. You can access this page from the main Web Scripts index page.</p>
 
 <h2>Usage</h2>
