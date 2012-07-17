@@ -1,5 +1,5 @@
-#summary Describes the Site Geotagged Content add-on for Alfresco Share
-#labels Addon-Dashlet
+#summary Custom site dashlet which shows the locations of geotagged content items on a map
+#labels Addon-Dashlet,AlfrescoVersion-3.x,AlfrescoVersion-4.x
 
 =Introduction=
 
@@ -7,11 +7,17 @@ This project defines a custom site dashlet which embeds a map display, with geot
 
 http://share-extras.googlecode.com/svn/trunk/Site%20Geotagged%20Content%20Dashlet/site-geotagged-content-dashlet.png
 
+==Download==
+
+For *Alfresco 3.x*, download the *0.x* or *1.0* version. For *Alfresco 4.x*, download the *2.0* version.
+
+[http://code.google.com/p/share-extras/downloads/list?q=site-geotagged-content Download Site Geotagged Content add-on]
+
 =Installation=
 
 The dashlet is packaged as a single JAR file for easy installation into Alfresco Share.
 
-To install the dashlet, simply drop the `site-geotagged-content-dashlet.jar` file into the `tomcat/shared/lib` folder within your Alfresco installation, and restart the application server. You might need to create this folder if it does not already exist.
+To install the dashlet, simply drop the `site-geotagged-content-dashlet-{version}.jar` file into the `tomcat/shared/lib` folder within your Alfresco installation, and restart the application server. You might need to create this folder if it does not already exist.
 
 =Building from Source=
 
@@ -32,16 +38,16 @@ An Ant build script is provided to build a JAR file containing the custom files,
 To build the JAR file, run the following command from the base project directory.
 
 {{{
-ant clean dist-jar
+ant dist-jar
 }}}
 
-The command should build a JAR file named `site-geotagged-content-dashlet.jar` in the `dist` directory within your project, which you can then copy into the `tomcat/shared/lib` folder of your Alfresco installation.
+The command should build a JAR file named `site-geotagged-content-dashlet-{version}.jar` in the `build/dist` directory within your project, which you can then copy into the `tomcat/shared/lib` folder of your Alfresco installation.
 
 Alternatively, you can use the build script to _hot deploy_ the JAR file directly into a local Tomcat instance for testing. You will need to use the `hotcopy-tomcat-jar task` and set the `tomcat.home`
 property in Ant.
 
 {{{
-ant -Dtomcat.home=C:/Alfresco/tomcat clean dist-jar hotcopy-tomcat-jar
+ant -Dtomcat.home=C:/Alfresco/tomcat hotcopy-tomcat-jar
 }}}
 
 After you have deployed the JAR file you will need to restart Tomcat to ensure it picks up the changes.
@@ -52,8 +58,8 @@ After you have deployed the JAR file you will need to restart Tomcat to ensure i
   # On the site dashboard and click the *Customize Dashboard* button to edit the contents of the dashboard. Drag the dashlet into one of the columns from the list of dashlets to add it.
   # Click *OK* to save the configuration.
   # The map view should now be visible in your dashboard.
+  # Use the Configure action in the toolbar to change the global view settings that are shared by all users. By default users are able to override these settings for themselves, but you can prevent this if you wish via the configuration dialog.
 
 =Known Issues=
 
   * A maximum of 100 items is displayed on the map for performance reasons. However you can zoom in using the map controls to get more detail on a specific area.
-  * The map centre and zoom level are persisted to your user preferences but currently this is a global setting, rather than site-specific.
