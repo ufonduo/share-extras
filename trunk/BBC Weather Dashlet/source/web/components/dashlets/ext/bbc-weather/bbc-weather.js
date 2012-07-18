@@ -222,7 +222,7 @@
        */
       _getWeatherIcon: function BBCWeather__getWeatherIcon(conditions, size)
       {
-         var img = null, msgid = "conditions." + conditions.replace(" ", "-", "g"), title=this.msg(msgid);
+         var img = null, msgid = "conditions." + conditions.replace(/ /g, "-"), title = this.msg(msgid);
          
          switch (conditions)
          {
