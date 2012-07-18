@@ -191,11 +191,11 @@
             {
                var item = forecast.items[i], itemDate = new Date(item.date.substring(0,4),item.date.substring(5,7)-1,item.date.substring(8,10));
                html += "<div class=\"forecast-item\">" + 
-               "<div class=\"date\">" + itemDate.toDateString().substring(0,3) + ":</div><div class=\"conditions\">" + this._getWeatherIcon(item.conditions, 32) + "</div>" + 
-               "<div class=\"temp-max\">" + item.maxTemp + "</div>" + "<div class=\"temp-min\">" + item.minTemp + "</div>" +
-               "<div class=\"clear\"></div></div>";
+               "<div class=\"date\">" + itemDate.toDateString().substring(0,3) + "</div><div class=\"conditions\">" + this._getWeatherIcon(item.conditions, 32) + "</div>" + 
+               "<div class=\"temp-max\">" + item.maxTemp + "</div>" + "<div class=\"temp-min\">" + item.minTemp + "</div></div>";
             }
             html += "</div>" +
+            "<div class=\"clear\"></div>" +
             "<div class=\"info\">" + this.msg("data.source") + " " + this.msg("data.updated", observations.pubDate).toString() + "</div>";
          }
          else
