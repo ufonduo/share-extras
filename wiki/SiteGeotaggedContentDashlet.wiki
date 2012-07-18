@@ -5,7 +5,7 @@
 
 This project defines a custom site dashlet which embeds a map display, with geotagged content marked on the map. Currently Google Maps is used to render the map, based on the method used by the map dashlet distributed with the [http://forge.alfresco.com/forum/forum.php?forum_id=1089 Calais Integration] forge project.
 
-http://share-extras.googlecode.com/svn/trunk/Site%20Geotagged%20Content%20Dashlet/site-geotagged-content-dashlet.png
+http://share-extras.googlecode.com/svn/trunk/Site%20Geotagged%20Content%20Dashlet/screenshots/site-geotagged-content-dashlet.png
 
 ==Download==
 
