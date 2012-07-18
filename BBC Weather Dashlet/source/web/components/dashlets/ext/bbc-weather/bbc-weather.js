@@ -266,7 +266,7 @@
          
          if (img != null)
          {
-            return "<img src=\"" + Alfresco.constants.URL_CONTEXT + "components/dashlets/weather-icons/" + size + "x" + size + "/" + img + "\" width=\"" + size + "\" height=\"" + size + "\" alt=\"" + title + "\" title=\"" + title + "\" />";
+            return "<img src=\"" + Alfresco.constants.URL_CONTEXT + "res/components/dashlets/weather-icons/" + size + "x" + size + "/" + img + "\" width=\"" + size + "\" height=\"" + size + "\" alt=\"" + title + "\" title=\"" + title + "\" />";
          }
          else if (title != msgid)
          {
