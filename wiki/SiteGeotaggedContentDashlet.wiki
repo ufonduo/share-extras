@@ -7,7 +7,7 @@ This project defines a custom site dashlet which embeds a map display, with geot
 
 http://share-extras.googlecode.com/svn/trunk/Site%20Geotagged%20Content%20Dashlet/screenshots/site-geotagged-content-dashlet.png
 
-==Download==
+=Download=
 
 For *Alfresco 3.x*, download the *0.x* or *1.0* version. For *Alfresco 4.x*, download the *2.0* version.
 
