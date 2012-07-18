@@ -1,3 +1,7 @@
+.bbc-weather-dashlet .body {
+	height: 320px;
+}
+
 .bbc-weather-dashlet .temp-current, .bbc-weather-dashlet .temp-max, .bbc-weather-dashlet .temp-min {
    padding: 0.25em;
    border-radius: 0.25em;
