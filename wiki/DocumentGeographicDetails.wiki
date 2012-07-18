@@ -1,4 +1,4 @@
-#summary Describes the Document Geographic Details component for Alfresco Share
+#summary Embedded map view for geotagged content items and custom actions for defining and viewing Geographic information on content items.
 #labels Addon-Action,Addon-PageComponent,AlfrescoVersion-3.x,AlfrescoVersion-4.x
 
 =Introduction=
