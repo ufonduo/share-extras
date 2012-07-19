@@ -2,7 +2,8 @@
    var dashlet = new Alfresco.dashlet.BBCWeather("${args.htmlid}").setOptions(
    {
       componentId: "${instance.object.id}",
-      location: <#if args.location?? && args.location?number gt 0>${args.location?number?c}<#else>${defaultLocation?number?c}</#if>
+      location: <#if args.location?? && args.location?number gt 0>${args.location?number?c}<#else>${defaultLocation?number?c}</#if>,
+      temperatureScale: "${args.tscale!'C'}"
    }).setMessages(
       ${messages}
    );

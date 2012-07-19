@@ -1,3 +1,14 @@
+function formatTemperature(value)
+{
+   var scale = args.tempScale,
+      celcius = value.substring(0, value.indexOf(" "));
+   if (celcius.length > 0)
+   {
+      celciusVal = parseInt(celcius); // temperature is always an int
+      return (scale == "F" ? ("" + Math.round(celciusVal * 9 / 5 + 32) + "°F") : ("" + celciusVal + "°C"))
+   }
+}
+
 function main()
 {
     var s = new XML(config.script);
@@ -43,7 +54,7 @@ function main()
            
            model.observations = {
                "conditions": conditions,
-               "temperature": temp.substring(0, temp.indexOf(" ")), // Temp in celcuis for now
+               "temperature": formatTemperature(temp), // Temp in celcuis for now
                "windDir": items[1].split(": ")[1],
                "windSpeed": items[2].split(": ")[1],
                "humidity": items[3].split(": ")[1],
@@ -102,17 +113,17 @@ function main()
               var dobj = {};
               
               for (var j = 0; j < ditems.length; j++)
-               {
-                  var pair = ditems[j].split(": ");
-                  dobj[pair[0]] = pair[1];
-               }
+              {
+                 var pair = ditems[j].split(": ");
+                 dobj[pair[0]] = pair[1];
+              }
               
               fcItems[i] =
                     {
                        "day": itemDate,
                        "conditions": conditions,
-                       "maxTemp": maxTemp.substring(0, maxTemp.indexOf(" ")), // Temp in celcuis for now
-                       "minTemp": minTemp.substring(0, minTemp.indexOf(" ")),
+                       "maxTemp": formatTemperature(maxTemp),
+                       "minTemp": formatTemperature(minTemp),
                        "windDir": dobj["Wind Direction"] ? dobj["Wind Direction"] : "",
                        "windSpeed": dobj["Wind Speed"] ? dobj["Wind Speed"] : "",
                        "humidity": dobj["Humidity"] ? dobj["Humidity"] : "",

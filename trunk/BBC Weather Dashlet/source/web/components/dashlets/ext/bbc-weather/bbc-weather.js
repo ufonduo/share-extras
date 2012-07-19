@@ -99,7 +99,16 @@
           * @type string
           * @default ""
           */
-         locationName: ""
+         locationName: "",
+         
+         /**
+          * Temperature scale to use to display values, 'C' or 'F'
+          * 
+          * @property temperatureScale
+          * @type string
+          * @default "C"
+          */
+         temperatureScale: "C"
       },
 
       /**
@@ -145,7 +154,12 @@
          // Load the user timeline
          Alfresco.util.Ajax.jsonGet(
          {
-            url: Alfresco.constants.URL_SERVICECONTEXT + "components/dashlets/bbc-weather/data?location=" + this.options.location,
+            url: Alfresco.constants.URL_SERVICECONTEXT + "components/dashlets/bbc-weather/data",
+            dataObj:
+            {
+               location: this.options.location,
+               tempScale: this.options.temperatureScale
+            },
             successCallback:
             {
                fn: this.onDataLoaded,
@@ -309,6 +323,7 @@
                      // Refresh the data
                      var loc = Dom.get(this.configDialog.id + "-location-id").value;
                      this.options.location = loc;
+                     this.options.temperatureScale = this.configDialog.widgets.tempButtonGroup.get("value").substring(1);
                      this.refreshData();
                   },
                   scope: this
@@ -364,6 +379,20 @@
                          myAC.getInputEl().value = oData.display ? oData.display : oData.name; 
                      };
                      oAC.itemSelectEvent.subscribe(myHandler);
+                     
+                     if (!this.configDialog.widgets.tempButtonGroup)
+                     {
+                        this.configDialog.widgets.tempButtonGroup = new YAHOO.widget.ButtonGroup(this.configDialog.id + "-tempbuttons");
+                     }
+                     
+                     this.configDialog.widgets.tempButtonGroup.check(this.options.temperatureScale == 'F' ? 1 : 0);
+                  },
+                  scope: this
+               },
+               doBeforeFormSubmit: {
+                  fn: function() {
+                     // ButtonGroup's 'real' radio input does get updated until *after* the form has submitted via AJAX
+                     Dom.setAttribute(this.configDialog.id + "-tscale", "value", this.configDialog.widgets.tempButtonGroup.get('value').substring(1));
                   },
                   scope: this
                }
