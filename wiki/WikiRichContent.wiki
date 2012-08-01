@@ -5,7 +5,7 @@
 
 This project implements a number of customisations to the Alfresco Share wiki component to improve its visual appearance, and add support for dynamic tables of contents, embedded document previews, in-line data lists/tables and syntax-highlighted code using [http://code.google.com/p/google-code-prettify Google Code Prettify].
 
-The add-on should work with Alfresco version 3.3/3.4 and version 4.x (inline document previews are not currently supported in Alfresco 4.x).
+The add-on has been tested against Alfresco version 3.3/3.4 and version 4.x.
 
 [#Download Download Wiki Rich Content add-on]
 
