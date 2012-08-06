@@ -482,13 +482,8 @@ viewer. This is due to a <a href="http://code.google.com/p/chromium/issues/detai
 system and declines to display the content. Fortunately the Embed viewer is able to render the content
 via Chrome's built-in PDF support.</p></li>
 
-<li><p>In versions 3.3, 3.4.a, 3.4.b and 3.4.c, the video player only supports previews of MP4 and FLV content, due to 
+<li><p>In Alfresco Community 3.3 and 3.4, the video player only supports previews of MP4 and FLV content, due to 
 a bug whereby the thumbnail service <a href="https://issues.alfresco.com/jira/browse/ALF-4214">cannot produce renditions 
 using a RuntimeExec transformer</a>. The workaround for this is to apply the fix in the JIRA issue to patch your 
-own <tt>alfresco-repository.jar</tt>. This is fixed in version 3.4.d.</p></li>
-<li><p>Prior to Alfresco Community 3.4.b, adding the additional thumbnail definitions to the thumbnail registry required 
-overriding the entire thumbnailRegistry bean. The supplied Spring configuration still uses this old method for now 
-in order to support the widest range of versions, but if this causes you problems you can use the new 
-<tt>org.alfresco.repo.thumbnail.ThumbnailDefinitionSpringRegistrer</tt> bean instead 
-(<a href="http://fisheye.alfresco.com/browse/alfresco_open_mirror/alfresco/HEAD/root/projects/repository/config/alfresco/extension/video-transformation-context.xml.sample?r=22817">example config</a>)</p></li>
+own <tt>alfresco-repository.jar</tt>. This is fixed in Alfresco 4 and also in Alfresco Enterprise 3.4.0 (thanks to Martin Gilly for spotting that it was not fixed in 3.4.d and 3.4.e).</p></li>
 </ul>
