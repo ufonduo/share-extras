@@ -1,5 +1,5 @@
 #summary Define user polls using Data Lists and add to a site dashboard, where site users can then vote
-#labels Addon-Dashlet
+#labels Addon-Dashlet,AlfrescoVersion-3.x,AlfrescoVersion-4.x
 
 =Introduction=
 
