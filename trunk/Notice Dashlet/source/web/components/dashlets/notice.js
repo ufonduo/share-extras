@@ -122,8 +122,6 @@
        */
       onReady: function Notice_onReady()
       {
-         Event.addListener(this.id + "-configure-link", "click", this.onConfigClick, this, true);
-         
          // The user timeline container
          this.textContainer = Dom.get(this.id + "-text");
          
