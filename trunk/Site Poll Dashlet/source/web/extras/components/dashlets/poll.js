@@ -156,7 +156,6 @@
          this.resultsContainer = Dom.get(this.id + "-results");
          this.toggleResultsLink = Dom.get(this.id + "-toggle-results-link");
          
-         Event.addListener(this.id + "-configure-link", "click", this.onConfigPollClick, this, true);
          Event.addListener(this.id + "-toggle-results-link", "click", this.onToggleResultsClick, this, true);
 
          this.initPoll();
@@ -436,10 +435,10 @@
       /**
        * Configuration click handler
        *
-       * @method onConfigPollClick
+       * @method onConfigClick
        * @param e {object} HTML event
        */
-      onConfigPollClick: function SitePoll_onConfigPollClick(e)
+      onConfigClick: function SitePoll_onConfigClick(e)
       {
          var actionUrl = Alfresco.constants.URL_SERVICECONTEXT + "modules/dashlet/config/" + encodeURIComponent(this.options.componentId);
          
@@ -450,7 +449,7 @@
             this.configDialog = new Alfresco.module.SimpleDialog(this.id + "-configDialog").setOptions(
             {
                width: "50em",
-               templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "modules/poll/config/" + this.options.siteId,
+               templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "modules/poll/config/" + this.options.siteId + "?ts=" + new Date().getTime(),
                actionUrl: actionUrl,
                onSuccess:
                {
@@ -476,7 +475,7 @@
                         // Validation
                         p_form.addValidation(this.configDialog.id + "-poll-select", function fnValidateConfig(field, args, event, form, silent, message)
                         {
-                           return field.options[field.selectedIndex].value !== "-";
+                           return field.selectedIndex >= 0 && field.options[field.selectedIndex].value !== "-";
                         }, null, "change");
                         p_form.setShowSubmitStateDynamically(true, false);
                      }

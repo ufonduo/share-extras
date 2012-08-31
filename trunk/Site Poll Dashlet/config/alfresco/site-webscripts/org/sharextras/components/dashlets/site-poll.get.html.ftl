@@ -1,5 +1,5 @@
 <script type="text/javascript">//<![CDATA[
-   new Alfresco.dashlet.SitePoll("${args.htmlid}").setOptions(
+   var dashlet = new Alfresco.dashlet.SitePoll("${args.htmlid}").setOptions(
    {
       "siteId": "${page.url.templateArgs.site!''}",
       "componentId": "${instance.object.id}",
@@ -7,15 +7,35 @@
    }).setMessages(
       ${messages}
    );
+   
+   var editDashletEvent = new YAHOO.util.CustomEvent("onDashletConfigure");
+   editDashletEvent.subscribe(dashlet.onConfigClick, dashlet, true);
+
+   new Alfresco.widget.DashletTitleBarActions("${args.htmlid}").setOptions(
+   {
+      actions:
+      [
+<#if userIsSiteManager>
+         {
+            cssClass: "edit",
+            eventOnClick: editDashletEvent,
+            tooltip: "${msg("dashlet.edit.tooltip")?js_string}"
+         },
+</#if>
+         {
+            cssClass: "help",
+            bubbleOnClick:
+            {
+               message: "${msg("dashlet.help")?js_string}"
+            },
+            tooltip: "${msg("dashlet.help.tooltip")?js_string}"
+         }
+      ]
+   });
 //]]></script>
 
 <div class="dashlet poll">
    <div class="title">${msg("header.poll")}</div>
-<#if userIsSiteManager>
-   <div class="toolbar">
-      <a class="theme-color-1" href="#" id="${args.htmlid}-configure-link">${msg("label.configure")}</a>
-   </div>
-</#if>
    <div class="body">
    <div class="msg">
    <h3 class="pollName" id="${args.htmlid}-poll-title"></h3>
