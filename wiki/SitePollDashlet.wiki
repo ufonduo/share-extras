@@ -1,4 +1,4 @@
-#summary Describes the Site Poll Dashlet add-on for Alfresco Share
+#summary Define user polls using Data Lists and add to a site dashboard, where site users can then vote
 #labels Addon-Dashlet
 
 =Introduction=
