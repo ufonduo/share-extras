@@ -1,5 +1,5 @@
-#summary Describes the Notice Dashlet add-on for Alfresco Share
-#labels Addon-Dashlet,AlfrescoVersion-3.x
+#summary Display a user-defined piece of content on a user or a site dashboard
+#labels Addon-Dashlet,AlfrescoVersion-3.x,AlfrescoVersion-4.x
 
 <wiki:toc max_depth="1" />
 
