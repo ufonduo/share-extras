@@ -1,5 +1,5 @@
-#summary Describes the Create Bulk Users add-on for Alfresco Share
-#labels Addon-AdminConsole,AlfrescoVersion-3.x
+#summary Bulk-create repository users from CSV or JSON data
+#labels Addon-AdminConsole,AlfrescoVersion-3.x,AlfrescoVersion-4.x
 
 =Introduction=
 
