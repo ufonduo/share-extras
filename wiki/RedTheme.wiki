@@ -1,4 +1,4 @@
-#summary Describes the custom Red Theme add-on for Alfresco Share 3.3/3.4
+#summary Custom 'Red' Theme for Alfresco Share 3.3+
 #labels Addon-Theme,AlfrescoVersion-3.x,AlfrescoVersion-4.x
 
 =Introduction=
