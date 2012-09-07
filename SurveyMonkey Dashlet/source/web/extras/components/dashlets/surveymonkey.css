@@ -13,7 +13,7 @@
 	margin-right: 0;
 }
 
-.surveymonkey-dashlet .body > div
+.dashlet.surveymonkey-dashlet .body > div
 {
-   margin: 10px 0;
+   margin: 10px 8px;
 }
