@@ -1,12 +1,10 @@
 .train-times-dashlet .trains
 {
-   margin-top: 10px;
-   margin-bottom: 10px;
+   margin: 10px 8px;
 }
-.train-times-dashlet .message
+.dashlet.train-times-dashlet div.message
 {
-   margin-top: 10px;
-   margin-bottom: 10px;
+   margin: 10px 8px;
 }
 .train-times-dashlet .yui-dt table
 {
@@ -20,16 +18,10 @@
    background-position: 90% 50%;
    background-repeat: no-repeat;
 }
-.train-times-dashlet .refresh
+.train-times-dashlet .titleBarActions .refresh
 {
-   background-image: url('refresh-icon.png');
-   background-repeat: no-repeat;
-   float: right;
-   height: 16px;
-   left: -8px;
-   position: relative;
-   top: -22px;
-   width: 16px;
+    display: none;
+    background-image: url('refresh-icon.png');
 }
 .train-times-dashlet .refresh a,
 .train-times-dashlet .refresh a:active,
@@ -42,10 +34,9 @@
 }
 .train-times-dashlet .updates
 {
-	background-color: #FFFBDD;
-	border-bottom: 1px solid #DDD6A0;
-   padding-top: 5px;
-   padding-bottom: 5px;
+   background-color: #FFFBDD;
+   border-bottom: 1px solid #DDD6A0;
+   padding: 5px 8px;
    display: none;
 }
 .train-times-dashlet .updates .update
