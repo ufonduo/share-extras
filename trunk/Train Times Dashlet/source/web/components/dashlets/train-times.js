@@ -180,8 +180,17 @@
          this.messageContainer = Dom.get(this.id + "-message");
          this.updatesContainer = Dom.get(this.id + "-updates");
          
-         Event.addListener(this.id + "-configure-link", "click", this.onConfigClick, this, true);
-         Event.addListener(this.id + "-refresh", "click", this.onRefresh, this, true);
+         // wait 1s before loading titleBarActions, otherwise they do not seem to be available
+         var me = this;
+         window.setTimeout(function TrainTimes_setTitleBarActions() {
+            Dom.getElementsByClassName ("titleBarActions", "div", me.id, function(el) {
+               me.widgets.titleBarActions = el;
+            }, me, true);
+            if (me.options.station != "")
+            {
+               me._showRefreshButton.call(me);
+            }
+         }, 1000);
          
          this.init();
       },
@@ -211,10 +220,12 @@
          {
             this.loadData();
             this.setMessage(); // Hide any message text
+            this._showRefreshButton();
          }
          else
          {
             this.setMessage(this.msg("msg.notConfigured"));
+            this._hideRefreshButton();
          }
       },
       
@@ -332,7 +343,7 @@
        */
       _htmlDecode: function TrainTimes_urlDecode(text)
       {
-         return text.replace("&lt;", "<", "g").replace("&gt;", ">", "g").replace("&amp;", "&", "g").replace("&quot;", "\"", "g").replace("&#034;", "\"", "g");
+         return text.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&").replace(/&quot;/g, "\"").replace(/&#034;/g, "\"");
       },
       
       /**
@@ -351,6 +362,36 @@
          };
          this.dataSource.sendRequest("", oCallback);
 
+      },
+
+      /**
+       * Hide the refresh button
+       *
+       * @method _hideRefreshButton
+       */
+      _hideRefreshButton: function TrainTimes__hideRefreshButton()
+      {
+          if (this.widgets.titleBarActions != null)
+          {
+              Dom.getElementsByClassName ("refresh", "div", this.widgets.titleBarActions, function(el) {
+                  Dom.setStyle(el, "display", "none");
+              }, this, true);
+          }
+      },
+
+      /**
+       * Show the refresh button
+       *
+       * @method _showRefreshButton
+       */
+      _showRefreshButton: function TrainTimes__showRefreshButton()
+      {
+          if (this.widgets.titleBarActions != null)
+          {
+              Dom.getElementsByClassName ("refresh", "div", this.widgets.titleBarActions, function(el) {
+                  Dom.setStyle(el, "display", "block");
+              }, this, true);
+          }
       },
 
       /**
