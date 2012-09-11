@@ -1,4 +1,4 @@
 #summary Describes the Sample Audit Dashlet add-on for Alfresco Share
-#labels Addon-Dashlet,AlfrescoVersion-3.x
+#labels Deprecated
 
 This page has now moved to [AuditDashlet]
