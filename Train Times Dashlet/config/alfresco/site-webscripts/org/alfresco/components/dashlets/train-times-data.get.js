@@ -5,7 +5,7 @@ function main()
    
    if (station != null)
    {
-      var uri = "http://ojp.nationalrail.co.uk/en/s/ldb/liveTrainsJson?departing=true&liveTrainsFrom=" + stringUtils.urlEncode(station) + "&liveTrainsTo=" + stringUtils.urlEncode(via) + "&serviceId=",
+      var uri = "http://ojp.nationalrail.co.uk/service/ldb/liveTrainsJson?departing=true&liveTrainsFrom=" + stringUtils.urlEncode(station) + "&liveTrainsTo=" + stringUtils.urlEncode(via) + "&serviceId=",
          connector = remote.connect("http"),
          result = connector.get(uri);
       
