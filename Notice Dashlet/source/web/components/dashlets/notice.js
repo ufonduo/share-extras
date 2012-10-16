@@ -169,7 +169,7 @@
                actionUrl: actionUrl,
                onSuccess:
                {
-                  fn: function VideoWidget_onConfigFeed_callback(response)
+                  fn: function Notice_onConfigFeed_callback(response)
                   {
                      // Refresh the feed
                      this.options.title = Dom.get(this.configDialog.id + "-title").value;
@@ -180,7 +180,7 @@
                },
                doSetupFormsValidation:
                {
-                  fn: function VideoWidget_doSetupForm_callback(form)
+                  fn: function Notice_doSetupForm_callback(form)
                   {
                      Dom.get(this.configDialog.id + "-title").value = this.options.title;
                      Dom.get(this.configDialog.id + "-text").value = this.options.text;
@@ -204,10 +204,18 @@
                            language: 'en',
                            extended_valid_elements: "a[href|target|name],font[face|size|color|style],span[class|align|style],div[class|align|style]"
                         });
+                        this.configDialog.editor.render();
+                        this.configDialog.editor.subscribe("onKeyUp", this._onTextContentChange, this.configDialog, true);
+                        this.configDialog.editor.subscribe("onChange", this._onTextContentChange, this.configDialog, true);
                      }
-                     this.configDialog.editor.render();
-                     this.configDialog.editor.subscribe("onKeyUp", this._onTextContentChange, this.configDialog, true);
-                     this.configDialog.editor.subscribe("onChange", this._onTextContentChange, this.configDialog, true);
+                  },
+                  scope: this
+               },
+               doBeforeFormSubmit:
+               {
+                  fn: function Notice_doBeforeFormSubmit_callback(form)
+                  {
+                     this.configDialog.editor.save();
                   },
                   scope: this
                }
