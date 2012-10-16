@@ -1,4 +1,4 @@
-<#macro dateFormat date>${date?string("dd MMM yyyy HH:mm:ss 'GMT'Z '('zzz')'")}</#macro>
+<#macro dateFormat date>${date?datetime?iso_utc}</#macro>
 <#escape x as jsonUtils.encodeJSONString(x)>
 {
    "nodeRef": "${poll.nodeRef}",
