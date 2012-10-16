@@ -7,6 +7,17 @@ This project defines a custom dashlet which displays train status information fr
 
 http://share-extras.googlecode.com/svn/trunk/Train%20Times%20Dashlet/train-times-dashlet.png
 
+
+==Download==
+
+For Alfresco 4.x, download the 2.0 version.
+
+<a href="http://code.google.com/p/share-extras/downloads/list?q=train-times+AlfrescoVersion%3D4.x">Download Train Times dashlet add-on</a>
+
+For Alfresco 3.x, download the 0.x/1.x version.
+
+<a href="http://code.google.com/p/share-extras/downloads/list?q=train-times+AlfrescoVersion%3D3.x">Download Train Times dashlet add-on</a>
+
 =Installation=
 
 The dashlet is packaged as a single JAR file for easy installation into Alfresco Share.
