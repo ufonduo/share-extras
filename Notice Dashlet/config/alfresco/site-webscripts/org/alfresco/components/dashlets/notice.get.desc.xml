@@ -1,7 +1,7 @@
 <webscript>
-   <shortname>Notice</shortname>
-   <description>Add a basic notice</description>
+   <shortname>Site Notice</shortname>
+   <description>Add a custom notice for display to site users</description>
    <authentication>user</authentication>
-   <family>dashlet</family>
+   <family>site-dashlet</family>
    <url>/components/dashlets/notice</url>
 </webscript>
