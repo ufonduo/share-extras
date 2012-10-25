@@ -58,7 +58,7 @@ Share Extras re-uses the general Alfresco [http://wiki.alfresco.com/wiki/Coding_
 
 Specifically, the coding standards specify 4-space tabbing and spaces instead of tabs. Eclipse should be configured to use this standard for all text files, following the instructions on that page.
 
-Eclipse provides the ability to save code style attributes as named presets, which you are encouraged to use. See recommended [JavaScriptFormatterSettings Share Extras JavaScript formatter settings].
+Eclipse provides the ability to save code style attributes as named presets, which you are encouraged to use. Please use the recommended [JavaScriptFormatterSettings Share Extras JavaScript formatter settings] if you can.
 
 = Importing Existing Projects into Eclipse =
 
