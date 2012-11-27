@@ -75,7 +75,7 @@ video files in JPEG format, and a transformer based on FFmpeg for generating the
 <p>Copy the JAR file into the <tt>tomcat/shared/lib</tt> folder of your Alfresco installation (create the `lib` directory if it does not exist). If you are hosting
 the repository and Share in different Tomcat containers then you should install it in both.</p>
 
-<p>See <em>Configuration</em> below, for instructions on how to enable the viewers in Share.</p>
+<p>See <em>[#Configuration Configuration]</em> below, for instructions on how to enable the viewers in Share.</p>
 
 <h3>FFmpeg Installation (optional)</h3>
 
@@ -144,7 +144,15 @@ property in Ant.</p>
 <p>After you have deployed the JAR file you will need to restart Tomcat to ensure 
 it picks up the changes.</p>
 
-<h2>Configuration</h2>
+==Configuration==
+
+You must enable the _PdfJs Viewer_ module in Share's Module Deployment console, which
+can be accessed by navigating to `http://hostname:port/share/page/modules/deploy`
+on your Alfresco server.
+
+*If you are using the `trunk` codeline from r1340 onwards, then you can use the 
+second module _PdfJs Configuration_ to automatically enable the viewer in the 
+Document Details page. Otherwise follow the instructions below.*
 
 <p>After installing the add-on in Alfresco 4, you must then configure the <tt>web-preview.get</tt>
 component to use the particular viewers that you wish to enable. To do this, you must</p>
