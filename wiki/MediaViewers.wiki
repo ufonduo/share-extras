@@ -150,7 +150,7 @@ You must enable the _PdfJs Viewer_ module in Share's Module Deployment console, 
 can be accessed by navigating to `http://hostname:port/share/page/modules/deploy`
 on your Alfresco server.
 
-*If you are using the `trunk` codeline from r1340 onwards, then you can use the 
+*If you are using the `trunk` codeline from r1340 onwards on Alfresco 4.2, then you can use the 
 second module _PdfJs Configuration_ to automatically enable the viewer in the 
 Document Details page. Otherwise follow the instructions below.*
 
