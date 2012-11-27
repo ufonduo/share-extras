@@ -139,7 +139,7 @@ in the <tt>dist</tt> directory within your project.</p>
 use the <tt>hotcopy-tomcat-jar</tt> task. You will need to set the <tt>tomcat.home</tt>
 property in Ant.</p>
 
-<code>ant -f project.xml -Dtomcat.home=C:/Alfresco/tomcat clean hotcopy-tomcat-jar</code>
+<code>ant -f project.xml -Dtomcat.home=C:/Alfresco/tomcat hotcopy-tomcat-jar</code>
 
 <p>After you have deployed the JAR file you will need to restart Tomcat to ensure 
 it picks up the changes.</p>
