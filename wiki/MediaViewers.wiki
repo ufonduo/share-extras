@@ -62,11 +62,11 @@ video files in JPEG format, and a transformer based on FFmpeg for generating the
 
 ==Download==
 
-<p>For Alfresco 4.x, download the 2.0 version of Media Viewers.</p>
+<p>For Alfresco 4.x, download the latest 2.x version of Media Viewers.</p>
 
 <p><a href="http://code.google.com/p/share-extras/downloads/list?q=media-viewers">Download Media Viewers add-on</a></p>
 
-<p>For Alfresco 3.x, download the 0.x or 1.0 version of Media Preview.</p>
+<p>For Alfresco 3.x, download the latest 0.x or 1.0 version of Media Preview.</p>
 
 <p><a href="http://code.google.com/p/share-extras/downloads/list?q=media-preview">Download Media Previews add-on</a></p>
 
@@ -116,7 +116,7 @@ warnings or errors related to FFmpeg, if you have enabled it.</p>
 
 <h2>Building from Source</h2>
 
-<p>The add-on has been developed to install on top of an existing Alfresco 4.0 or
+<p>The add-on has been developed to install on top of an existing Alfresco 4.x or
 3.3/3.4 installation.</p>
 
 <p>An Ant build script is provided to build a JAR file containing the 
@@ -146,15 +146,15 @@ it picks up the changes.</p>
 
 ==Configuration==
 
-You must enable the _PdfJs Viewer_ module in Share's Module Deployment console, which
+If you are using Alfresco 4, you must enable the _PdfJs Viewer_ module in Share's Module Deployment console, which
 can be accessed by navigating to `http://hostname:port/share/page/modules/deploy`
 on your Alfresco server.
 
-*If you are using the `trunk` codeline from r1340 onwards on Alfresco 4.2, then you can use the 
+*If you are using Media Viewers 2.5+ on Alfresco 4.2 onwards, then you can use the 
 second module _PdfJs Configuration_ to automatically enable the viewer in the 
 Document Details page. Otherwise follow the instructions below.*
 
-<p>After installing the add-on in Alfresco 4, you must then configure the <tt>web-preview.get</tt>
+<p>After installing the add-on in Alfresco 4.0/4.1, you must then configure the <tt>web-preview.get</tt>
 component to use the particular viewers that you wish to enable. To do this, you must</p>
 
 <ol>
