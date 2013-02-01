@@ -77,7 +77,7 @@ the repository and Share in different Tomcat containers then you should install 
 
 <p>See <em>[#Configuration Configuration]</em> below, for instructions on how to enable the viewers in Share.</p>
 
-<h3>FFmpeg Installation (optional)</h3>
+<h3>FFmpeg Installation (optional; only required for audio/video viewers)</h3>
 
 <p>The supplied Spring configuration extends the repository thumbnailing capabilities to support 
 H264/FLV thumbnails for video content and MP3 thumbnails for audio content, both
