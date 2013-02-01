@@ -459,6 +459,11 @@ accompanied by an error in the browser JavaScript console indicating that the pl
 <p>If you see this on your system, check that the add-on is installed correctly and that you have enabled the relevant viewers
 in the Module Deployment console.</p>
 
+<ul>
+<li><p>If your content does not load using the viewers, check that you have enabled the viewer and configuration modules in Share's Module Deployment console, and (for Alfresco 4.0/4.1) that you have configured your `web-preview.config.xml` as documented above</p></li>
+<li><p>If PDF content loads using the PdfJs or Embed viewers but other document types do not (e.g. Word, PowerPoint), check that you have added the JAR file to the repository or at least added the <a href="http://code.google.com/p/share-extras/source/browse/trunk/Media%20Preview/config/alfresco/extension/org_sharextras_pdfviewer-context.xml">required Spring configuration</a>.</p></li>
+</ul>
+
 <h3>FFmpeg</h3>
 
 <p>If you have problems with audio and video previews or thumbnails not working, first check your <tt>alfresco.log</tt> for any errors being thrown at startup, relating to FFmpeg. 
@@ -485,10 +490,7 @@ the Document Details page URL), and substitute in the hostname of your server in
 <h2>Known Issues</h2>
 
 <ul>
-<li><p>Chrome on Windows does not correctly render PDF documents converted via OpenOffice, when using the PdfJs 
-viewer. This is due to a <a href="http://code.google.com/p/chromium/issues/detail?id=122465">Chrome bug</a>. The viewer therefore tests for this combination of browser and operating 
-system and declines to display the content. Fortunately the Embed viewer is able to render the content
-via Chrome's built-in PDF support.</p></li>
+<li><p>Internet Explorer is only supported in version 10 and greater due to performance problems in that browser. The Embed viewer can be used instead, otherwise rendering will fall back to the out-of-the-box Flash viewer</p></li>
 
 <li><p>In Alfresco Community 3.3 and 3.4, the video player only supports previews of MP4 and FLV content, due to 
 a bug whereby the thumbnail service <a href="https://issues.alfresco.com/jira/browse/ALF-4214">cannot produce renditions 
