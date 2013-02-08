@@ -90,20 +90,20 @@ Additional server side filters are configurable :
 || Value Filter || filter on the audit value (exact match, optional). This filtering is done server-side. || 'value' ||
 || Max Entry Count || maximum number of audit entries retrieved (optional) || 'limit' (default 100) ||
 || Audit Path Filter || select only the audit entries with a matching audit path key in their values map (optional) || URL path after application (default none) ||                                
-|| additional query params || other possible query parameters (optional). Separated by &. || from/to time, from/to id, user, ... ||
+|| additional query params || other possible server-side query parameters (optional). Separated by &. (See [http://wiki.alfresco.com/wiki/Auditing_(from_V3.4)#Advanced_Query) Advanced_Query]) || from/to time, from/to id, user, ... ||
 
-    (See [http://wiki.alfresco.com/wiki/Auditing_(from_V3.4)#Advanced_Query) Advanced_Query]). 
+     
 
 
 The columns to display are also configurable (show/hide).
-    
+
+
 *Note* : the output in the "audited values" field will depend on the configuration of the current audit application.
 (ie what data extractors have been configured, if using the access auditor or not, etc...).
 
 *Note* : querying for values when an audit path query is configured will restrict the search to entries with that value for that specific audit path.
 
-The "Trim Audit Paths" checkbox can be used to show the full audit paths up to the audit key, or just the audit key, in the audit values.
-    It can be useful to temporarily turn on in case one wants to use the audit path filter above, as it will show the full audit paths required for that filter.
+The "Trim Audit Paths" checkbox can be used to show the full audit paths up to the audit key, or just the audit key, in the audit values. It can be useful to temporarily turn on in case one wants to use the audit path filter above, as it will show the full audit paths required for that filter.
 
 *Note* : The data webscript does a version check to determine if a workaround for the unquoted json feed prior to 3.4.3 Enterprise / 4.0 Community (ALF-8307) is required.
 This can be overriden by copying the webscript config file (audit-application-data.get.config.xml) in the equivalent path in web-extension, if required.
