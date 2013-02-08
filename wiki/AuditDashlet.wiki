@@ -81,7 +81,7 @@ Could be useful if you don't know what application name to search for.
 The number of data rows (audit events) displayed per page is configurable with the 'Entries per page' parameter.
 
 If you want you can also select an additional value filter to limit the results.
-This server-side filter correspond to the "value" parameter optionally passed to the audit query. 
+This server-side filter correspond to the "value" parameter optionally passed to the audit query. It defaults to 10.
 
 Additional server side filters are configurable :
 
