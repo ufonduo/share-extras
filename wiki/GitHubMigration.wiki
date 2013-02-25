@@ -3,7 +3,6 @@
 = Migrating Source Code =
 
  # Create the project in GitHub.
-
       {{{
 curl -u 'USER' https://api.github.com/user/repos -d '{"name":"REPO"}'
       }}}
