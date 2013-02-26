@@ -32,3 +32,7 @@ git remote add origin https://github.com/share-extras/projectname.git
 git push --all origin
 git checkout master
 }}}
+
+==Post-Migration==
+
+Any subsequent changes made in SVN can be pulled through to Git using `git svn rebase`. After doing this you probably also want to push your changes to the GitHub repo using `git push`.
