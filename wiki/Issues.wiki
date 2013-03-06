@@ -1,0 +1,10 @@
+#summary Issue-tracking guidance
+
+As part of the migration from Google Code to GitHub, issues are now being tracked within the individual GitHub projects.
+
+To report defects or suggest enhancements, please follow these steps
+
+  # Navigate to the [https://github.com/share-extras Share Extras organisation] on GitHub
+  # Locate the project relating to the add-on your issue concerns, in the list of repositories, and visit the project home page
+  # Click into the Issues section and create an issue there. You will need to register a GitHub account if you have not done so already.
+  # Consider forking the project and contributing a pull request. This will make it much more likely that your issue will be actioned.
