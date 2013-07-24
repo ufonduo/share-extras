@@ -5,8 +5,7 @@
 
 *Note* : This project, along with the rest of Share Extras, has moved to !GitHub. See https://github.com/share-extras/audit-dashlet.
 
-All wiki information, sources, and current downloads are available in 
-the !GitHub project. 
+All wiki information, screenshots, sources, and current downloads are available in the !GitHub project. 
 
 This wiki page will likely no longer receive updates. 
 
@@ -101,7 +100,7 @@ Additional server side filters are configurable :
 || Value Filter || filter on the audit value (exact match, optional). This filtering is done server-side. || 'value' ||
 || Max Entry Count || maximum number of audit entries retrieved (optional) || 'limit' (default 100) ||
 || Audit Path Filter || select only the audit entries with a matching audit path key in their values map (optional) || URL path after application (default none) ||                                
-|| additional query params || other possible server-side query parameters (optional). Separated by &. (See [http://wiki.alfresco.com/wiki/Auditing_(from_V3.4)#Advanced_Query) Advanced_Query]) || from/to time, from/to id, user, ... ||
+|| additional query params || other possible server-side query parameters (optional). Separated by &. (See [http://wiki.alfresco.com/wiki/Auditing_(from_V3.4)#Advanced_Query) Advanced_Query]) || from/to time, from/to id, user, valueType, ... ||
 
      
 
