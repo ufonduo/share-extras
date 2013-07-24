@@ -1,6 +1,15 @@
 #summary Describes the Audit Dashlet add-on for Alfresco Share
 #labels Addon-Dashlet,AlfrescoVersion-3.x,AlfrescoVersion-4.x
 
+= Moved to GitHub =
+
+*Note* : This project, along with the rest of Share Extras, has moved to GitHub. See https://github.com/share-extras/audit-dashlet.
+
+All wiki information, sources, and current downloads are available in 
+the GitHub project. 
+
+This wiki page will likely no longer receive updates. The past releases/downloads that happened prior to the move to GitHub are left in Google Code for now.
+
 =Introduction=
 
 This project defines a custom dashlet to display events for a given audit application. 
