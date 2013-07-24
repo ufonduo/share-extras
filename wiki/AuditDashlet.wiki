@@ -1,5 +1,4 @@
 #summary Describes the Audit Dashlet add-on for Alfresco Share
-#labels Addon-Dashlet,AlfrescoVersion-3.x,AlfrescoVersion-4.x
 
 = Moved to !GitHub =
 
@@ -29,7 +28,8 @@ Here, the screenshots are made using simple data extractors, for clarity of the 
 
 The dashlet is packaged as a single JAR file for easy installation into Alfresco Share.
 
-To install the dashlet, simply drop the `audit-dashlet-${version}.jar` file from [http://code.google.com/p/share-extras/downloads/list the downloads section] into the classpath (usually `tomcat/shared/lib`, or other appservers equivalents) within your Alfresco installation, and restart the application server. 
+To install the dashlet, simply drop the `audit-dashlet-${version}.jar` file from the [https://github.com/share-extras/audit-dashlet/releases GitHub project releases section] into the classpath (usually `tomcat/shared/lib`, or other appservers equivalents) within your Alfresco installation, and restart the application server. 
+Past releases are available from the  [http://code.google.com/p/share-extras/downloads/list Google Code project downloads section].
 You might need to create this folder if it does not already exist.
 
 =Building from Source=
