@@ -8,7 +8,9 @@
 All wiki information, sources, and current downloads are available in 
 the !GitHub project. 
 
-This wiki page will likely no longer receive updates. The past releases/downloads that happened prior to the move to !GitHub are left in Google Code for now.
+This wiki page will likely no longer receive updates. 
+
+The past releases/downloads that happened prior to the move to !GitHub are left in Google Code for now.
 
 =Introduction=
 
