@@ -1,4 +1,5 @@
 #summary Describes the Audit Dashlet add-on for Alfresco Share
+#labels Addon-Dashlet,AlfrescoVersion-3.x,AlfrescoVersion-4.x
 
 = Moved to !GitHub =
 
