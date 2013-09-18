@@ -76,7 +76,6 @@ public class OAuth2Return extends AbstractWebScript
 	{
 	}
 
-	@Override
 	public void execute(WebScriptRequest req, WebScriptResponse resp) throws IOException
 	{
 		String code = req.getParameter(PARAM_CODE), // mandatory

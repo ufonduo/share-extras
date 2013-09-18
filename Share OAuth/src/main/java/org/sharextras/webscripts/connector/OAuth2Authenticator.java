@@ -35,7 +35,6 @@ public class OAuth2Authenticator extends AbstractAuthenticator
     // For Chatter this should be https://login.instance_name/services/oauth2/token
     private String requestTokenUri;
 
-    @Override
     public ConnectorSession authenticate(String endpoint, Credentials credentials, ConnectorSession connectorSession)
             throws AuthenticationException
     {
@@ -100,7 +99,6 @@ public class OAuth2Authenticator extends AbstractAuthenticator
         return cs;
     }
 
-    @Override
     public boolean isAuthenticated(String endpoint, ConnectorSession connectorSession)
     {
         return true;
