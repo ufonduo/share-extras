@@ -7,13 +7,11 @@ import org.springframework.extensions.webscripts.connector.CredentialVaultProvid
 public class OAuth2CredentialVaultProvider implements CredentialVaultProvider
 {
 
-    @Override
     public CredentialVault provide(String id) throws CredentialVaultProviderException
     {
         return new OAuth2CredentialVault(id);
     }
 
-    @Override
     public String generateKey(String id, String userId)
     {
         return id;

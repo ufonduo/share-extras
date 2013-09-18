@@ -66,7 +66,6 @@ public class OAuthReturn extends AbstractWebScript
 	{
 	}
 
-	@Override
 	public void execute(WebScriptRequest req, WebScriptResponse resp) throws IOException
 	{
 		String verifier = req.getParameter(PARAM_OAUTH_VERIFIER),
