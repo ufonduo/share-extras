@@ -1,27 +1,3 @@
-#summary Overview of the add-ons hosted on Share Extras
+Share Extras has now moved to GitHub
 
-Share Extras provides a wide range of add-ons for use with Alfresco Share 3.x and 4.x.
-
-Add-ons are categorised by the type of additional function they provide.
-
-  * [http://code.google.com/p/share-extras/w/list?q=Addon%3DDashlet Dashlets]
-  * [http://code.google.com/p/share-extras/w/list?q=Addon%3DAction Actions]
-  * [http://code.google.com/p/share-extras/w/list?q=Addon%3DTheme Themes]
-  * [http://code.google.com/p/share-extras/w/list?q=Addon%3DAdminConsole Admin Console]
-  * [http://code.google.com/p/share-extras/w/list?q=Addon%3DForms Form Configuration]
-  * [http://code.google.com/p/share-extras/w/list?q=Addon%3DPageComponent Page Components]
-  * [http://code.google.com/p/share-extras/w/list?q=Addon%3DPage Pages]
-
-Add-ons may be compatible with Alfresco 3.x, 4.x or both.
-
-The add-on's wiki page should be tagged with the versions that have been tested and supported, and full details should be provided in the page text.
-
-  * 3.x-compatible add-ons are tagged [http://code.google.com/p/share-extras/w/list?q=AlfrescoVersion%3D3.x AlfrescoVersion-3.x]
-  * 4.x-compatible add-ons are tagged [http://code.google.com/p/share-extras/w/list?q=AlfrescoVersion%3D4.x AlfrescoVersion-4.x]
-
-At the time of writing all add-ons are being reviewed for compatibility with Alfresco 4.x. Therefore the absence of an explicit AlfrescoVersion-4.x tag may not necessarily mean that it will not work with 4.x, just that it has not been tested.
-
-In the [http://code.google.com/p/share-extras/downloads/list Downloads] section the versions supported should be obvious from the filename of the download.
-
-  * Version *0.x* and *1.x* downloads are intended for use with Alfresco 3.x
-  * Version *2.x* downloads are intended for use with Alfresco 4.x
+[http://share-extras.github.io/ Share Extras Project Site]
