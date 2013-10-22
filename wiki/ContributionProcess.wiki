@@ -1,5 +1,4 @@
 #summary Information on contributing to Share Extras.
-#labels Featured
 
 Anyone can help contribute to Share Extras by trying out the existing add-ons and providing feedback. Simple comments will be accepted on the individual wiki pages, but if you have specific issues please raise these in the Issues section for further investigation. Detailed issues that are posted as comments may be removed.
 
